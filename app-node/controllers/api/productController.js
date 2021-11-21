@@ -1,12 +1,9 @@
 const helper = require('../../utils/helperv2');
 
-const product = (req, res, next) => {
-    res.render('client/product', { layout: 'client-layout', page_name: 'product' });
-}
-
-const getProduct = (req, res, next) => {
+const getProductAPI = (req, res, next) => {
     let org = req.query.org;
     let productCode = req.query.productCode;
+    console.log(productCode);
     if (org) {
         try {
             let products = helper.getProduct(org, productCode);
@@ -20,14 +17,12 @@ const getProduct = (req, res, next) => {
     }
 }
 
-const getAllProduct = (req, res, next) => {
+const getAllProductAPI = (req, res, next) => {
     let org = req.query.org;
     if (org) {
         try {
             let products = helper.getAllProduct(org);
-            let result = undefined;
-            products.then(data => result = JSON.parse(data.toString()));
-            res.render('client/product', { layout: 'client-layout', page_name: 'product', products: result })
+            products.then(data => res.json({ products: JSON.parse(data.toString()) }));
         } catch (error) {
             res.status(500).json('Cannot get product. ERR: ' + error.message);
         }
@@ -38,7 +33,6 @@ const getAllProduct = (req, res, next) => {
 }
 
 module.exports = {
-    product,
-    getProduct,
-    getAllProduct
+    getProductAPI,
+    getAllProductAPI
 }

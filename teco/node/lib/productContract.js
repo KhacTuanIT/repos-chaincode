@@ -4,7 +4,6 @@ const { Contract } = require('fabric-contract-api');
 
 class ProductContract extends Contract {
     async initProductLedger(ctx) {
-        console.log('initProductLedger');
         const assets = [
             {
                 name: 'Product1',
@@ -31,9 +30,7 @@ class ProductContract extends Contract {
         for (let index = 0; index < assets.length; index++) {
             assets[index].docType = 'product';
             await ctx.stub.putState(assets[index].code, Buffer.from(JSON.stringify(assets[index])));
-            console.log('add product ---------------------> ', assets[index].code);
         }
-        console.log('initProductLedger done ============');
     }
 
     async queryProduct(ctx, productCode) {
@@ -52,20 +49,20 @@ class ProductContract extends Contract {
                 name: name,
                 code: code,
                 manufactororId: manufactororId,
-                color: color ?? '',
-                price: price ?? '',
-                cpu: cpu ?? '',
-                ram: ram ?? '',
-                screen: screen ?? '',
-                keyboard: keyboard ?? '',
-                storage: storage ?? '',
-                network: network ?? '',
-                usb: usb ?? '',
-                origin: origin ?? '',
-                yearOrigin: yearOrigin ?? '',
-                owner: owner ?? '',
-                primaryImage: primaryImage ?? '',
-                subImage: subImage ?? '',
+                color: color ? color : '',
+                price: price ? price : '',
+                cpu: cpu ? cpu : '',
+                ram: ram ? ram : '',
+                screen: screen ? screen : '',
+                keyboard: keyboard ? keyboard : '',
+                storage: storage ? storage : '',
+                network: network ? network : '',
+                usb: usb ? usb : '',
+                origin: origin ? origin : '',
+                yearOrigin: yearOrigin ? yearOrigin : '',
+                owner: owner ? owner : '',
+                primaryImage: primaryImage ? primaryImage : '',
+                subImage: subImage ? subImage : '',
                 docType: 'product'
             }
 
@@ -89,17 +86,15 @@ class ProductContract extends Contract {
                     allProducts.push({ Key: key, Value: record });
                 }
             } catch (error) {
-                console.log(error);
+                throw new Error(error);
             }
         }
-        console.log(allProducts);
         return JSON.stringify(allProducts);
     }
 
     async updateProductInformation(ctx, name, code, manufactororId, color, price, cpu, ram,
         screen, keyboard, storage, network, usb, origin,
         yearOrigin, owner, primaryImage, subImage) {
-        console.info('============= START : updateProductInformation ===========');
         const productAsBytes = await ctx.stub.getState(code); // get the car from chaincode state
         if (!productAsBytes || productAsBytes.length === 0) {
             throw new Error(`${code} does not exist`);
@@ -108,31 +103,29 @@ class ProductContract extends Contract {
         if (product.docType !== 'product') {
             throw new Error(`${code} does not exist`);
         }
-        product.name = name ?? product.name;
-        product.code = code ?? product.code;
-        product.manufactororId = manufactororId ?? product.manufactororId;
-        product.color = color ?? product.color;
-        product.price = price ?? product.price;
-        product.cpu = cpu ?? product.cpu;
-        product.ram = ram ?? product.ram;
-        product.screen = screen ?? product.screen;
-        product.keyboard = keyboard ?? product.keyboard;
-        product.storage = storage ?? product.storage;
-        product.network = network ?? product.network;
-        product.usb = usb ?? product.usb;
-        product.origin = origin ?? product.origin;
-        product.yearOrigin = yearOrigin ?? product.yearOrigin;
-        product.owner = owner ?? product.owner;
-        product.primaryImage = primaryImage ?? product.primaryImage;
-        product.subImage = subImage ?? product.subImage;
+        product.name = name ? name : product.name;
+        product.code = code ? code : product.code;
+        product.manufactororId = manufactororId ? manufactororId : product.manufactororId;
+        product.color = color ? color : product.color;
+        product.price = price ? price : product.price;
+        product.cpu = cpu ? cpu : product.cpu;
+        product.ram = ram ? ram : product.ram;
+        product.screen = screen ? screen : product.screen;
+        product.keyboard = keyboard ? keyboard : product.keyboard;
+        product.storage = storage ? storage : product.storage;
+        product.network = network ? network : product.network;
+        product.usb = usb ? usb : product.usb;
+        product.origin = origin ? origin : product.origin;
+        product.yearOrigin = yearOrigin ? yearOrigin : product.yearOrigin;
+        product.owner = owner ? owner : product.owner;
+        product.primaryImage = primaryImage ? primaryImage : product.primaryImage;
+        product.subImage = subImage ? subImage : product.subImage;
 
         await ctx.stub.putState(code, Buffer.from(JSON.stringify(product)));
-        console.info('============= END : updateProductInformation ===========');
         return JSON.stringify(product);
     }
 
     async changeProductOwner(ctx, productCode, newOwner) {
-        console.info('============= START : changeProductOwner ===========');
         const productAsBytes = await ctx.stub.getState(productCode); // get the car from chaincode state
         if (!productAsBytes || productAsBytes.length === 0) {
             throw new Error(`${productCode} does not exist`);
@@ -144,12 +137,10 @@ class ProductContract extends Contract {
         product.owner = newOwner;
 
         await ctx.stub.putState(productCode, Buffer.from(JSON.stringify(product)));
-        console.info('============= END : changeProductOwner ===========');
         return JSON.stringify(product);
     }
 
     async getOwnerProducts(ctx, ownerId) {
-        console.info('============= START : getOwnerProducts ===========');
         const startKey = '';
         const endKey = '';
         const allProducts = [];
@@ -162,15 +153,13 @@ class ProductContract extends Contract {
                     allProducts.push({ Key: key, Value: record });
                 }
             } catch (error) {
-                console.log(error);
+                throw new Error(error);
             }
         }
-        console.log(allProducts);
         return JSON.stringify(allProducts);
     }
 
     async deleteProduct(ctx, productCode) {
-        console.info('============= START : changeProductOwner ===========');
         const productAsBytes = await ctx.stub.getState(productCode); // get the car from chaincode state
         if (!productAsBytes || productAsBytes.length === 0) {
             throw new Error(`${productCode} does not exist`);
@@ -181,55 +170,6 @@ class ProductContract extends Contract {
         }
 
         await ctx.stub.deleteState(productCode);
-        console.info('============= END : changeProductOwner ===========');
-    }
-
-    async getTransactionById(ctx, txId) {
-        return await ctx.stub.GetTxID(txId);
-    }
-
-    /**
-      * getCurrentUserId
-      * To be called by application to get the type for a user who is logged in
-      *
-      * @param {Context} ctx the transaction context
-      * Usage:  getCurrentUserId ()
-     */
-    async getCurrentUserId(ctx) {
-
-        let id = [];
-        id.push(ctx.clientIdentity.getID());
-        var begin = id[0].indexOf("/CN=");
-        var end = id[0].lastIndexOf("::/C=");
-        let userid = id[0].substring(begin + 4, end);
-        return userid;
-    }
-
-    /**
-      * getCurrentUserType
-      * To be called by application to get the type for a user who is logged in
-      *
-      * @param {Context} ctx the transaction context
-      * Usage:  getCurrentUserType ()
-     */
-    async getCurrentUserType(ctx) {
-
-        let userid = await this.getCurrentUserId(ctx);
-
-        //  check user id;  if admin, return type = admin;
-        //  else return value set for attribute "type" in certificate;
-        if (userid == "admin") {
-            return userid;
-        }
-        return ctx.clientIdentity.getAttributeValue("usertype");
-    }
-
-    static toBuffer(data) {
-        return Buffer.from(JSON.stringify(data));
-    }
-
-    static fromBuffer(buffer) {
-        return Order.deserialize(Buffer.from(JSON.parse(buffer)));
     }
 }
 

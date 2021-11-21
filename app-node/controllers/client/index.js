@@ -1,5 +1,5 @@
 const { home } = require('./homeController');
-const { account } = require('./accountController');
+const { account, registerClientView, register, loginClient, loginClientView } = require('./accountController');
 const { about } = require('./aboutController');
 const { cart } = require('./cartController');
 const { contact } = require('./contactController');
@@ -15,5 +15,9 @@ module.exports = {
     payment,
     product,
     getProduct,
-    getAllProduct
+    getAllProduct,
+    register,
+    registerClientView,
+    loginClient,
+    loginClientView
 }

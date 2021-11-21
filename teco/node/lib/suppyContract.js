@@ -25,7 +25,6 @@ class SupplyContract extends Contract {
 
     async orderProduct(ctx, orderId, productId, price, quantity, producerId, retailerId, modifiedBy, buyerId) {
 
-        console.log("incoming asset fields: " + JSON.stringify());
         var orderAsBytes = await ctx.stub.getState(orderId);
         if (orderAsBytes && orderAsBytes.length > 0) {
             throw new Error(`Error Message from orderProduct. Order with orderId = ${orderId} already exists.`);
@@ -34,7 +33,6 @@ class SupplyContract extends Contract {
         let order = Order.createInstance(orderId);
         order.productId = productId;
         order.price = price.toString();
-        order.quantity = quantity.toString();
         order.producerId = producerId;
         order.retailerId = retailerId;
         order.modifiedBy = modifiedBy;
@@ -49,7 +47,6 @@ class SupplyContract extends Contract {
     }
 
     async receiveOrder(ctx, orderId, userId) {
-        console.info('============= receiveOrder ===========');
 
         if (orderId.length < 1) {
             throw new Error('orderId is required as input')
@@ -72,7 +69,6 @@ class SupplyContract extends Contract {
     }
 
     async assignShipper(ctx, orderId, newShipperId, userId) {
-        console.info('============= assignShipper ===========');
 
         if (orderId.length < 1) {
             throw new Error('orderId is required as input')
@@ -124,7 +120,6 @@ class SupplyContract extends Contract {
     }
 
     async transportShipment(ctx, orderId, userId) {
-        console.info('============= transportShipment ===========');
 
         if (orderId.length < 1) {
             throw new Error('orderId is required as input')
@@ -146,7 +141,6 @@ class SupplyContract extends Contract {
     }
 
     async receiveShipment(ctx, orderId, userId) {
-        console.info('============= receiveShipment ===========');
 
         if (orderId.length < 1) {
             throw new Error('orderId is required as input')
@@ -167,7 +161,6 @@ class SupplyContract extends Contract {
     }
 
     async queryOrder(ctx, orderId) {
-        console.info('============= queryOrder ===========');
 
         if (orderId.length < 1) {
             throw new Error('orderId is required as input')
@@ -195,26 +188,22 @@ class SupplyContract extends Contract {
                     allOrders.push({ Key: key, Value: record });
                 }
             } catch (error) {
-                console.log(error);
+                throw new Error(error);
             }
         }
         return JSON.stringify(allOrders);
     }
 
     async getOrderHistory(ctx, orderId) {
-        console.info('============= getOrderHistory ===========');
         if (orderId.length < 1) {
             throw new Error('orderId is required as input')
         }
-        console.log("input, orderId = " + orderId);
 
         var orderAsBytes = await ctx.stub.getState(orderId);
 
         if (!orderAsBytes || orderAsBytes.length === 0) {
             throw new Error(`Error Message from getOrderHistory: Order with orderId = ${orderId} does not exist.`);
         }
-
-        console.info('start GetHistoryForOrder: %s', orderId);
 
         const iterator = await ctx.stub.getHistoryForKey(orderId);
         const orderHistory = [];
@@ -242,21 +231,16 @@ class SupplyContract extends Contract {
             }
 
             if (history.done) {
-                console.log('end of data');
                 await iterator.close();
-                console.info(orderHistory);
                 return JSON.stringify(orderHistory);
             }
         }
     }
 
     async deleteOrder(ctx, orderId) {
-
-        console.info('============= deleteOrder ===========');
         if (orderId.length < 1) {
             throw new Error('Order Id required as input')
         }
-        console.log("orderId = " + orderId);
 
         var orderAsBytes = await ctx.stub.getState(orderId);
 
@@ -265,50 +249,6 @@ class SupplyContract extends Contract {
         }
 
         await ctx.stub.deleteState(orderId);
-    }
-
-    /**
-      * getCurrentUserId
-      * To be called by application to get the type for a user who is logged in
-      *
-      * @param {Context} ctx the transaction context
-      * Usage:  getCurrentUserId ()
-     */
-    async getCurrentUserId(ctx) {
-
-        let id = [];
-        id.push(ctx.clientIdentity.getID());
-        var begin = id[0].indexOf("/CN=");
-        var end = id[0].lastIndexOf("::/C=");
-        let userid = id[0].substring(begin + 4, end);
-        return userid;
-    }
-
-    /**
-      * getCurrentUserType
-      * To be called by application to get the type for a user who is logged in
-      *
-      * @param {Context} ctx the transaction context
-      * Usage:  getCurrentUserType ()
-     */
-    async getCurrentUserType(ctx) {
-
-        let userid = await this.getCurrentUserId(ctx);
-
-        //  check user id;  if admin, return type = admin;
-        //  else return value set for attribute "type" in certificate;
-        if (userid == "admin") {
-            return userid;
-        }
-        return ctx.clientIdentity.getAttributeValue("usertype");
-    }
-
-    static toBuffer(data) {
-        return Buffer.from(JSON.stringify(data));
-    }
-
-    static fromBuffer(buffer) {
-        return Order.deserialize(Buffer.from(JSON.parse(buffer)));
     }
 }
 
