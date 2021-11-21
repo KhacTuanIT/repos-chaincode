@@ -1,0 +1,164 @@
+{
+  "name": "fabric-network",
+  "x-type": "hlfv1",
+  "version": "1.0.0",
+  "channels": {
+    "ecsupply": {
+      "orderers": [
+        "orderer1.teco.com"
+      ],
+      "peers": [
+        "peer1.supply.teco.com",
+        "peer2.supply.teco.com",
+        "peer1.delivery.teco.com",
+        "peer2.delivery.teco.com"
+      ]
+    }
+  },
+  "organizations": {
+    "delivery.teco.com": {
+      "mspid": "delivery-teco-com",
+      "peers": [
+        "peer1.delivery.teco.com",
+        "peer2.delivery.teco.com"
+      ],
+      "orderers": [
+      ],
+      "certificateAuthorities": [
+        "ca1.delivery.teco.com"
+      ]
+    },
+    "supply.teco.com": {
+      "mspid": "supply-teco-com",
+      "peers": [
+        "peer1.supply.teco.com",
+        "peer2.supply.teco.com"
+      ],
+      "orderers": [
+      ],
+      "certificateAuthorities": [
+        "ca1.supply.teco.com"
+      ]
+    },
+    "teco.com": {
+      "mspid": "teco-com",
+      "peers": [
+      ],
+      "orderers": [
+        "orderer1.teco.com"
+      ]
+    }
+  },
+  "orderers": {
+    "orderer1.teco.com": {
+      "url": "grpcs://172.19.40.177:7010",
+      "grpcOptions": {
+        "ssl-target-name-override": "orderer1.teco.com"
+      },
+      "tlsCACerts": {
+        "pem": "-----BEGIN CERTIFICATE-----\nMIICjzCCAjagAwIBAgIUMDIX2d8sCsCtKyR0weGtza7SeLEwCgYIKoZIzj0EAwIw\nZDELMAkGA1UEBhMCVVMxFzAVBgNVBAgMDk5vcnRoIENhcm9saW5hMRAwDgYDVQQH\nDAdSYWxlaWdoMREwDwYDVQQKDAh0ZWNvLmNvbTEXMBUGA1UEAwwOdGxzY2EudGVj\nby5jb20wHhcNMjExMTIxMDc1OTA0WhcNMzExMTE5MDc1OTA0WjBkMQswCQYDVQQG\nEwJVUzEXMBUGA1UECAwOTm9ydGggQ2Fyb2xpbmExEDAOBgNVBAcMB1JhbGVpZ2gx\nETAPBgNVBAoMCHRlY28uY29tMRcwFQYDVQQDDA50bHNjYS50ZWNvLmNvbTBZMBMG\nByqGSM49AgEGCCqGSM49AwEHA0IABANTOMcmlSNWioJDjH5GBHWG54qYMGZs29hZ\nRKnw9I/dR8VurJBrQvptho2VboO05kZ8E7hjqffC/N/M+mW4zWGjgcUwgcIwHQYD\nVR0OBBYEFOesb2Wrh1o/qCDtNOukt8fIJKvXMB8GA1UdIwQYMBaAFOesb2Wrh1o/\nqCDtNOukt8fIJKvXMA8GA1UdEwEB/wQFMAMBAf8wDgYDVR0PAQH/BAQDAgGmMB0G\nA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjBABgNVHREEOTA3hwSsEyixgg50\nbHNjYS50ZWNvLmNvbYIOdGxzY2EtdGVjby1jb22CCWxvY2FsaG9zdIcEfwAAATAK\nBggqhkjOPQQDAgNHADBEAiB7tLeDS1zxj07ScAcNlX+PzDtBxruTA3ufa82iD6fh\nWwIgSV6rtJw8zVRvIEJaeNeUq2Lxr3vA1amTe4ZEU+6Gm4o=\n-----END CERTIFICATE-----"
+      }
+    }
+  },
+  "peers": {
+    "peer1.supply.teco.com": {
+      "url": "grpcs://172.19.40.177:7002",
+      "grpcOptions": {
+        "ssl-target-name-override": "peer1.supply.teco.com"
+      },
+      "tlsCACerts": {
+        "pem": "-----BEGIN CERTIFICATE-----\nMIICvzCCAmSgAwIBAgIULCGzbN/8Yv0hejs2nlI6waft01EwCgYIKoZIzj0EAwIw\nczELMAkGA1UEBhMCVVMxFzAVBgNVBAgMDk5vcnRoIENhcm9saW5hMRAwDgYDVQQH\nDAdSYWxlaWdoMRgwFgYDVQQKDA9zdXBwbHkudGVjby5jb20xHzAdBgNVBAMMFnRs\nc2NhMS5zdXBwbHkudGVjby5jb20wHhcNMjExMTIxMDc1NzUyWhcNMzExMTE5MDc1\nNzUyWjBzMQswCQYDVQQGEwJVUzEXMBUGA1UECAwOTm9ydGggQ2Fyb2xpbmExEDAO\nBgNVBAcMB1JhbGVpZ2gxGDAWBgNVBAoMD3N1cHBseS50ZWNvLmNvbTEfMB0GA1UE\nAwwWdGxzY2ExLnN1cHBseS50ZWNvLmNvbTBZMBMGByqGSM49AgEGCCqGSM49AwEH\nA0IABBLcObt4KNXkzCw/zwq5H+Y8nkoWi1H13/9KNHGtxm47/gBkHqJRovBQKTW/\n7KtDj+kQXzSYc0uPhaczqGcmXiWjgdUwgdIwHQYDVR0OBBYEFDs1PsU+7uijZsHM\nHbwpFympxcfGMB8GA1UdIwQYMBaAFDs1PsU+7uijZsHMHbwpFympxcfGMA8GA1Ud\nEwEB/wQFMAMBAf8wDgYDVR0PAQH/BAQDAgGmMB0GA1UdJQQWMBQGCCsGAQUFBwMB\nBggrBgEFBQcDAjBQBgNVHREESTBHhwSsEyixghZ0bHNjYTEuc3VwcGx5LnRlY28u\nY29tghZ0bHNjYTEtc3VwcGx5LXRlY28tY29tgglsb2NhbGhvc3SHBH8AAAEwCgYI\nKoZIzj0EAwIDSQAwRgIhAOTr0fPMZ+W5nr3jE9E7gF7cCZoAYRCqX8xebn8ael83\nAiEA+cRBeDsax9f+oT3Nus9m4UGnxuJa+59zFZ4KD4Lhqhs=\n-----END CERTIFICATE-----"
+      }
+    },
+    "peer2.supply.teco.com": {
+      "url": "grpcs://172.19.40.177:7003",
+      "grpcOptions": {
+        "ssl-target-name-override": "peer2.supply.teco.com"
+      },
+      "tlsCACerts": {
+        "pem": "-----BEGIN CERTIFICATE-----\nMIICvzCCAmSgAwIBAgIULCGzbN/8Yv0hejs2nlI6waft01EwCgYIKoZIzj0EAwIw\nczELMAkGA1UEBhMCVVMxFzAVBgNVBAgMDk5vcnRoIENhcm9saW5hMRAwDgYDVQQH\nDAdSYWxlaWdoMRgwFgYDVQQKDA9zdXBwbHkudGVjby5jb20xHzAdBgNVBAMMFnRs\nc2NhMS5zdXBwbHkudGVjby5jb20wHhcNMjExMTIxMDc1NzUyWhcNMzExMTE5MDc1\nNzUyWjBzMQswCQYDVQQGEwJVUzEXMBUGA1UECAwOTm9ydGggQ2Fyb2xpbmExEDAO\nBgNVBAcMB1JhbGVpZ2gxGDAWBgNVBAoMD3N1cHBseS50ZWNvLmNvbTEfMB0GA1UE\nAwwWdGxzY2ExLnN1cHBseS50ZWNvLmNvbTBZMBMGByqGSM49AgEGCCqGSM49AwEH\nA0IABBLcObt4KNXkzCw/zwq5H+Y8nkoWi1H13/9KNHGtxm47/gBkHqJRovBQKTW/\n7KtDj+kQXzSYc0uPhaczqGcmXiWjgdUwgdIwHQYDVR0OBBYEFDs1PsU+7uijZsHM\nHbwpFympxcfGMB8GA1UdIwQYMBaAFDs1PsU+7uijZsHMHbwpFympxcfGMA8GA1Ud\nEwEB/wQFMAMBAf8wDgYDVR0PAQH/BAQDAgGmMB0GA1UdJQQWMBQGCCsGAQUFBwMB\nBggrBgEFBQcDAjBQBgNVHREESTBHhwSsEyixghZ0bHNjYTEuc3VwcGx5LnRlY28u\nY29tghZ0bHNjYTEtc3VwcGx5LXRlY28tY29tgglsb2NhbGhvc3SHBH8AAAEwCgYI\nKoZIzj0EAwIDSQAwRgIhAOTr0fPMZ+W5nr3jE9E7gF7cCZoAYRCqX8xebn8ael83\nAiEA+cRBeDsax9f+oT3Nus9m4UGnxuJa+59zFZ4KD4Lhqhs=\n-----END CERTIFICATE-----"
+      }
+    },
+    "peer1.delivery.teco.com": {
+      "url": "grpcs://172.19.40.177:7004",
+      "grpcOptions": {
+        "ssl-target-name-override": "peer1.delivery.teco.com"
+      },
+      "tlsCACerts": {
+        "pem": "-----BEGIN CERTIFICATE-----\nMIICyjCCAnCgAwIBAgIUNilPU1KeYPJGek1dWI0ROO+/qXAwCgYIKoZIzj0EAwIw\ndzELMAkGA1UEBhMCVVMxFzAVBgNVBAgMDk5vcnRoIENhcm9saW5hMRAwDgYDVQQH\nDAdSYWxlaWdoMRowGAYDVQQKDBFkZWxpdmVyeS50ZWNvLmNvbTEhMB8GA1UEAwwY\ndGxzY2ExLmRlbGl2ZXJ5LnRlY28uY29tMB4XDTIxMTEyMTA3NTY0NloXDTMxMTEx\nOTA3NTY0NlowdzELMAkGA1UEBhMCVVMxFzAVBgNVBAgMDk5vcnRoIENhcm9saW5h\nMRAwDgYDVQQHDAdSYWxlaWdoMRowGAYDVQQKDBFkZWxpdmVyeS50ZWNvLmNvbTEh\nMB8GA1UEAwwYdGxzY2ExLmRlbGl2ZXJ5LnRlY28uY29tMFkwEwYHKoZIzj0CAQYI\nKoZIzj0DAQcDQgAEp99usJt474HxTRHu1fn26pC+XgW2ST3zZ7s+OYwF+PaNCC9/\ncS3a6vXaa6PNDv7ppfkCrI4aUk15d0vwjrkVxqOB2TCB1jAdBgNVHQ4EFgQULPVg\nX0XC1bOvya4odkhRoHaysz8wHwYDVR0jBBgwFoAULPVgX0XC1bOvya4odkhRoHay\nsz8wDwYDVR0TAQH/BAUwAwEB/zAOBgNVHQ8BAf8EBAMCAaYwHQYDVR0lBBYwFAYI\nKwYBBQUHAwEGCCsGAQUFBwMCMFQGA1UdEQRNMEuHBKwTKLGCGHRsc2NhMS5kZWxp\ndmVyeS50ZWNvLmNvbYIYdGxzY2ExLWRlbGl2ZXJ5LXRlY28tY29tgglsb2NhbGhv\nc3SHBH8AAAEwCgYIKoZIzj0EAwIDSAAwRQIhAKb13aiFYJbhU/gWhESNBYaDyxJl\nMS2bLyKLDo9qqwoLAiAQTfTUzc4J+55EnjyiIb7l59dhuKqpP8H4ks0NUdJMUQ==\n-----END CERTIFICATE-----"
+      }
+    },
+    "peer2.delivery.teco.com": {
+      "url": "grpcs://172.19.40.177:7005",
+      "grpcOptions": {
+        "ssl-target-name-override": "peer2.delivery.teco.com"
+      },
+      "tlsCACerts": {
+        "pem": "-----BEGIN CERTIFICATE-----\nMIICyjCCAnCgAwIBAgIUNilPU1KeYPJGek1dWI0ROO+/qXAwCgYIKoZIzj0EAwIw\ndzELMAkGA1UEBhMCVVMxFzAVBgNVBAgMDk5vcnRoIENhcm9saW5hMRAwDgYDVQQH\nDAdSYWxlaWdoMRowGAYDVQQKDBFkZWxpdmVyeS50ZWNvLmNvbTEhMB8GA1UEAwwY\ndGxzY2ExLmRlbGl2ZXJ5LnRlY28uY29tMB4XDTIxMTEyMTA3NTY0NloXDTMxMTEx\nOTA3NTY0NlowdzELMAkGA1UEBhMCVVMxFzAVBgNVBAgMDk5vcnRoIENhcm9saW5h\nMRAwDgYDVQQHDAdSYWxlaWdoMRowGAYDVQQKDBFkZWxpdmVyeS50ZWNvLmNvbTEh\nMB8GA1UEAwwYdGxzY2ExLmRlbGl2ZXJ5LnRlY28uY29tMFkwEwYHKoZIzj0CAQYI\nKoZIzj0DAQcDQgAEp99usJt474HxTRHu1fn26pC+XgW2ST3zZ7s+OYwF+PaNCC9/\ncS3a6vXaa6PNDv7ppfkCrI4aUk15d0vwjrkVxqOB2TCB1jAdBgNVHQ4EFgQULPVg\nX0XC1bOvya4odkhRoHaysz8wHwYDVR0jBBgwFoAULPVgX0XC1bOvya4odkhRoHay\nsz8wDwYDVR0TAQH/BAUwAwEB/zAOBgNVHQ8BAf8EBAMCAaYwHQYDVR0lBBYwFAYI\nKwYBBQUHAwEGCCsGAQUFBwMCMFQGA1UdEQRNMEuHBKwTKLGCGHRsc2NhMS5kZWxp\ndmVyeS50ZWNvLmNvbYIYdGxzY2ExLWRlbGl2ZXJ5LXRlY28tY29tgglsb2NhbGhv\nc3SHBH8AAAEwCgYIKoZIzj0EAwIDSAAwRQIhAKb13aiFYJbhU/gWhESNBYaDyxJl\nMS2bLyKLDo9qqwoLAiAQTfTUzc4J+55EnjyiIb7l59dhuKqpP8H4ks0NUdJMUQ==\n-----END CERTIFICATE-----"
+      }
+    }
+  },
+  "certificateAuthorities": {
+    "ca1.supply.teco.com": {
+      "url": "https://172.19.40.177:7000",
+      "tlsCACerts": {
+        "pem": "-----BEGIN CERTIFICATE-----\nMIICsjCCAligAwIBAgIUJ85nn2P1mOdfEDi8litOXERtXAYwCgYIKoZIzj0EAwIw\ncDELMAkGA1UEBhMCVVMxFzAVBgNVBAgMDk5vcnRoIENhcm9saW5hMRAwDgYDVQQH\nDAdSYWxlaWdoMRgwFgYDVQQKDA9zdXBwbHkudGVjby5jb20xHDAaBgNVBAMME2Nh\nMS5zdXBwbHkudGVjby5jb20wHhcNMjExMTIxMDc1NzUyWhcNMzExMTE5MDc1NzUy\nWjBwMQswCQYDVQQGEwJVUzEXMBUGA1UECAwOTm9ydGggQ2Fyb2xpbmExEDAOBgNV\nBAcMB1JhbGVpZ2gxGDAWBgNVBAoMD3N1cHBseS50ZWNvLmNvbTEcMBoGA1UEAwwT\nY2ExLnN1cHBseS50ZWNvLmNvbTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABFWl\n7jeKqJNDmQUTg7SVg2VoPGnzcifz9G0wEQiZpj2nyvvXQzncfj70JWchqi1ObuDk\nytykyq5GywW3LZawbOGjgc8wgcwwHQYDVR0OBBYEFDX7r14s1etmrh1wre0neotC\njk8AMB8GA1UdIwQYMBaAFDX7r14s1etmrh1wre0neotCjk8AMA8GA1UdEwEB/wQF\nMAMBAf8wDgYDVR0PAQH/BAQDAgGmMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEF\nBQcDAjBKBgNVHREEQzBBhwSsEyixghNjYTEuc3VwcGx5LnRlY28uY29tghNjYTEt\nc3VwcGx5LXRlY28tY29tgglsb2NhbGhvc3SHBH8AAAEwCgYIKoZIzj0EAwIDSAAw\nRQIgd8OFAYGDVddp92TnPw3W4hob5/Fc8VfdJpVMzpdRFIYCIQChTA+ofYFTKC67\nqzZUuXNuBoeykkExoIdtRyzIkJy/7Q==\n-----END CERTIFICATE-----"
+      },
+      "httpOptions": { "verify": "false" },
+      "caName": "ca1",
+      "registrar": { "enrollId": "admin", "enrollSecret": "adminpw" }
+    },
+    "ca1.delivery.teco.com": {
+      "url": "https://172.19.40.177:7001",
+      "tlsCACerts": {
+        "pem": "-----BEGIN CERTIFICATE-----\nMIICvjCCAmSgAwIBAgIUbsgSnFvopVPIxm+NEZNqSR1Gh2IwCgYIKoZIzj0EAwIw\ndDELMAkGA1UEBhMCVVMxFzAVBgNVBAgMDk5vcnRoIENhcm9saW5hMRAwDgYDVQQH\nDAdSYWxlaWdoMRowGAYDVQQKDBFkZWxpdmVyeS50ZWNvLmNvbTEeMBwGA1UEAwwV\nY2ExLmRlbGl2ZXJ5LnRlY28uY29tMB4XDTIxMTEyMTA3NTY0NVoXDTMxMTExOTA3\nNTY0NVowdDELMAkGA1UEBhMCVVMxFzAVBgNVBAgMDk5vcnRoIENhcm9saW5hMRAw\nDgYDVQQHDAdSYWxlaWdoMRowGAYDVQQKDBFkZWxpdmVyeS50ZWNvLmNvbTEeMBwG\nA1UEAwwVY2ExLmRlbGl2ZXJ5LnRlY28uY29tMFkwEwYHKoZIzj0CAQYIKoZIzj0D\nAQcDQgAE8SvYeSk5zfUjlso6cFw6MyaocS2TBnQ5bB/ej8/BqpcaWo48RPwokdB0\nB03hRohrvzpR477adt3XLpyaeecqhqOB0zCB0DAdBgNVHQ4EFgQUgfQzabT2Lurd\nzFhMmAT7Vt2HkWkwHwYDVR0jBBgwFoAUgfQzabT2LurdzFhMmAT7Vt2HkWkwDwYD\nVR0TAQH/BAUwAwEB/zAOBgNVHQ8BAf8EBAMCAaYwHQYDVR0lBBYwFAYIKwYBBQUH\nAwEGCCsGAQUFBwMCME4GA1UdEQRHMEWHBKwTKLGCFWNhMS5kZWxpdmVyeS50ZWNv\nLmNvbYIVY2ExLWRlbGl2ZXJ5LXRlY28tY29tgglsb2NhbGhvc3SHBH8AAAEwCgYI\nKoZIzj0EAwIDSAAwRQIhAL70SWNi5p92hgNaHusuIMhvRPqn1V8JA/E9unLcSUB9\nAiBG0BvRqFRORCjwHNaVv//phTw+It2raw1YXpSl89NMFg==\n-----END CERTIFICATE-----"
+      },
+      "httpOptions": { "verify": "false" },
+      "caName": "ca1",
+      "registrar": { "enrollId": "admin", "enrollSecret": "adminpw" }
+    }
+  },
+  "entityMatchers": {
+    "orderer": [
+      { "mappedHost": "orderer1.teco.com",
+        "pattern": "(\\w*)orderer1.teco.com(\\w*)",
+        "sslTargetOverrideUrlSubstitutionExp": "orderer1.teco.com",
+        "urlSubstitutionExp": "172.19.40.177:7010"
+      }
+    ],
+    "peer": [
+      { "mappedHost": "peer1.supply.teco.com",
+        "pattern": "(\\w*)peer1.supply.teco.com(\\w*)",
+        "sslTargetOverrideUrlSubstitutionExp": "peer1.supply.teco.com",
+        "urlSubstitutionExp": "172.19.40.177:7002"
+      },
+      { "mappedHost": "peer2.supply.teco.com",
+        "pattern": "(\\w*)peer2.supply.teco.com(\\w*)",
+        "sslTargetOverrideUrlSubstitutionExp": "peer2.supply.teco.com",
+        "urlSubstitutionExp": "172.19.40.177:7003"
+      },
+      { "mappedHost": "peer1.delivery.teco.com",
+        "pattern": "(\\w*)peer1.delivery.teco.com(\\w*)",
+        "sslTargetOverrideUrlSubstitutionExp": "peer1.delivery.teco.com",
+        "urlSubstitutionExp": "172.19.40.177:7004"
+      },
+      { "mappedHost": "peer2.delivery.teco.com",
+        "pattern": "(\\w*)peer2.delivery.teco.com(\\w*)",
+        "sslTargetOverrideUrlSubstitutionExp": "peer2.delivery.teco.com",
+        "urlSubstitutionExp": "172.19.40.177:7005"
+      }
+    ],
+  "certificateAuthorities": [
+      { "mappedHost": "ca1.supply.teco.com",
+        "pattern": "(\\w*)ca1.supply.teco.com(\\w*)",
+        "sslTargetOverrideUrlSubstitutionExp": "ca1.supply.teco.com",
+        "urlSubstitutionExp": "172.19.40.177:7000"
+      },
+      { "mappedHost": "ca1.delivery.teco.com",
+        "pattern": "(\\w*)ca1.delivery.teco.com(\\w*)",
+        "sslTargetOverrideUrlSubstitutionExp": "ca1.delivery.teco.com",
+        "urlSubstitutionExp": "172.19.40.177:7001"
+      }
+    ]
+  }
+}
