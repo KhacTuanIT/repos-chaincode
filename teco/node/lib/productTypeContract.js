@@ -4,6 +4,24 @@ const { Contract } = require('fabric-contract-api');
 
 class ProductType extends Contract {
     async initProductType(ctx) {
+        const assets = [
+            {
+                productTypeId: 'PRT0000001',
+                name: 'Laptop'
+            },
+            {
+                productTypeId: 'PRT0000002',
+                name: 'Desktop'
+            },
+            {
+                productTypeId: 'PRT0000003',
+                name: 'Notebook'
+            }
+        ]
+        for (let i = 0; i < assets.length; i++) {
+            assets[i].docType = 'product-type';
+            await stx.stub.putState(assets[i].manufactororId, Buffer.from(JSON.stringify(assets[i])));
+        }
         return;
     }
 

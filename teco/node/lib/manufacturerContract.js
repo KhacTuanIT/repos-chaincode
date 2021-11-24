@@ -4,6 +4,36 @@ const { Contract } = require('fabric-contract-api');
 
 class Manufacturer extends Contract {
     async initManufacturer(ctx) {
+        const assets = [
+            {
+                manufactororId: 'MAN0000001',
+                name: 'Macbook'
+            },
+            {
+                manufactororId: 'MAN0000002',
+                name: 'Acer'
+            },
+            {
+                manufactororId: 'MAN0000003',
+                name: 'MSI'
+            },
+            {
+                manufactororId: 'MAN0000004',
+                name: 'ASUS'
+            },
+            {
+                manufactororId: 'MAN0000005',
+                name: 'Dell'
+            },
+            {
+                manufactororId: 'MAN0000006',
+                name: 'HP'
+            }
+        ]
+        for (let i = 0; i < assets.length; i++) {
+            assets[i].docType = 'manufacturer';
+            await stx.stub.putState(assets[i].manufactororId, Buffer.from(JSON.stringify(assets[i])));
+        }
         return;
     }
 
