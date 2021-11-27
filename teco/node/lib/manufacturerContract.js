@@ -28,6 +28,14 @@ class Manufacturer extends Contract {
             {
                 manufactororId: 'MAN0000006',
                 name: 'HP'
+            },
+            {
+                manufactororId: 'MAN0000007',
+                name: 'Windows'
+            },
+            {
+                manufactororId: 'MAN0000008',
+                name: 'Alienware'
             }
         ]
         for (let i = 0; i < assets.length; i++) {

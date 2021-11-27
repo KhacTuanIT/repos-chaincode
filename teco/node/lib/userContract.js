@@ -8,18 +8,29 @@ class UserContract extends Contract {
         const userAssets = [
             {
                 userId: 'US0001',
-                username: 'usertest',
-                password: this._hashCode('password'),
-                email: 'test@example.com',
+                username: 'adminsupply',
+                password: this._hashCode('sample@123'),
+                email: 'admin.supply@example.com',
                 address: '123 Duy Tan, VN',
                 role: 'admin',
                 manager: '',
                 org: 'supply',
                 docType: 'user'
-            }
+            },
+            {
+                userId: 'US0002',
+                username: 'admindelivery',
+                password: this._hashCode('sample@123'),
+                email: 'admin.delivery@example.com',
+                address: '123 Duy Tan, VN',
+                role: 'admin',
+                manager: '',
+                org: 'delivery',
+                docType: 'user'
+            },
         ]
         for (let index = 0; index < userAssets.length; index++) {
-            userAssets[index].docType = 'product';
+            userAssets[index].docType = 'user';
             await ctx.stub.putState(userAssets[index].userId, Buffer.from(JSON.stringify(userAssets[index])));
             console.log('add product ---------------------> ', userAssets[index].userId);
         }
