@@ -350,7 +350,7 @@ const registerAndGetSecret = async (username, password, userType, userOrg) => {
 // ##### PRODUCT #####
 // ##### ####### #####
 
-const initDataManufacturer = async (org) => {
+const initDataProduct = async (org) => {
   try {
     let ccp = await getCCP();
     const walletPath = await getWalletPath(org);
@@ -489,6 +489,7 @@ const addProduct = async function (product, org) {
       product.origin,
       product.yearOrigin,
       product.owner,
+      product.description,
       product.primaryImage,
       product.subImage
     );
@@ -501,6 +502,34 @@ const addProduct = async function (product, org) {
 // ##### #### #####
 // ##### USER #####
 // ##### #### #####
+
+const initDataUser = async (org) => {
+  try {
+    let ccp = await getCCP();
+    const walletPath = await getWalletPath(org);
+    const wallet = await Wallets.newFileSystemWallet(walletPath);
+
+    const userIdentity = await wallet.get("admin");
+    if (!userIdentity) {
+      return;
+    }
+    const gateway = new Gateway();
+    await gateway.connect(ccp, {
+      wallet,
+      identity: "admin",
+      discovery: { enabled: true, asLocalhost: true },
+    });
+
+    const network = await gateway.getNetwork("ecsupply");
+
+    const contract = network.getContract("teco", "UserContract");
+
+    const result = await contract.submitTransaction("initUser");
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 
 const addUserForOrg = async function (user) {
   try {
@@ -634,4 +663,5 @@ module.exports = {
   addUserForOrg,
   initDataManufacturer,
   initDataProductType,
+  initDataProduct,
 };

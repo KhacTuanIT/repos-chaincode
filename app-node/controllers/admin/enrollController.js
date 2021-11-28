@@ -37,11 +37,11 @@ const addUser = async (req, res, next) => {
 
 const addProduct = async (req, res, next) => {
     const { name, code, manufactororId, color, price, cpu, ram,
-        screen, keyboard, storage, network, usb, origin,
+        screen, keyboard, storage, network, usb, origin, description,
         yearOrigin, owner, primaryImage, subImage, org } = req.body;
     const product = {
         name, code, manufactororId, color, price, cpu, ram,
-        screen, keyboard, storage, network, usb, origin,
+        screen, keyboard, storage, network, usb, origin, description,
         yearOrigin, owner, primaryImage, subImage
     }
     if (org) {

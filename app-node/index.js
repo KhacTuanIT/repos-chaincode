@@ -3,6 +3,7 @@ const expressLayouts = require('express-ejs-layouts');
 const path = require('path');
 const bodyParser = require('body-parser');
 const homeRoutes = require('./routes/home-routes');
+const { body, validationResult } = require("express-validator");
 
 const app = express();
 
