@@ -440,7 +440,7 @@ const getAllProduct = async function (org) {
 
     const network = await gateway.getNetwork("ecsupply");
 
-    const contract = network.getContract("teco");
+    const contract = network.getContract("teco", "ProductContract");
 
     const result = await contract.evaluateTransaction("queryAllProducts");
     return result;
@@ -603,6 +603,76 @@ const initDataManufacturer = async (org) => {
   }
 };
 
+const getManufacturer = async function (org, manufactororId) {
+  try {
+    let ccp = await getCCP();
+
+    const caURL = await getCaUrl(org, ccp);
+
+    const ca = new FabricCAServices(caURL);
+    const walletPath = await getWalletPath(org);
+    const wallet = await Wallets.newFileSystemWallet(walletPath);
+
+    const userIdentity = await wallet.get("admin");
+    console.log(userIdentity);
+    if (!userIdentity) {
+      return;
+    }
+
+    const gateway = new Gateway();
+    await gateway.connect(ccp, {
+      wallet,
+      identity: "admin",
+      discovery: { enabled: true, asLocalhost: true },
+    });
+
+    const network = await gateway.getNetwork("ecsupply");
+
+    const contract = network.getContract("teco", "ManufacturerContract");
+
+    const result = await contract.evaluateTransaction(
+      "queryManufacturer",
+      manufactororId
+    );
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const getAllManufacturer = async function (org) {
+  try {
+    let ccp = await getCCP();
+
+    const caURL = await getCaUrl(org, ccp);
+
+    const ca = new FabricCAServices(caURL);
+    const walletPath = await getWalletPath(org);
+    const wallet = await Wallets.newFileSystemWallet(walletPath);
+
+    const userIdentity = await wallet.get("admin");
+    if (!userIdentity) {
+      return;
+    }
+
+    const gateway = new Gateway();
+    await gateway.connect(ccp, {
+      wallet,
+      identity: "admin",
+      discovery: { enabled: true, asLocalhost: true },
+    });
+
+    const network = await gateway.getNetwork("ecsupply");
+
+    const contract = network.getContract("teco", "ManufacturerContract");
+
+    const result = await contract.evaluateTransaction("queryAllManufactureres");
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 // ##### ########### #####
 // ##### PRODUCTTPYE #####
 // ##### ########### #####
@@ -629,6 +699,76 @@ const initDataProductType = async (org) => {
     const contract = network.getContract("teco", "ProductTypeContract");
 
     const result = await contract.submitTransaction("initProductType");
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const getProductType = async function (org, productTypeId) {
+  try {
+    let ccp = await getCCP();
+
+    const caURL = await getCaUrl(org, ccp);
+
+    const ca = new FabricCAServices(caURL);
+    const walletPath = await getWalletPath(org);
+    const wallet = await Wallets.newFileSystemWallet(walletPath);
+
+    const userIdentity = await wallet.get("admin");
+    console.log(userIdentity);
+    if (!userIdentity) {
+      return;
+    }
+
+    const gateway = new Gateway();
+    await gateway.connect(ccp, {
+      wallet,
+      identity: "admin",
+      discovery: { enabled: true, asLocalhost: true },
+    });
+
+    const network = await gateway.getNetwork("ecsupply");
+
+    const contract = network.getContract("teco", "ProductTypeContract");
+
+    const result = await contract.evaluateTransaction(
+      "queryProductType",
+      productTypeId
+    );
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const getAllProductType = async function (org) {
+  try {
+    let ccp = await getCCP();
+
+    const caURL = await getCaUrl(org, ccp);
+
+    const ca = new FabricCAServices(caURL);
+    const walletPath = await getWalletPath(org);
+    const wallet = await Wallets.newFileSystemWallet(walletPath);
+
+    const userIdentity = await wallet.get("admin");
+    if (!userIdentity) {
+      return;
+    }
+
+    const gateway = new Gateway();
+    await gateway.connect(ccp, {
+      wallet,
+      identity: "admin",
+      discovery: { enabled: true, asLocalhost: true },
+    });
+
+    const network = await gateway.getNetwork("ecsupply");
+
+    const contract = network.getContract("teco", "ProductTypeContract");
+
+    const result = await contract.evaluateTransaction("queryAllProductTypes");
     return result;
   } catch (error) {
     throw new Error(error);
@@ -664,4 +804,9 @@ module.exports = {
   initDataManufacturer,
   initDataProductType,
   initDataProduct,
+  initDataUser,
+  getManufacturer,
+  getAllManufacturer,
+  getProductType,
+  getAllProductType,
 };

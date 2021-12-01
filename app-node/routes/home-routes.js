@@ -31,11 +31,32 @@ const {
   addUser,
 } = require("../controllers/admin/enrollController");
 const productAdmin = require("../controllers/admin/productController");
-const { addProductAdmin } = require("../controllers/admin/productController");
+const {
+  addProductAdmin,
+  productAdminView,
+} = require("../controllers/admin/productController");
 const {
   getProductAPI,
   getAllProductAPI,
+  initializeDataProduct,
 } = require("../controllers/api/productController");
+const {
+  initializeDataManufacturer,
+  getManufacturerAPI,
+  getAllManufacturerAPI,
+} = require("../controllers/api/manufacturerController");
+const {
+  initializeDataProductType,
+  getProductTypeAPI,
+  getAllProductTypeAPI,
+} = require("../controllers/api/productTypeController");
+const { initializeDataUser } = require("../controllers/api/userController");
+const {
+  manufacturerAdminView,
+} = require("../controllers/admin/manufacturerController");
+const {
+  productTypeAdminView,
+} = require("../controllers/admin/productTypeController");
 const router = express.Router();
 
 // #### client ####
@@ -67,6 +88,9 @@ router.get("/admin/map", mapView);
 router.get("/admin/tables", tablesView);
 router.get("/admin/login", loginView);
 router.get("/admin/register", registerView);
+router.get("/admin/products", productAdminView);
+router.get("/admin/manufactureres", manufacturerAdminView);
+router.get("/admin/product-types", productTypeAdminView);
 
 // product
 router.post(
@@ -85,6 +109,17 @@ router.post("/api/registry-user", addUser);
 router.get("/api/products", getAllProductAPI);
 router.get("/api/product", getProductAPI);
 router.post("/api/product", addProduct);
+
+router.get("/api/product-type", getProductTypeAPI);
+router.get("/api/product-types", getAllProductTypeAPI);
+
+router.get("/api/manufacturer", getManufacturerAPI);
+router.get("/api/manufactureres", getAllManufacturerAPI);
+
+router.post("/api/init-manufacturer", initializeDataManufacturer);
+router.post("/api/init-product", initializeDataProduct);
+router.post("/api/init-user", initializeDataUser);
+router.post("/api/init-product-type", initializeDataProductType);
 
 module.exports = {
   routes: router,

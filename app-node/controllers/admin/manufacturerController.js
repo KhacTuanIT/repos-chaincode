@@ -67,6 +67,13 @@ const addProductAdmin = async (req, res, next) => {
   }
 };
 
+const manufacturerAdminView = (req, res, next) => {
+  res.render("admin/manufactureres/manufactureres", {
+    layout: "layout",
+    page_name: "manufacturer",
+  });
+};
+
 const validateProductAdmin = (method) => {
   switch (method) {
     case "addProductAdmin": {
@@ -83,4 +90,5 @@ const validateProductAdmin = (method) => {
 module.exports = {
   addProductAdmin,
   validateProductAdmin,
+  manufacturerAdminView,
 };
