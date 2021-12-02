@@ -7,13 +7,13 @@
                     <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                         <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                             <li class="breadcrumb-item"><a href="/admin"><i class="fas fa-home"></i></a></li>
-                            <li class="breadcrumb-item"><a href="/admin/products">Products</a></li>
+                            <li class="breadcrumb-item"><a href="/admin/manufactureres">Manufacturers</a></li>
                             <li class="breadcrumb-item active" aria-current="page">List</li>
                         </ol>
                     </nav>
                 </div>
                 <div class="col-lg-6 col-5 text-right">
-                    <a href="#" class="btn btn-sm btn-neutral">New</a>
+                    <a href="/admin/manufactureres/add" class="btn btn-sm btn-neutral">New</a>
                     <!-- <a href="#" class="btn btn-sm btn-neutral">Filters</a> -->
                 </div>
             </div>
@@ -75,7 +75,44 @@
     </div>
 </div>
 
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Delete item</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>Item: <span id="item-modal-name"></span></div>
+                <div>Are you sure delete this item?</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" data-key="" id="btn-delete-modal">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
+    document.querySelector('#btn-delete-modal').addEventListener('click', function(e) {
+        console.log('delete');
+    });
+
+    function addEventShowupModal() {
+        document.querySelectorAll('.showup-delete-modal').forEach(ele => {
+            ele.addEventListener('click', function(){
+                let name = ele.getAttribute('data-name');
+                let key = ele.getAttribute('data-key');
+                document.getElementById('item-modal-name').innerText = name;
+                document.getElementById('item-modal-name').setAttribute('data-key', key);
+            })
+        })
+    }
+
     $(document).ready(function () {
         const loadProduct = () => {
             $.ajax({
@@ -102,9 +139,9 @@
                                             '<i class="fas fa-ellipsis-v"></i>' +
                                         '</a>' +
                                         '<div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">' +
-                                            '<a class="dropdown-item" href="#">Detail</a>' +
-                                            '<a class="dropdown-item" href="#">Edit</a>' +
-                                            '<a class="dropdown-item" href="#">Delete</a>' +
+                                            '<a class="dropdown-item" href="/admin/manufactureres/' + manufacturer.manufactororId + '">Detail</a>' +
+                                            '<a class="dropdown-item" href="/admin/manufactureres/edit/' + manufacturer.manufactororId + '">Edit</a>' +
+                                            '<a class="dropdown-item showup-delete-modal" data-name="' + manufacturer.name + '" data-key="' + manufacturer.manufactororId + '" data-toggle="modal" data-target="#exampleModalCenter">Delete</a>' +
                                         '</div>' +
                                     '</div>' +
                                 '</td>' +
@@ -117,6 +154,7 @@
                         $('#admin-product-list').empty();
                         $('#admin-product-list').append('<div class="col-lg-12 col-md-12 col-sm-12 mt-40 d-flex justify-content-center">Not found any manufactureres</div>');
                     }
+                    addEventShowupModal();
                 },
                 error: function (r, h, e) {
                     console.log(e);

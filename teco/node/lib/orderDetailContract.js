@@ -93,6 +93,52 @@ class OrderDetailContract extends Contract {
       throw new Error(error);
     }
   }
+
+  async getOrderDetailHistory(ctx, orderDetailId) {
+    if (orderDetailId.length < 1) {
+      throw new Error("orderDetailId is required as input");
+    }
+
+    var orderAsBytes = await ctx.stub.getState(orderDetailId);
+
+    if (!orderAsBytes || orderAsBytes.length === 0) {
+      throw new Error(
+        `Error Message from getOrderDetailHistory: Order with orderDetailId = ${orderDetailId} does not exist.`
+      );
+    }
+
+    const iterator = await ctx.stub.getHistoryForKey(orderDetailId);
+    const orderDetailHistory = [];
+
+    while (true) {
+      let history = await iterator.next();
+
+      if (history.value && history.value.value.toString()) {
+        let jsonRes = {};
+        jsonRes.TxId = history.value.tx_id;
+        jsonRes.IsDelete = history.value.is_delete.toString();
+
+        var d = new Date(0);
+        d.setUTCSeconds(history.value.timestamp.seconds.low);
+        jsonRes.Timestamp =
+          d.toLocaleString("en-US", { timeZone: "America/Chicago" }) + " CST";
+
+        try {
+          jsonRes.Value = JSON.parse(history.value.value.toString("utf8"));
+        } catch (err) {
+          console.log(err);
+          jsonRes.Value = history.value.value.toString("utf8");
+        }
+
+        orderDetailHistory.push(jsonRes);
+      }
+
+      if (history.done) {
+        await iterator.close();
+        return JSON.stringify(orderDetailHistory);
+      }
+    }
+  }
 }
 
 module.exports = OrderDetailContract;

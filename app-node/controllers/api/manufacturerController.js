@@ -48,7 +48,9 @@ const getAllManufacturerAPI = (req, res, next) => {
     try {
       let manufactureres = helper.getAllManufacturer(org);
       manufactureres.then((data) => {
-        let resultManufactureres = JSON.parse(data != null ? data.toString() : "{}");
+        let resultManufactureres = JSON.parse(
+          data != null ? data.toString() : "{}"
+        );
 
         res.json({
           manufactureres: resultManufactureres,

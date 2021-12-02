@@ -552,6 +552,52 @@ class ProductContract extends Contract {
 
     await ctx.stub.deleteState(productCode);
   }
+
+  async getProductHistory(ctx, productId) {
+    if (productId.length < 1) {
+      throw new Error("productId is required as input");
+    }
+
+    var orderAsBytes = await ctx.stub.getState(productId);
+
+    if (!orderAsBytes || orderAsBytes.length === 0) {
+      throw new Error(
+        `Error Message from getProductHistory: Order with productId = ${productId} does not exist.`
+      );
+    }
+
+    const iterator = await ctx.stub.getHistoryForKey(productId);
+    const productHistory = [];
+
+    while (true) {
+      let history = await iterator.next();
+
+      if (history.value && history.value.value.toString()) {
+        let jsonRes = {};
+        jsonRes.TxId = history.value.tx_id;
+        jsonRes.IsDelete = history.value.is_delete.toString();
+
+        var d = new Date(0);
+        d.setUTCSeconds(history.value.timestamp.seconds.low);
+        jsonRes.Timestamp =
+          d.toLocaleString("en-US", { timeZone: "America/Chicago" }) + " CST";
+
+        try {
+          jsonRes.Value = JSON.parse(history.value.value.toString("utf8"));
+        } catch (err) {
+          console.log(err);
+          jsonRes.Value = history.value.value.toString("utf8");
+        }
+
+        productHistory.push(jsonRes);
+      }
+
+      if (history.done) {
+        await iterator.close();
+        return JSON.stringify(productHistory);
+      }
+    }
+  }
 }
 
 module.exports = ProductContract;

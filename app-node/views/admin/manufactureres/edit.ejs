@@ -1,0 +1,108 @@
+<div class="header bg-primary pb-6">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-center py-4">
+                <div class="col-lg-6 col-7">
+                    <h6 class="h2 text-white d-inline-block mb-0">Dashboard</h6>
+                    <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                        <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                            <li class="breadcrumb-item"><a href="/admin"><i class="fas fa-home"></i></a></li>
+                            <li class="breadcrumb-item"><a href="/admin/manufactureres">Manufacturers</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Edit</li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="col-lg-6 col-5 text-right">
+                    <a href="/admin/manufactureres/add" class="btn btn-sm btn-neutral">New</a>
+                    <!-- <a href="#" class="btn btn-sm btn-neutral">Filters</a> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid mt--6">
+    <div class="row">
+        <div class="col-xl-12 order-xl-1">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h3 class="mb-0">Edit Manufacturer </h3>
+                        </div>
+                        <div class="col-4 text-right">
+                            <button type="submit" id="btn-form-edit" class="btn btn-sm btn-primary">Save</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form id="form-edit">
+                        <h6 class="heading-small text-muted mb-4">Manufacturer information</h6>
+                        <div class="pl-lg-4">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="manufactororId">Manufacturer ID</label>
+                                        <input type="text" id="manufactororId" name="manufactororId" class="form-control" readonly
+                                            placeholder="Manufacturer Id" value="<%= manufacturer.manufactororId %>">
+                                        <span id="invalid-manufactororId" class="invalid-text-value"></span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="name">Name</label>
+                                        <input type="text" id="name" name="name" class="form-control" value="<%= manufacturer.name %>"
+                                            placeholder="">
+                                        <span id="invalid-name" class="invalid-text-value"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="my-4" />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer -->
+</div>
+
+<script>
+    function clearAfterDelay(e) {
+        setTimeout(() => {
+            e.text('');
+        }, 5000);
+    }
+
+    document.querySelector('#btn-form-edit').addEventListener('click', function(e){
+        $.ajax({
+            url: "/admin/manufactureres/edit",
+            type: "post",
+            data: $('#form-edit').serialize(),
+            success: function(res) {
+                console.log(res);
+                if (res.status) {
+                    toastr.success(res.message);
+                }
+                else {
+                    toastr.error(res.message);
+                }
+            }, 
+            error: function(jq, status, err) {
+                let responseError = JSON.parse(jq.responseText);
+                console.log(responseError);
+                responseError.errors.forEach(error => {
+                    if (!$('#' + error.param).hasClass('invalid-error-input')) {
+                        $('#' + error.param).addClass('invalid-error-input');
+                        setTimeout(() => {
+                            if ($('#' + error.param).hasClass('invalid-error-input')) {
+                                $('#' + error.param).removeClass('invalid-error-input');
+                            }
+                        }, 5000);
+                    }
+                    $('#invalid-' + error.param).text(error.msg);
+                    clearAfterDelay($('#invalid-' + error.param));
+                });
+            }
+        })
+    });
+</script>

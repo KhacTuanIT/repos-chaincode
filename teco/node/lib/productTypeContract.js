@@ -21,7 +21,7 @@ class ProductTypeContract extends Contract {
     for (let i = 0; i < assets.length; i++) {
       assets[i].docType = "product-type";
       await ctx.stub.putState(
-        assets[i].manufactororId,
+        assets[i].productTypeId,
         Buffer.from(JSON.stringify(assets[i]))
       );
     }
@@ -113,6 +113,52 @@ class ProductTypeContract extends Contract {
       return true;
     } catch (error) {
       throw new Error(error);
+    }
+  }
+
+  async getProductTypeHistory(ctx, productTypeId) {
+    if (productTypeId.length < 1) {
+      throw new Error("productTypeId is required as input");
+    }
+
+    var orderAsBytes = await ctx.stub.getState(productTypeId);
+
+    if (!orderAsBytes || orderAsBytes.length === 0) {
+      throw new Error(
+        `Error Message from getProductTypeHistory: Order with productTypeId = ${productTypeId} does not exist.`
+      );
+    }
+
+    const iterator = await ctx.stub.getHistoryForKey(productTypeId);
+    const productTypeHistory = [];
+
+    while (true) {
+      let history = await iterator.next();
+
+      if (history.value && history.value.value.toString()) {
+        let jsonRes = {};
+        jsonRes.TxId = history.value.tx_id;
+        jsonRes.IsDelete = history.value.is_delete.toString();
+
+        var d = new Date(0);
+        d.setUTCSeconds(history.value.timestamp.seconds.low);
+        jsonRes.Timestamp =
+          d.toLocaleString("en-US", { timeZone: "America/Chicago" }) + " CST";
+
+        try {
+          jsonRes.Value = JSON.parse(history.value.value.toString("utf8"));
+        } catch (err) {
+          console.log(err);
+          jsonRes.Value = history.value.value.toString("utf8");
+        }
+
+        productTypeHistory.push(jsonRes);
+      }
+
+      if (history.done) {
+        await iterator.close();
+        return JSON.stringify(productTypeHistory);
+      }
     }
   }
 }

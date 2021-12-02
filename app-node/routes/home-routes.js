@@ -53,10 +53,16 @@ const {
 const { initializeDataUser } = require("../controllers/api/userController");
 const {
   manufacturerAdminView,
+  editManufacturerAdminView,
+  validateManufacturerAdmin,
+  editManufacurerAdmin,
+  addManufacturerAdminView,
+  addManufacurerAdmin,
 } = require("../controllers/admin/manufacturerController");
 const {
   productTypeAdminView,
 } = require("../controllers/admin/productTypeController");
+const bodyParser = require("body-parser");
 const router = express.Router();
 
 // #### client ####
@@ -88,11 +94,31 @@ router.get("/admin/map", mapView);
 router.get("/admin/tables", tablesView);
 router.get("/admin/login", loginView);
 router.get("/admin/register", registerView);
-router.get("/admin/products", productAdminView);
+
+// manufacturer
+
 router.get("/admin/manufactureres", manufacturerAdminView);
+router.get("/admin/manufactureres/add", addManufacturerAdminView);
+
+router.post(
+  "/admin/manufactureres/add",
+  validateManufacturerAdmin("addManufacurerAdmin"),
+  addManufacurerAdmin
+);
+
+router.get("/admin/manufactureres/edit/:id", editManufacturerAdminView);
+router.post(
+  "/admin/manufactureres/edit",
+  validateManufacturerAdmin("editManufacurerAdmin"),
+  editManufacurerAdmin
+);
+
+// product type
+
 router.get("/admin/product-types", productTypeAdminView);
 
 // product
+router.get("/admin/products", productAdminView);
 router.post(
   "/admin/product",
   productAdmin.validateProductAdmin("addProductAdmin"),

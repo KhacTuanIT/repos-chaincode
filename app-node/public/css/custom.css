@@ -1,0 +1,9 @@
+.invalid-error-input {
+  border-color: brown !important;
+  box-shadow: 1px 1px 3px brown !important;
+}
+
+.invalid-text-value {
+  color: brown;
+  font-size: 11px;
+}
