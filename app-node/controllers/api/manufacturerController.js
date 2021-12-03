@@ -5,8 +5,9 @@ const initializeDataManufacturer = (req, res, next) => {
   if (org) {
     try {
       let products = helper.initDataManufacturer(org);
+      console.log(products.toString());
       products.then((data) =>
-        res.json({ product: JSON.parse(data ? data.toString() : "{}") })
+        res.json({ product: JSON.parse(data ? data.toString() : "") })
       );
       res.json({ status: true });
     } catch (error) {

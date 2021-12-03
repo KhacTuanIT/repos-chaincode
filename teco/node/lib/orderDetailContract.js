@@ -21,6 +21,7 @@ class OrderDetailContract extends Contract {
       price: price,
       quantity: quantity,
       docType: "order-detail",
+      is_delete: false,
     };
 
     try {
@@ -115,13 +116,15 @@ class OrderDetailContract extends Contract {
 
       if (history.value && history.value.value.toString()) {
         let jsonRes = {};
-        jsonRes.TxId = history.value.tx_id;
-        jsonRes.IsDelete = history.value.is_delete.toString();
+        jsonRes.TxId = history.value.txId;
+        jsonRes.IsDelete = history.value.is_delete
+          ? history.value.is_delete.toString()
+          : "false";
 
         var d = new Date(0);
         d.setUTCSeconds(history.value.timestamp.seconds.low);
         jsonRes.Timestamp =
-          d.toLocaleString("en-US", { timeZone: "America/Chicago" }) + " CST";
+          d.toLocaleString("en-GB", { timeZone: "UTC" }) + " UKT";
 
         try {
           jsonRes.Value = JSON.parse(history.value.value.toString("utf8"));

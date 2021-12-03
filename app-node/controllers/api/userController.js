@@ -6,7 +6,7 @@ const initializeDataUser = (req, res, next) => {
     try {
       let products = helper.initDataUser(org);
       products.then((data) =>
-        res.json({ product: JSON.parse(data ? data.toString() : "{}") })
+        res.json({ product: JSON.parse(data ? data.toString() : "") })
       );
       res.json({ status: true });
     } catch (error) {

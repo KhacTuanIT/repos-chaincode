@@ -671,6 +671,72 @@ const editManufacturer = async function (manufacturer, org) {
   }
 };
 
+const deleteManufacturer = async function (manufactororId, org) {
+  try {
+    let ccp = await getCCP();
+    console.log(org);
+    const walletPath = await getWalletPath(org);
+    const wallet = await Wallets.newFileSystemWallet(walletPath);
+
+    console.log(wallet);
+    const userIdentity = await wallet.get("admin");
+    if (!userIdentity) {
+      return;
+    }
+    const gateway = new Gateway();
+    await gateway.connect(ccp, {
+      wallet,
+      identity: "admin",
+      discovery: { enabled: true, asLocalhost: true },
+    });
+
+    const network = await gateway.getNetwork("ecsupply");
+
+    const contract = network.getContract("teco", "ManufacturerContract");
+
+    const result = await contract.submitTransaction(
+      "deleteManufacturer",
+      manufactororId
+    );
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const getHistoryManufacturer = async function (manufactororId, org) {
+  try {
+    let ccp = await getCCP();
+    console.log(org);
+    const walletPath = await getWalletPath(org);
+    const wallet = await Wallets.newFileSystemWallet(walletPath);
+
+    console.log(wallet);
+    const userIdentity = await wallet.get("admin");
+    if (!userIdentity) {
+      return;
+    }
+    const gateway = new Gateway();
+    await gateway.connect(ccp, {
+      wallet,
+      identity: "admin",
+      discovery: { enabled: true, asLocalhost: true },
+    });
+
+    const network = await gateway.getNetwork("ecsupply");
+
+    const contract = network.getContract("teco", "ManufacturerContract");
+
+    const result = await contract.evaluateTransaction(
+      "getManufacturerHistory",
+      manufactororId
+    );
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 const getManufacturer = async function (org, manufactororId) {
   try {
     let ccp = await getCCP();
@@ -875,8 +941,10 @@ module.exports = {
   initDataUser,
   getManufacturer,
   getAllManufacturer,
-  getProductType,
-  getAllProductType,
   editManufacturer,
   addManufacturer,
+  deleteManufacturer,
+  getHistoryManufacturer,
+  getProductType,
+  getAllProductType,
 };

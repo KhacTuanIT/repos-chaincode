@@ -26,6 +26,7 @@ class ProductContract extends Contract {
         owner: "",
         primaryImage: "",
         subImage: "",
+        is_delete: false,
       },
       {
         name: "Apple MacBook Air with Apple M1",
@@ -48,6 +49,7 @@ class ProductContract extends Contract {
         owner: "",
         primaryImage: "",
         subImage: "",
+        is_delete: false,
       },
       {
         name: "Dell XPS 13",
@@ -70,6 +72,7 @@ class ProductContract extends Contract {
         owner: "",
         primaryImage: "",
         subImage: "",
+        is_delete: false,
       },
       {
         name: "Dell XPS 13 2-in-1",
@@ -92,6 +95,7 @@ class ProductContract extends Contract {
         owner: "",
         primaryImage: "",
         subImage: "",
+        is_delete: false,
       },
       {
         name: "Dell XPS 13 2-in-1",
@@ -114,6 +118,7 @@ class ProductContract extends Contract {
         owner: "",
         primaryImage: "",
         subImage: "",
+        is_delete: false,
       },
       {
         name: "Asus ROG Mothership",
@@ -136,6 +141,7 @@ class ProductContract extends Contract {
         owner: "",
         primaryImage: "",
         subImage: "",
+        is_delete: false,
       },
       {
         name: "Alienware Area-51m",
@@ -158,6 +164,7 @@ class ProductContract extends Contract {
         owner: "",
         primaryImage: "",
         subImage: "",
+        is_delete: false,
       },
       {
         name: "MSI GT76 Titan",
@@ -180,6 +187,7 @@ class ProductContract extends Contract {
         owner: "",
         primaryImage: "",
         subImage: "",
+        is_delete: false,
       },
       {
         name: "Asus ZenBook Pro Duo",
@@ -202,6 +210,7 @@ class ProductContract extends Contract {
         owner: "",
         primaryImage: "",
         subImage: "",
+        is_delete: false,
       },
       {
         name: "Dell Precision 7730",
@@ -224,6 +233,7 @@ class ProductContract extends Contract {
         owner: "",
         primaryImage: "",
         subImage: "",
+        is_delete: false,
       },
       {
         name: "HP ZBook 17 G4",
@@ -246,6 +256,7 @@ class ProductContract extends Contract {
         owner: "",
         primaryImage: "",
         subImage: "",
+        is_delete: false,
       },
       {
         name: "Acer Helios 300",
@@ -268,6 +279,7 @@ class ProductContract extends Contract {
         owner: "",
         primaryImage: "",
         subImage: "",
+        is_delete: false,
       },
       {
         name: "Dell XPS Desktop 8940 Special Edition",
@@ -290,6 +302,7 @@ class ProductContract extends Contract {
         owner: "",
         primaryImage: "",
         subImage: "",
+        is_delete: false,
       },
       {
         name: "Mac Mini M1 (2020)",
@@ -312,6 +325,7 @@ class ProductContract extends Contract {
         owner: "",
         primaryImage: "",
         subImage: "",
+        is_delete: false,
       },
       {
         name: "HP Envy 32",
@@ -334,6 +348,7 @@ class ProductContract extends Contract {
         owner: "",
         primaryImage: "",
         subImage: "",
+        is_delete: false,
       },
       {
         name: "Surface Studio 2",
@@ -356,6 +371,7 @@ class ProductContract extends Contract {
         owner: "",
         primaryImage: "",
         subImage: "",
+        is_delete: false,
       },
     ];
 
@@ -418,6 +434,7 @@ class ProductContract extends Contract {
         subImage: subImage ? subImage : "",
         description: description ? description : "",
         docType: "product",
+        is_delete: false,
       };
 
       await ctx.stub.putState(code, Buffer.from(JSON.stringify(product)));
@@ -549,8 +566,10 @@ class ProductContract extends Contract {
     if (product.docType !== "product") {
       throw new Error(`${productCode} does not exist`);
     }
+    const product = JSON.parse(productAsBytes.toString());
+    product.is_delete = true;
 
-    await ctx.stub.deleteState(productCode);
+    await ctx.stub.putState(productCode, Buffer.from(JSON.stringify(product)));
   }
 
   async getProductHistory(ctx, productId) {
@@ -574,13 +593,15 @@ class ProductContract extends Contract {
 
       if (history.value && history.value.value.toString()) {
         let jsonRes = {};
-        jsonRes.TxId = history.value.tx_id;
-        jsonRes.IsDelete = history.value.is_delete.toString();
+        jsonRes.TxId = history.value.txId;
+        jsonRes.IsDelete = history.value.is_delete
+          ? history.value.is_delete.toString()
+          : "false";
 
         var d = new Date(0);
         d.setUTCSeconds(history.value.timestamp.seconds.low);
         jsonRes.Timestamp =
-          d.toLocaleString("en-US", { timeZone: "America/Chicago" }) + " CST";
+          d.toLocaleString("en-GB", { timeZone: "UTC" }) + " UKT";
 
         try {
           jsonRes.Value = JSON.parse(history.value.value.toString("utf8"));

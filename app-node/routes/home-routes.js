@@ -58,6 +58,8 @@ const {
   editManufacurerAdmin,
   addManufacturerAdminView,
   addManufacurerAdmin,
+  getHistoryManufacturerAdmin,
+  deleteManufacturerAdmin,
 } = require("../controllers/admin/manufacturerController");
 const {
   productTypeAdminView,
@@ -113,6 +115,12 @@ router.post(
   editManufacurerAdmin
 );
 
+router.post(
+  "/admin/manufactureres/delete",
+  validateManufacturerAdmin("deleteManufacturerAdmin"),
+  deleteManufacturerAdmin
+);
+
 // product type
 
 router.get("/admin/product-types", productTypeAdminView);
@@ -136,11 +144,18 @@ router.get("/api/products", getAllProductAPI);
 router.get("/api/product", getProductAPI);
 router.post("/api/product", addProduct);
 
+// product type
+
 router.get("/api/product-type", getProductTypeAPI);
 router.get("/api/product-types", getAllProductTypeAPI);
 
+// manufacturer
+
 router.get("/api/manufacturer", getManufacturerAPI);
 router.get("/api/manufactureres", getAllManufacturerAPI);
+router.get("/api/get-manufacturer-history/:id", getHistoryManufacturerAdmin);
+
+//
 
 router.post("/api/init-manufacturer", initializeDataManufacturer);
 router.post("/api/init-product", initializeDataProduct);

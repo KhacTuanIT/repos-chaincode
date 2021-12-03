@@ -28,7 +28,6 @@ class SupplyContract extends Contract {
     orderId,
     productId,
     price,
-    quantity,
     producerId,
     retailerId,
     modifiedBy,
@@ -51,6 +50,7 @@ class SupplyContract extends Contract {
     order.currentOrderState = OrderStates.ORDER_CREATED;
     order.trackingInfo = "";
     order.docType = "order";
+    order.is_delete = false;
 
     await ctx.stub.putState(orderId, Buffer.from(JSON.stringify(order)));
 
@@ -236,13 +236,14 @@ class SupplyContract extends Contract {
 
       if (history.value && history.value.value.toString()) {
         let jsonRes = {};
-        jsonRes.TxId = history.value.tx_id;
-        jsonRes.IsDelete = history.value.is_delete.toString();
-
+        jsonRes.TxId = history.value.txId;
+        jsonRes.IsDelete = history.value.is_delete
+          ? history.value.is_delete.toString()
+          : "false";
         var d = new Date(0);
         d.setUTCSeconds(history.value.timestamp.seconds.low);
         jsonRes.Timestamp =
-          d.toLocaleString("en-US", { timeZone: "America/Chicago" }) + " CST";
+          d.toLocaleString("en-GB", { timeZone: "UTC" }) + " UKT";
 
         try {
           jsonRes.Value = JSON.parse(history.value.value.toString("utf8"));
@@ -273,8 +274,9 @@ class SupplyContract extends Contract {
         `Error Message from deleteOrder: Order with orderId = ${orderId} does not exist.`
       );
     }
-
-    await ctx.stub.deleteState(orderId);
+    var order = Order.deserialize(orderAsBytes);
+    order.is_delete = true;
+    await ctx.stub.putState(orderId, Buffer.from(JSON.stringify(order)));
   }
 }
 

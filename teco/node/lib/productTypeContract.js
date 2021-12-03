@@ -8,14 +8,17 @@ class ProductTypeContract extends Contract {
       {
         productTypeId: "PRT0000001",
         name: "Laptop",
+        is_delete: false,
       },
       {
         productTypeId: "PRT0000002",
         name: "Desktop",
+        is_delete: false,
       },
       {
         productTypeId: "PRT0000003",
         name: "Notebook",
+        is_delete: false,
       },
     ];
     for (let i = 0; i < assets.length; i++) {
@@ -33,6 +36,7 @@ class ProductTypeContract extends Contract {
       productTypeId: productTypeId,
       name: name,
       docType: "product-type",
+      is_delete: false,
     };
 
     try {
@@ -109,7 +113,13 @@ class ProductTypeContract extends Contract {
     }
 
     try {
-      await ctx.stub.deleteState(productTypeId);
+      const productType = JSON.parse(productTypeAsBytes.toString());
+
+      productType.is_delete = true;
+      await ctx.stub.putState(
+        productTypeId,
+        Buffer.from(JSON.stringify(productType))
+      );
       return true;
     } catch (error) {
       throw new Error(error);
@@ -137,13 +147,15 @@ class ProductTypeContract extends Contract {
 
       if (history.value && history.value.value.toString()) {
         let jsonRes = {};
-        jsonRes.TxId = history.value.tx_id;
-        jsonRes.IsDelete = history.value.is_delete.toString();
+        jsonRes.TxId = history.value.txId;
+        jsonRes.IsDelete = history.value.is_delete
+          ? history.value.is_delete.toString()
+          : "false";
 
         var d = new Date(0);
         d.setUTCSeconds(history.value.timestamp.seconds.low);
         jsonRes.Timestamp =
-          d.toLocaleString("en-US", { timeZone: "America/Chicago" }) + " CST";
+          d.toLocaleString("en-GB", { timeZone: "UTC" }) + " UKT";
 
         try {
           jsonRes.Value = JSON.parse(history.value.value.toString("utf8"));

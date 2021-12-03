@@ -99,7 +99,27 @@
 
 <script>
     document.querySelector('#btn-delete-modal').addEventListener('click', function(e) {
-        console.log('delete');
+        let key = this.getAttribute('data-key');
+        console.log(key);
+        $.ajax({
+            url: '/admin/manufactureres/delete',
+            type: 'post',
+            data: {
+                manufactororId: key
+            },
+            success: function(res) {
+                if (res.status) {
+                    toastr.success(res.message);
+                }
+                else {
+                    toastr.error(res.message);
+                }
+            },
+            error: function(jq, status, err) {
+                let responseError = JSON.parse(jq.responseText);
+                toastr.error(responseError.toString());
+            }
+        })
     });
 
     function addEventShowupModal() {
@@ -107,8 +127,9 @@
             ele.addEventListener('click', function(){
                 let name = ele.getAttribute('data-name');
                 let key = ele.getAttribute('data-key');
+                console.log(key);
                 document.getElementById('item-modal-name').innerText = name;
-                document.getElementById('item-modal-name').setAttribute('data-key', key);
+                document.getElementById('btn-delete-modal').setAttribute('data-key', key);
             })
         })
     }
