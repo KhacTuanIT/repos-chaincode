@@ -1,148 +1,383 @@
 <div class="header bg-primary pb-6">
-    <div class="container-fluid">
-        <div class="header-body">
-            <div class="row align-items-center py-4">
-                <div class="col-lg-6 col-7">
-                    <h6 class="h2 text-white d-inline-block mb-0">Dashboard</h6>
-                    <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
-                        <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
-                            <li class="breadcrumb-item"><a href="/admin"><i class="fas fa-home"></i></a></li>
-                            <li class="breadcrumb-item"><a href="/admin/products">Products</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">List</li>
-                        </ol>
-                    </nav>
-                </div>
-                <div class="col-lg-6 col-5 text-right">
-                    <a href="#" class="btn btn-sm btn-neutral">New</a>
-                    <!-- <a href="#" class="btn btn-sm btn-neutral">Filters</a> -->
-                </div>
-            </div>
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center py-4">
+        <div class="col-lg-6 col-7">
+          <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+              <li class="breadcrumb-item">
+                <a href="/admin"><i class="fas fa-home"></i></a>
+              </li>
+              <li class="breadcrumb-item">
+                <a href="/admin/products">Products</a>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">List</li>
+            </ol>
+          </nav>
         </div>
+        <div class="col-lg-6 col-5 text-right">
+          <a href="/admin/products/add" class="btn btn-sm btn-neutral">New</a>
+          <!-- <a href="#" class="btn btn-sm btn-neutral">Filters</a> -->
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 <!-- Page content -->
 <div class="container-fluid mt--6">
-    <div class="row">
-        <div class="col">
-            <div class="card">
-                <!-- Card header -->
-                <div class="card-header border-0">
-                    <h3 class="mb-0">List Product</h3>
-                </div>
-                <!-- Light table -->
-                <div class="table-responsive">
-                    <table class="table align-items-center table-flush">
-                        <thead class="thead-light">
-                            <tr>
-                                <th scope="col" class="sort" data-sort="completion">Image</th>
-                                <th scope="col" class="sort" data-sort="name">Code</th>
-                                <th scope="col" class="sort" data-sort="budget">Name</th>
-                                <th scope="col" class="sort" data-sort="status">Brand</th>
-                                <th scope="col">Price</th>
-                                <th scope="col"></th>
-                            </tr>
-                        </thead>
-                        <tbody class="list" id="admin-product-list">
-                            
-                        </tbody>
-                    </table>
-                </div>
-                <!-- Card footer -->
-                <div class="card-footer py-4">
-                    <nav aria-label="...">
-                        <ul class="pagination justify-content-end mb-0">
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#" tabindex="-1">
-                                    <i class="fas fa-angle-left"></i>
-                                    <span class="sr-only">Previous</span>
-                                </a>
-                            </li>
-                            <li class="page-item active">
-                                <a class="page-link" href="#">1</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">
-                                    <i class="fas fa-angle-right"></i>
-                                    <span class="sr-only">Next</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <!-- Card header -->
+        <div class="card-header border-0">
+          <h3 class="mb-0">List Product</h3>
         </div>
+        <!-- Light table -->
+        <div class="table-responsive">
+          <table class="table align-items-center table-flush">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col" class="sort" data-sort="completion">Image</th>
+                <th scope="col" class="sort" data-sort="name">Code</th>
+                <th scope="col" class="sort" data-sort="budget">Name</th>
+                <th scope="col" class="sort" data-sort="status">Brand</th>
+                <th scope="col">Price</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody class="list" id="admin-product-list"></tbody>
+          </table>
+        </div>
+        <!-- Card footer -->
+        <div class="card-footer py-4">
+          <nav aria-label="..." id="pagination-footer"></nav>
+        </div>
+      </div>
     </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="exampleModalCenter"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Delete item</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div>Item: <span id="item-modal-name"></span></div>
+        <div>Are you sure delete this item?</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          data-key=""
+          id="btn-delete-modal"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="exampleModalLong"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLongTitle"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalDetailTitle"></h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="time-line-container">
+          <div class="time-line-wrapper">
+            <h2 class="time-line-header">Timeline</h2>
+            <ul class="sessions"></ul>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
-    $(document).ready(function () {
-        const loadProduct = () => {
-            $.ajax({
-                url: '/api/products',
-                type: 'get',
-                data: {
-                    org: 'supply'
-                },
-                success: function (res) {
-                    if (res?.products) {
-                        let gridContent = '';
-                        let listContent = '';
-                        let { products } = res;
-                        console.log(products);
-                        let product = undefined;
-                        products.forEach(prod => {
-                            product = prod.Value;
-                            gridContent += '<tr><th scope="row"><div class="media align-items-center"><a href="#" class="avatar rounded-circle mr-3">';
-                            if (product.primaryImage === '' || product.primaryImage === "none") {
-                                gridContent += '<img src="/assets/images/product/large-size/1.jpg" />'
-                            }
-                            else {
-                                gridContent += '<img src="/assets/images/product/' + product.primaryImage + '" />';
-                            }
-                            gridContent += '</a></div></th><th class="budget">';
-                            gridContent += product.code;
-                            gridContent += '</th><th class="budget">';
-                            gridContent += product.name;
-                            gridContent += '</th><td class="budget">';
-                            gridContent += product.manufacturer[0].Value.name;
-                            gridContent += '</th><td class="budget"> $';
-                            gridContent += product.price;
-                            gridContent += '</th><td class="text-right"><div class="dropdown"><a class="btn btn-sm btn-icon-only text-light" href="#" role="button"' +
-                                            'data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
-                                            '<i class="fas fa-ellipsis-v"></i>' +
-                                        '</a>' +
-                                        '<div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">' +
-                                            '<a class="dropdown-item" href="#">Detail</a>' +
-                                            '<a class="dropdown-item" href="#">Edit</a>' +
-                                            '<a class="dropdown-item" href="#">Delete</a>' +
-                                        '</div>' +
-                                    '</div>' +
-                                '</td>' +
-                            '</tr>';
-                        });
-                        $('#admin-product-list').empty();
-                        $('#admin-product-list').append(gridContent);
-                    }
-                    else {
-                        $('#admin-product-list').empty();
-                        $('#admin-product-list').append('<div class="col-lg-12 col-md-12 col-sm-12 mt-40 d-flex justify-content-center">Not found any products</div>');
-                    }
-                },
-                error: function (r, h, e) {
-                    console.log(e);
-                    $('#admin-product-list').empty();
-                    $('#admin-product-list').append('<div class="col-lg-12 col-md-12 col-sm-12 mt-40 d-flex justify-content-center">Not found any products</div>');
-                }
-            });
-        }
-
-        let pathname = window.location.pathname;
-        if (pathname.includes('admin/products')) {
-            loadProduct();
-        }
+  var pageSize = 10;
+  document
+    .querySelector("#btn-delete-modal")
+    .addEventListener("click", function (e) {
+      let key = this.getAttribute("data-key");
+      console.log(key);
+      $.ajax({
+        url: "/admin/products/delete",
+        type: "post",
+        data: {
+          productCode: key,
+        },
+        success: function (res) {
+          if (res.status) {
+            toastr.success(res.message);
+          } else {
+            toastr.error(res.message);
+          }
+        },
+        error: function (jq, status, err) {
+          let responseError = JSON.parse(jq.responseText);
+          toastr.error(responseError.toString());
+        },
+      });
     });
+
+  function template(products) {
+    let gridContent = "";
+    let product = undefined;
+    products.forEach((prod) => {
+      product = prod.Value;
+      gridContent +=
+        '<tr><th scope="row"><div class="media align-items-center"><a href="#" class="avatar rounded-circle mr-3">';
+      if (product.primaryImage === "" || product.primaryImage === "none") {
+        gridContent += '<img src="/assets/images/product/large-size/1.jpg" />';
+      } else {
+        gridContent +=
+          '<img src="/assets/images/product/' + product.primaryImage + '" />';
+      }
+      gridContent += '</a></div></th><th class="budget">';
+      gridContent += product.code;
+      gridContent += '</th><th class="budget">';
+      gridContent += product.name;
+      gridContent += '</th><td class="budget">';
+      gridContent += product.manufacturer[0].Value.name;
+      gridContent += '</th><td class="budget"> $';
+      gridContent += product.price;
+      gridContent +=
+        '</th><td class="text-right"><div class="dropdown"><a class="btn btn-sm btn-icon-only text-light" href="#" role="button"' +
+        'data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
+        '<i class="fas fa-ellipsis-v"></i>' +
+        "</a>" +
+        '<div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">' +
+        '<a class="dropdown-item showup-detail-modal" data-name="' +
+        product.name +
+        '" data-key="' +
+        product.code +
+        '">Detail</a>' +
+        '<a class="dropdown-item" href="/admin/products/edit/' +
+        product.code +
+        '">Edit</a>' +
+        '<a class="dropdown-item showup-delete-modal" data-name="' +
+        product.name +
+        '" data-key="' +
+        product.code +
+        '" data-toggle="modal" onclick="loadDeleteModal(this)" data-target="#exampleModalCenter">Delete</a>' +
+        "</div>" +
+        "</div>" +
+        "</td>" +
+        "</tr>";
+    });
+    return gridContent;
+  }
+
+  function loadDeleteModal(e) {
+    let name = e.getAttribute("data-name");
+    let key = e.getAttribute("data-key");
+    console.log(key);
+    document.getElementById("item-modal-name").innerText = name;
+    document.getElementById("btn-delete-modal").setAttribute("data-key", key);
+  }
+
+  $(document).on("click", ".showup-detail-modal", function () {
+    let name = $(this).data("name");
+    let key = $(this).data("key");
+    $.ajax({
+      url: `/api/get-product-history/${key}`,
+      type: "get",
+      success: function (res) {
+        if (res.status) {
+          let { history } = res;
+          if (history.length > 0) {
+            let historyContent = "";
+            history.forEach((his) => {
+              console.log(typeof his.updated_by);
+              historyContent +=
+                '<li class="time-line-list"><div class="time">' + his.Timestamp;
+              if (his.Value.is_delete) {
+                historyContent +=
+                  '<div class="time-line-badge time-line-badge-delete">Deleted</div>' +
+                  "</div><div> TxID: " +
+                  his.TxId +
+                  "</div>";
+              } else {
+                if (his.Value.updated_by != "") {
+                  historyContent +=
+                    '<div class="time-line-badge time-line-badge-update">Updated</div>' +
+                    "</div><div> TxID: " +
+                    his.TxId +
+                    "</div>";
+                } else {
+                  historyContent +=
+                    '<div class="time-line-badge time-line-badge-create">Create</div>' +
+                    "</div><div> TxID: " +
+                    his.TxId +
+                    "</div>";
+                }
+              }
+              historyContent +=
+                '<div id="accordion_' +
+                his.TxId +
+                '">' +
+                '<div class="card">' +
+                '<div class="card-header" id="heading_' +
+                his.TxId +
+                '">' +
+                '<h5 class="mb-0">' +
+                "<button" +
+                ' class="btn btn-link"' +
+                ' data-toggle="collapse"' +
+                ' data-target="#collapse_' +
+                his.TxId +
+                '"' +
+                ' aria-expanded="true"' +
+                ' aria-controls="collapse_' +
+                his.TxId +
+                '"' +
+                ">" +
+                his.Value.code +
+                "[Doc type: " +
+                his.Value.docType +
+                "]" +
+                "</button>" +
+                "</h5>" +
+                "</div>" +
+                "<div " +
+                'id="collapse_' +
+                his.TxId +
+                '" ' +
+                'class="collapse"' +
+                ' aria-labelledby="heading_' +
+                his.TxId +
+                '"' +
+                ' data-parent="#accordion_' +
+                his.TxId +
+                '"' +
+                ">" +
+                '<div class="card-body"><div class="row">';
+              for (const [key, value] of Object.entries(his.Value)) {
+                if (key === "manufacturer") {
+                  historyContent +=
+                    '<div class="col-sm-4">' +
+                    key +
+                    '</div><div class="col-sm-8">' +
+                    value.Value.name +
+                    "</div>";
+                } else {
+                  historyContent +=
+                    '<div class="col-sm-4">' +
+                    key +
+                    '</div><div class="col-sm-8">' +
+                    value +
+                    "</div>";
+                }
+              }
+              historyContent +=
+                "</div></div>" + "</div>" + "</div>" + "</div>" + "</li>";
+            });
+            document.getElementsByClassName("sessions")[0].innerHTML =
+              historyContent;
+          }
+          $("#exampleModalLong").modal("show");
+          document.getElementById("exampleModalDetailTitle").innerText = name;
+        } else {
+          toastr.warn(res.message);
+        }
+      },
+      error: function (jq, status, err) {
+        console.log(jq);
+        let responseError = JSON.parse(jq.responseText);
+        toastr.error(responseError.toString());
+      },
+    });
+  });
+
+  $(document).ready(function () {
+    const loadProduct = () => {
+      $.ajax({
+        url: "/api/products",
+        type: "get",
+        data: {
+          org: "supply",
+        },
+        success: function (res) {
+          if (res?.products) {
+            let { products } = res;
+
+            $("#admin-product-list").empty();
+            let dataContainer = $("#admin-product-list");
+            $("#pagination-footer").pagination({
+              dataSource: products,
+              pageSize: pageSize,
+              showGoInput: true,
+              showGoButton: true,
+              callback: function (data, pagination) {
+                var html = template(data);
+                dataContainer.html(html);
+              },
+            });
+          } else {
+            $("#admin-product-list").empty();
+            $("#admin-product-list").append(
+              '<div class="col-lg-12 col-md-12 col-sm-12 mt-40 d-flex justify-content-center">Not found any products</div>'
+            );
+          }
+        },
+        error: function (r, h, e) {
+          console.log(e);
+          $("#admin-product-list").empty();
+          $("#admin-product-list").append(
+            '<div class="col-lg-12 col-md-12 col-sm-12 mt-40 d-flex justify-content-center">Not found any products</div>'
+          );
+        },
+      });
+    };
+
+    let pathname = window.location.pathname;
+    if (pathname.includes("admin/products")) {
+      loadProduct();
+    }
+  });
 </script>

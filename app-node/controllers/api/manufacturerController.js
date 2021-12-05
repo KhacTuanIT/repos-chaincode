@@ -6,9 +6,10 @@ const initializeDataManufacturer = (req, res, next) => {
     try {
       let products = helper.initDataManufacturer(org);
       console.log(products.toString());
-      products.then((data) =>
-        res.json({ product: JSON.parse(data ? data.toString() : "") })
-      );
+      products.then((data) => {
+        console.log(JSON.stringify(data));
+        res.json({ status: true });
+      });
       res.json({ status: true });
     } catch (error) {
       res
@@ -22,7 +23,7 @@ const initializeDataManufacturer = (req, res, next) => {
 
 const getManufacturerAPI = (req, res, next) => {
   let org = req.query.org ? req.query.org : "supply";
-  let manufactororId = req.query.manufactororId;
+  let manufactororId = req.params.id;
   if (org) {
     try {
       let manufacturer = helper.getManufacturer(org, manufactororId);

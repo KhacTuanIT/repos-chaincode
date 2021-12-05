@@ -5,9 +5,10 @@ const initializeDataProductType = (req, res, next) => {
   if (org) {
     try {
       let products = helper.initDataProductType(org);
-      products.then((data) =>
-        res.json({ product: JSON.parse(data ? data.toString() : "{}") })
-      );
+      products.then((data) => {
+        console.log(JSON.stringify(data));
+        res.json({ status: true });
+      });
       res.json({ status: true });
     } catch (error) {
       res

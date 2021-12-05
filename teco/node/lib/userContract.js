@@ -150,24 +150,28 @@ class UserContract extends Contract {
     org,
     updated_by
   ) {
-    const user = ctx.stub.getState(userId);
-    if (!user || user.length === 0) {
-      throw new Error(`User ${userId} doesn't exists in the system!`);
+    try {
+      const user = ctx.stub.getState(userId);
+      if (!user || user.length === 0) {
+        throw new Error(`User ${userId} doesn't exists in the system!`);
+      }
+      user = JSON.parse(user.toString());
+
+      user.firstName = firstName ? firstName : user.firstName;
+      user.middleName = middleName ? middleName : user.middleName;
+      user.lastName = lastName ? lastName : user.lastName;
+      user.email = email ? email : user.email;
+      user.address = address ? address : user.address;
+      user.role = role ? role : user.role;
+      user.manager = manager ? manager : user.manager;
+      user.org = org ? org : user.org;
+      user.updated_by = updated_by ? updated_by : user.updated_by;
+
+      await ctx.stub.putState(userId, Buffer.from(JSON.stringify(user)));
+      return JSON.stringify(user);
+    } catch (error) {
+      throw new Error(error);
     }
-    user = JSON.parse(user.toString());
-
-    user.firstName = firstName ? firstName : user.firstName;
-    user.middleName = middleName ? middleName : user.middleName;
-    user.lastName = lastName ? lastName : user.lastName;
-    user.email = email ? email : user.email;
-    user.address = address ? address : user.address;
-    user.role = role ? role : user.role;
-    user.manager = manager ? manager : user.manager;
-    user.org = org ? org : user.org;
-    user.updated_by = updated_by ? updated_by : user.updated_by;
-
-    await ctx.stub.putState(userId, Buffer.from(JSON.stringify(user)));
-    return JSON.stringify(user);
   }
 
   async login(ctx, userId, password) {

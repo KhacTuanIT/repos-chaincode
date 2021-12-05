@@ -1,11 +1,12 @@
 const helper = require("../../utils/helperv2");
 const { body, validationResult } = require("express-validator");
 
-const addManufacurerAdmin = async (req, res, next) => {
-  const { name, manufactororId } = req.body;
+const addManufacturerAdmin = async (req, res, next) => {
+  const { name, manufactororId, updated_by } = req.body;
   const manufacturer = {
     name,
     manufactororId,
+    updated_by,
   };
   const org = req.body.org ? req.body.org : "supply";
   if (org) {
@@ -37,11 +38,13 @@ const addManufacurerAdmin = async (req, res, next) => {
   }
 };
 
-const editManufacurerAdmin = async (req, res, next) => {
+const editManufacturerAdmin = async (req, res, next) => {
   const { name, manufactororId } = req.body;
+  let updated_by = "admin";
   const manufacturer = {
     name,
     manufactororId,
+    updated_by: updated_by ? updated_by : "admin",
   };
   const org = req.body.org ? req.body.org : "supply";
   if (org) {
@@ -76,6 +79,7 @@ const editManufacurerAdmin = async (req, res, next) => {
 const deleteManufacturerAdmin = async (req, res, next) => {
   const { manufactororId } = req.body;
   const org = req.body.org ? req.body.org : "supply";
+  let updated_by = "admin";
   if (org) {
     try {
       const errors = validationResult(req); // Finds the validation errors in this request and wraps them in an object with handy functions
@@ -84,7 +88,11 @@ const deleteManufacturerAdmin = async (req, res, next) => {
         res.status(422).json({ errors: errors.array() });
         return;
       }
-      const result = await helper.deleteManufacturer(manufactororId, org);
+      const result = await helper.deleteManufacturer(
+        manufactororId,
+        updated_by,
+        org
+      );
       await res.json({
         message: `Delete manufacturer for ${org} successfully!`,
         manufacturer: result,
@@ -176,8 +184,8 @@ const editManufacturerAdminView = (req, res, next) => {
 
 const validateManufacturerAdmin = (method) => {
   switch (method) {
-    case "addManufacurerAdmin":
-    case "editManufacurerAdmin": {
+    case "addManufacturerAdmin":
+    case "editManufacturerAdmin": {
       return [
         body("name", "Manufacturer name is required").notEmpty(),
         body("manufactororId", "Manufacturer Id is required").notEmpty(),
@@ -193,8 +201,8 @@ module.exports = {
   validateManufacturerAdmin,
   manufacturerAdminView,
   editManufacturerAdminView,
-  addManufacurerAdmin,
-  editManufacurerAdmin,
+  addManufacturerAdmin,
+  editManufacturerAdmin,
   addManufacturerAdminView,
   deleteManufacturerAdmin,
   getHistoryManufacturerAdmin,

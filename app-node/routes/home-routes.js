@@ -9,6 +9,7 @@ const {
   tablesView,
   loginView,
   registerView,
+  uploadFile,
 } = require("../controllers/adminController");
 const {
   about,
@@ -30,10 +31,15 @@ const {
   addProduct,
   addUser,
 } = require("../controllers/admin/enrollController");
-const productAdmin = require("../controllers/admin/productController");
 const {
   addProductAdmin,
   productAdminView,
+  getHistoryProductAdmin,
+  addProductAdminView,
+  editProductAdmin,
+  deleteProductAdmin,
+  validateProductAdmin,
+  editProductAdminView,
 } = require("../controllers/admin/productController");
 const {
   getProductAPI,
@@ -55,14 +61,21 @@ const {
   manufacturerAdminView,
   editManufacturerAdminView,
   validateManufacturerAdmin,
-  editManufacurerAdmin,
   addManufacturerAdminView,
-  addManufacurerAdmin,
   getHistoryManufacturerAdmin,
   deleteManufacturerAdmin,
+  editManufacturerAdmin,
+  addManufacturerAdmin,
 } = require("../controllers/admin/manufacturerController");
 const {
   productTypeAdminView,
+  getHistoryProductTypeAdmin,
+  editProductTypeAdmin,
+  addProductTypeAdmin,
+  editProductTypeAdminView,
+  deleteProductTypeAdmin,
+  validateProductTypeAdmin,
+  addProductTypeAdminView,
 } = require("../controllers/admin/productTypeController");
 const bodyParser = require("body-parser");
 const router = express.Router();
@@ -97,6 +110,9 @@ router.get("/admin/tables", tablesView);
 router.get("/admin/login", loginView);
 router.get("/admin/register", registerView);
 
+
+router.post("/admin/upload", uploadFile);
+
 // manufacturer
 
 router.get("/admin/manufactureres", manufacturerAdminView);
@@ -104,15 +120,15 @@ router.get("/admin/manufactureres/add", addManufacturerAdminView);
 
 router.post(
   "/admin/manufactureres/add",
-  validateManufacturerAdmin("addManufacurerAdmin"),
-  addManufacurerAdmin
+  validateManufacturerAdmin("addManufacturerAdmin"),
+  addManufacturerAdmin
 );
 
 router.get("/admin/manufactureres/edit/:id", editManufacturerAdminView);
 router.post(
   "/admin/manufactureres/edit",
-  validateManufacturerAdmin("editManufacurerAdmin"),
-  editManufacurerAdmin
+  validateManufacturerAdmin("editManufacturerAdmin"),
+  editManufacturerAdmin
 );
 
 router.post(
@@ -124,13 +140,48 @@ router.post(
 // product type
 
 router.get("/admin/product-types", productTypeAdminView);
+router.get("/admin/product-types/add", addProductTypeAdminView);
+
+router.post(
+  "/admin/product-types/add",
+  validateProductTypeAdmin("addProductTypeAdmin"),
+  addProductTypeAdmin
+);
+
+router.get("/admin/product-types/edit/:id", editProductTypeAdminView);
+router.post(
+  "/admin/product-types/edit",
+  validateProductTypeAdmin("editProductTypeAdmin"),
+  editProductTypeAdmin
+);
+
+router.post(
+  "/admin/product-types/delete",
+  validateProductTypeAdmin("deleteProductTypeAdmin"),
+  deleteProductTypeAdmin
+);
 
 // product
 router.get("/admin/products", productAdminView);
+router.get("/admin/products/add", addProductAdminView);
+
 router.post(
-  "/admin/product",
-  productAdmin.validateProductAdmin("addProductAdmin"),
+  "/admin/products/add",
+  validateProductAdmin("addProductAdmin"),
   addProductAdmin
+);
+
+router.get("/admin/products/edit/:id", editProductAdminView);
+router.post(
+  "/admin/products/edit",
+  validateProductAdmin("editProductAdmin"),
+  editProductAdmin
+);
+
+router.post(
+  "/admin/products/delete",
+  validateProductAdmin("deleteProductAdmin"),
+  deleteProductAdmin
 );
 
 // #### api ####
@@ -143,11 +194,13 @@ router.post("/api/registry-user", addUser);
 router.get("/api/products", getAllProductAPI);
 router.get("/api/product", getProductAPI);
 router.post("/api/product", addProduct);
+router.get("/api/get-product-history/:id", getHistoryProductAdmin);
 
 // product type
 
 router.get("/api/product-type", getProductTypeAPI);
 router.get("/api/product-types", getAllProductTypeAPI);
+router.get("/api/get-product-type-history/:id", getHistoryProductTypeAdmin);
 
 // manufacturer
 

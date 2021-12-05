@@ -94,13 +94,11 @@ class ProductTypeContract extends Contract {
     if (!productTypeAsBytes || productTypeAsBytes.length === 0) {
       throw new Error(`Product type ${productTypeId} does not exist`);
     }
-
-    const productType = JSON.parse(productTypeAsBytes.toString());
-
-    productType.name = name;
-    productType.updated_by = updated_by;
-
     try {
+      const productType = JSON.parse(productTypeAsBytes.toString());
+
+      productType.name = name;
+      productType.updated_by = updated_by;
       await ctx.stub.putState(
         productTypeId,
         Buffer.from(JSON.stringify(productType))

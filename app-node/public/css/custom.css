@@ -7,3 +7,14 @@
   color: brown;
   font-size: 11px;
 }
+
+.dropdown-menu a.dropdown-item {
+  cursor: pointer;
+}
+
+@media (min-width: 768px) {
+  .ml-md-4,
+  .mx-md-4 {
+    margin-left: 0 !important;
+  }
+}

@@ -120,11 +120,10 @@ class ManufacturerContract extends Contract {
       throw new Error(`${manufactororId} does not exist`);
     }
 
-    let manufacturer = JSON.parse(manufacturerAsBytes.toString());
-    manufacturer.name = name;
-    manufacturer.updated_by = updated_by;
-
     try {
+      let manufacturer = JSON.parse(manufacturerAsBytes.toString());
+      manufacturer.name = name;
+      manufacturer.updated_by = updated_by;
       await ctx.stub.putState(
         manufactororId,
         Buffer.from(JSON.stringify(manufacturer))

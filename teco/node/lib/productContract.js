@@ -506,38 +506,42 @@ class ProductContract extends Contract {
     description,
     updated_by
   ) {
-    const productAsBytes = await ctx.stub.getState(code); // get the car from chaincode state
-    if (!productAsBytes || productAsBytes.length === 0) {
-      throw new Error(`${code} does not exist`);
-    }
-    const product = JSON.parse(productAsBytes.toString());
-    if (product.docType !== "product") {
-      throw new Error(`${code} does not exist`);
-    }
-    product.name = name ? name : product.name;
-    product.code = code ? code : product.code;
-    product.manufactororId = manufactororId
-      ? manufactororId
-      : product.manufactororId;
-    product.color = color ? color : product.color;
-    product.price = price ? price : product.price;
-    product.cpu = cpu ? cpu : product.cpu;
-    product.ram = ram ? ram : product.ram;
-    product.screen = screen ? screen : product.screen;
-    product.keyboard = keyboard ? keyboard : product.keyboard;
-    product.storage = storage ? storage : product.storage;
-    product.network = network ? network : product.network;
-    product.usb = usb ? usb : product.usb;
-    product.origin = origin ? origin : product.origin;
-    product.yearOrigin = yearOrigin ? yearOrigin : product.yearOrigin;
-    product.owner = owner ? owner : product.owner;
-    product.primaryImage = primaryImage ? primaryImage : product.primaryImage;
-    product.subImage = subImage ? subImage : product.subImage;
-    product.description = description ? description : product.description;
-    product.updated_by = updated_by ? updated_by : product.updated_by;
+    try {
+      const productAsBytes = await ctx.stub.getState(code); // get the car from chaincode state
+      if (!productAsBytes || productAsBytes.length === 0) {
+        throw new Error(`${code} does not exist`);
+      }
+      const product = JSON.parse(productAsBytes.toString());
+      if (product.docType !== "product") {
+        throw new Error(`${code} does not exist`);
+      }
+      product.name = name ? name : product.name;
+      product.code = code ? code : product.code;
+      product.manufactororId = manufactororId
+        ? manufactororId
+        : product.manufactororId;
+      product.color = color ? color : product.color;
+      product.price = price ? price : product.price;
+      product.cpu = cpu ? cpu : product.cpu;
+      product.ram = ram ? ram : product.ram;
+      product.screen = screen ? screen : product.screen;
+      product.keyboard = keyboard ? keyboard : product.keyboard;
+      product.storage = storage ? storage : product.storage;
+      product.network = network ? network : product.network;
+      product.usb = usb ? usb : product.usb;
+      product.origin = origin ? origin : product.origin;
+      product.yearOrigin = yearOrigin ? yearOrigin : product.yearOrigin;
+      product.owner = owner ? owner : product.owner;
+      product.primaryImage = primaryImage ? primaryImage : product.primaryImage;
+      product.subImage = subImage ? subImage : product.subImage;
+      product.description = description ? description : product.description;
+      product.updated_by = updated_by ? updated_by : product.updated_by;
 
-    await ctx.stub.putState(code, Buffer.from(JSON.stringify(product)));
-    return JSON.stringify(product);
+      await ctx.stub.putState(code, Buffer.from(JSON.stringify(product)));
+      return JSON.stringify(product);
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   async changeProductOwner(ctx, productCode, newOwner, updated_by) {
@@ -619,9 +623,10 @@ class ProductContract extends Contract {
           ? history.value.is_delete.toString()
           : "false";
 
-          var d = new Date(0);
-          d.setUTCSeconds(history.value.timestamp.seconds.low);
-          jsonRes.Timestamp = d.toLocaleString("en-US", { timeZone: "America/Chicago" }) + " CST";
+        var d = new Date(0);
+        d.setUTCSeconds(history.value.timestamp.seconds.low);
+        jsonRes.Timestamp =
+          d.toLocaleString("en-US", { timeZone: "America/Chicago" }) + " CST";
 
         try {
           jsonRes.Value = JSON.parse(history.value.value.toString("utf8"));
