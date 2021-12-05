@@ -27,6 +27,7 @@ class ProductContract extends Contract {
         primaryImage: "",
         subImage: "",
         is_delete: false,
+        updated_by: "",
       },
       {
         name: "Apple MacBook Air with Apple M1",
@@ -50,6 +51,7 @@ class ProductContract extends Contract {
         primaryImage: "",
         subImage: "",
         is_delete: false,
+        updated_by: "",
       },
       {
         name: "Dell XPS 13",
@@ -73,6 +75,7 @@ class ProductContract extends Contract {
         primaryImage: "",
         subImage: "",
         is_delete: false,
+        updated_by: "",
       },
       {
         name: "Dell XPS 13 2-in-1",
@@ -96,6 +99,7 @@ class ProductContract extends Contract {
         primaryImage: "",
         subImage: "",
         is_delete: false,
+        updated_by: "",
       },
       {
         name: "Dell XPS 13 2-in-1",
@@ -119,6 +123,7 @@ class ProductContract extends Contract {
         primaryImage: "",
         subImage: "",
         is_delete: false,
+        updated_by: "",
       },
       {
         name: "Asus ROG Mothership",
@@ -142,6 +147,7 @@ class ProductContract extends Contract {
         primaryImage: "",
         subImage: "",
         is_delete: false,
+        updated_by: "",
       },
       {
         name: "Alienware Area-51m",
@@ -165,6 +171,7 @@ class ProductContract extends Contract {
         primaryImage: "",
         subImage: "",
         is_delete: false,
+        updated_by: "",
       },
       {
         name: "MSI GT76 Titan",
@@ -188,6 +195,7 @@ class ProductContract extends Contract {
         primaryImage: "",
         subImage: "",
         is_delete: false,
+        updated_by: "",
       },
       {
         name: "Asus ZenBook Pro Duo",
@@ -211,6 +219,7 @@ class ProductContract extends Contract {
         primaryImage: "",
         subImage: "",
         is_delete: false,
+        updated_by: "",
       },
       {
         name: "Dell Precision 7730",
@@ -234,6 +243,7 @@ class ProductContract extends Contract {
         primaryImage: "",
         subImage: "",
         is_delete: false,
+        updated_by: "",
       },
       {
         name: "HP ZBook 17 G4",
@@ -257,6 +267,7 @@ class ProductContract extends Contract {
         primaryImage: "",
         subImage: "",
         is_delete: false,
+        updated_by: "",
       },
       {
         name: "Acer Helios 300",
@@ -280,6 +291,7 @@ class ProductContract extends Contract {
         primaryImage: "",
         subImage: "",
         is_delete: false,
+        updated_by: "",
       },
       {
         name: "Dell XPS Desktop 8940 Special Edition",
@@ -303,6 +315,7 @@ class ProductContract extends Contract {
         primaryImage: "",
         subImage: "",
         is_delete: false,
+        updated_by: "",
       },
       {
         name: "Mac Mini M1 (2020)",
@@ -326,6 +339,7 @@ class ProductContract extends Contract {
         primaryImage: "",
         subImage: "",
         is_delete: false,
+        updated_by: "",
       },
       {
         name: "HP Envy 32",
@@ -349,6 +363,7 @@ class ProductContract extends Contract {
         primaryImage: "",
         subImage: "",
         is_delete: false,
+        updated_by: "",
       },
       {
         name: "Surface Studio 2",
@@ -372,6 +387,7 @@ class ProductContract extends Contract {
         primaryImage: "",
         subImage: "",
         is_delete: false,
+        updated_by: "",
       },
     ];
 
@@ -411,7 +427,8 @@ class ProductContract extends Contract {
     owner,
     primaryImage,
     subImage,
-    description
+    description,
+    updated_by
   ) {
     try {
       const product = {
@@ -435,6 +452,7 @@ class ProductContract extends Contract {
         description: description ? description : "",
         docType: "product",
         is_delete: false,
+        updated_by: updated_by ? updated_by : "",
       };
 
       await ctx.stub.putState(code, Buffer.from(JSON.stringify(product)));
@@ -485,7 +503,8 @@ class ProductContract extends Contract {
     owner,
     primaryImage,
     subImage,
-    description
+    description,
+    updated_by
   ) {
     const productAsBytes = await ctx.stub.getState(code); // get the car from chaincode state
     if (!productAsBytes || productAsBytes.length === 0) {
@@ -515,12 +534,13 @@ class ProductContract extends Contract {
     product.primaryImage = primaryImage ? primaryImage : product.primaryImage;
     product.subImage = subImage ? subImage : product.subImage;
     product.description = description ? description : product.description;
+    product.updated_by = updated_by ? updated_by : product.updated_by;
 
     await ctx.stub.putState(code, Buffer.from(JSON.stringify(product)));
     return JSON.stringify(product);
   }
 
-  async changeProductOwner(ctx, productCode, newOwner) {
+  async changeProductOwner(ctx, productCode, newOwner, updated_by) {
     const productAsBytes = await ctx.stub.getState(productCode); // get the car from chaincode state
     if (!productAsBytes || productAsBytes.length === 0) {
       throw new Error(`${productCode} does not exist`);
@@ -530,6 +550,7 @@ class ProductContract extends Contract {
       throw new Error(`${productCode} does not exist`);
     }
     product.owner = newOwner;
+    product.updated_by = updated_by;
 
     await ctx.stub.putState(productCode, Buffer.from(JSON.stringify(product)));
     return JSON.stringify(product);
@@ -557,17 +578,17 @@ class ProductContract extends Contract {
     return JSON.stringify(allProducts);
   }
 
-  async deleteProduct(ctx, productCode) {
+  async deleteProduct(ctx, productCode, updated_by) {
     const productAsBytes = await ctx.stub.getState(productCode); // get the car from chaincode state
     if (!productAsBytes || productAsBytes.length === 0) {
       throw new Error(`${productCode} does not exist`);
     }
-    const product = JSON.parse(productAsBytes.toString());
+    let product = JSON.parse(productAsBytes.toString());
     if (product.docType !== "product") {
       throw new Error(`${productCode} does not exist`);
     }
-    const product = JSON.parse(productAsBytes.toString());
     product.is_delete = true;
+    product.updated_by = updated_by;
 
     await ctx.stub.putState(productCode, Buffer.from(JSON.stringify(product)));
   }
@@ -598,10 +619,9 @@ class ProductContract extends Contract {
           ? history.value.is_delete.toString()
           : "false";
 
-        var d = new Date(0);
-        d.setUTCSeconds(history.value.timestamp.seconds.low);
-        jsonRes.Timestamp =
-          d.toLocaleString("en-GB", { timeZone: "UTC" }) + " UKT";
+          var d = new Date(0);
+          d.setUTCSeconds(history.value.timestamp.seconds.low);
+          jsonRes.Timestamp = d.toLocaleString("en-US", { timeZone: "America/Chicago" }) + " CST";
 
         try {
           jsonRes.Value = JSON.parse(history.value.value.toString("utf8"));

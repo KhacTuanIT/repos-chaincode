@@ -12,7 +12,8 @@ class OrderDetailContract extends Contract {
     orderId,
     productId,
     price,
-    quantity
+    quantity,
+    updated_by,
   ) {
     const orderDetail = {
       orderDetailId: orderDetailId,
@@ -22,6 +23,7 @@ class OrderDetailContract extends Contract {
       quantity: quantity,
       docType: "order-detail",
       is_delete: false,
+      updated_by: updated_by,
     };
 
     try {
@@ -71,7 +73,8 @@ class OrderDetailContract extends Contract {
     orderId,
     productId,
     price,
-    quantity
+    quantity,
+    updated_by
   ) {
     const orderDetailAsBytes = await ctx.stub.getState(orderDetailId);
     if (!orderDetailAsBytes || orderDetailAsBytes.length === 0) {
@@ -83,6 +86,7 @@ class OrderDetailContract extends Contract {
     orderDetail.productId = productId;
     orderDetail.price = price;
     orderDetail.quantity = quantity;
+    orderDetail.updated_by = updated_by;
 
     try {
       await ctx.stub.putState(
@@ -124,7 +128,7 @@ class OrderDetailContract extends Contract {
         var d = new Date(0);
         d.setUTCSeconds(history.value.timestamp.seconds.low);
         jsonRes.Timestamp =
-          d.toLocaleString("en-GB", { timeZone: "UTC" }) + " UKT";
+          d.toLocaleString("en-US", { timeZone: "America/Chicago" }) + " CST";
 
         try {
           jsonRes.Value = JSON.parse(history.value.value.toString("utf8"));

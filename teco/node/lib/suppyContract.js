@@ -31,7 +31,8 @@ class SupplyContract extends Contract {
     producerId,
     retailerId,
     modifiedBy,
-    buyerId
+    buyerId,
+    updated_by
   ) {
     var orderAsBytes = await ctx.stub.getState(orderId);
     if (orderAsBytes && orderAsBytes.length > 0) {
@@ -243,7 +244,7 @@ class SupplyContract extends Contract {
         var d = new Date(0);
         d.setUTCSeconds(history.value.timestamp.seconds.low);
         jsonRes.Timestamp =
-          d.toLocaleString("en-GB", { timeZone: "UTC" }) + " UKT";
+          d.toLocaleString("en-US", { timeZone: "America/Chicago" }) + " CST";
 
         try {
           jsonRes.Value = JSON.parse(history.value.value.toString("utf8"));

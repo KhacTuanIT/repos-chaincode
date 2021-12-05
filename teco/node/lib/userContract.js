@@ -19,6 +19,7 @@ class UserContract extends Contract {
         org: "supply",
         docType: "user",
         is_delete: false,
+        updated_by: "",
       },
       {
         userId: "US0002",
@@ -34,6 +35,7 @@ class UserContract extends Contract {
         org: "delivery",
         docType: "user",
         is_delete: false,
+        updated_by: "",
       },
     ];
     for (let index = 0; index < userAssets.length; index++) {
@@ -62,7 +64,8 @@ class UserContract extends Contract {
     address,
     role,
     manager,
-    org
+    org,
+    updated_by
   ) {
     const user = {
       userId: userId,
@@ -78,6 +81,7 @@ class UserContract extends Contract {
       org: org,
       docType: "user",
       is_delete: false,
+      updated_by: updated_by ? updated_by : "",
     };
     try {
       await ctx.stub.putState(userId, Buffer.from(JSON.stringify(user)));
@@ -117,7 +121,7 @@ class UserContract extends Contract {
     return JSON.stringify(allUsers);
   }
 
-  async changePassword(ctx, userId, newPassword) {
+  async changePassword(ctx, userId, newPassword, updated_by) {
     const user = ctx.stub.getState(userId);
     if (!user || user.length === 0)
       throw new Error(`User ${userId} doesn't exists in the system!`);
@@ -128,6 +132,7 @@ class UserContract extends Contract {
     }
     user = JSON.parse(user.toString());
     user.password = this._hashCode(newPassword);
+    user.updated_by = updated_by;
     await ctx.stub.putState(userId, Buffer.from(JSON.stringify(user)));
     return JSON.stringify(user);
   }
@@ -142,7 +147,8 @@ class UserContract extends Contract {
     address,
     role,
     manager,
-    org
+    org,
+    updated_by
   ) {
     const user = ctx.stub.getState(userId);
     if (!user || user.length === 0) {
@@ -158,6 +164,7 @@ class UserContract extends Contract {
     user.role = role ? role : user.role;
     user.manager = manager ? manager : user.manager;
     user.org = org ? org : user.org;
+    user.updated_by = updated_by ? updated_by : user.updated_by;
 
     await ctx.stub.putState(userId, Buffer.from(JSON.stringify(user)));
     return JSON.stringify(user);
@@ -203,7 +210,7 @@ class UserContract extends Contract {
         var d = new Date(0);
         d.setUTCSeconds(history.value.timestamp.seconds.low);
         jsonRes.Timestamp =
-          d.toLocaleString("en-GB", { timeZone: "UTC" }) + " UKT";
+          d.toLocaleString("en-US", { timeZone: "America/Chicago" }) + " CST";
 
         try {
           jsonRes.Value = JSON.parse(history.value.value.toString("utf8"));

@@ -9,16 +9,19 @@ class ProductTypeContract extends Contract {
         productTypeId: "PRT0000001",
         name: "Laptop",
         is_delete: false,
+        updated_by: "",
       },
       {
         productTypeId: "PRT0000002",
         name: "Desktop",
         is_delete: false,
+        updated_by: "",
       },
       {
         productTypeId: "PRT0000003",
         name: "Notebook",
         is_delete: false,
+        updated_by: "",
       },
     ];
     for (let i = 0; i < assets.length; i++) {
@@ -31,12 +34,13 @@ class ProductTypeContract extends Contract {
     return;
   }
 
-  async createProductType(ctx, productTypeId, name) {
+  async createProductType(ctx, productTypeId, name, updated_by) {
     const productType = {
       productTypeId: productTypeId,
       name: name,
       docType: "product-type",
       is_delete: false,
+      updated_by: updated_by ? updated_by : "",
     };
 
     try {
@@ -85,7 +89,7 @@ class ProductTypeContract extends Contract {
     return JSON.stringify(allProductTypes);
   }
 
-  async updateProductType(ctx, productTypeId, name) {
+  async updateProductType(ctx, productTypeId, name, updated_by) {
     const productTypeAsBytes = await ctx.stub.getState(productTypeId);
     if (!productTypeAsBytes || productTypeAsBytes.length === 0) {
       throw new Error(`Product type ${productTypeId} does not exist`);
@@ -94,6 +98,7 @@ class ProductTypeContract extends Contract {
     const productType = JSON.parse(productTypeAsBytes.toString());
 
     productType.name = name;
+    productType.updated_by = updated_by;
 
     try {
       await ctx.stub.putState(
@@ -106,16 +111,17 @@ class ProductTypeContract extends Contract {
     }
   }
 
-  async deleteProductType(ctx, productTypeId) {
+  async deleteProductType(ctx, productTypeId, updated_by) {
     const productTypeAsBytes = await ctx.stub.getState(productTypeId);
     if (!productTypeAsBytes || productTypeAsBytes.length === 0) {
       throw new Error(`Product type ${productTypeId} does not exist`);
     }
 
     try {
-      const productType = JSON.parse(productTypeAsBytes.toString());
+      let productType = JSON.parse(productTypeAsBytes.toString());
 
       productType.is_delete = true;
+      productType.updated_by = updated_by;
       await ctx.stub.putState(
         productTypeId,
         Buffer.from(JSON.stringify(productType))
@@ -155,7 +161,7 @@ class ProductTypeContract extends Contract {
         var d = new Date(0);
         d.setUTCSeconds(history.value.timestamp.seconds.low);
         jsonRes.Timestamp =
-          d.toLocaleString("en-GB", { timeZone: "UTC" }) + " UKT";
+          d.toLocaleString("en-US", { timeZone: "America/Chicago" }) + " CST";
 
         try {
           jsonRes.Value = JSON.parse(history.value.value.toString("utf8"));
