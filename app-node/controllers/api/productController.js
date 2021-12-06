@@ -81,7 +81,6 @@ const initializeDataProduct = (req, res, next) => {
         console.log(JSON.stringify(data));
         res.json({ status: true });
       });
-      res.json({ status: true });
     } catch (error) {
       res
         .status(500)

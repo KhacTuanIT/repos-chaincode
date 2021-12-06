@@ -188,11 +188,13 @@ const addProductAdminView = (req, res, next) => {
   });
 };
 
-const editProductAdminView = (req, res, next) => {
+const editProductAdminView = async (req, res, next) => {
   let productCode = req.params.id;
   let org = req.params.org ? req.params.org : "supply";
   if (org) {
     try {
+      let types = await helper.getAllProductType(org);
+      let manufactureres = await helper.getAllManufacturer(org);
       let product = helper.getProduct(org, productCode);
       product.then((data) => {
         console.log(JSON.parse(data.toString()));
@@ -202,6 +204,8 @@ const editProductAdminView = (req, res, next) => {
           product: data
             ? JSON.parse(data.toString())
             : { productCode: "", name: "" },
+          types: JSON.parse(types.toString()),
+          manufactureres: JSON.parse(manufactureres.toString()),
         });
       });
     } catch (error) {

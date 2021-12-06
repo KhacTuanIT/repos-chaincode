@@ -94,6 +94,23 @@
                       class="form-control"
                     >
                       <option>--- Choose Manufacturer ---</option>
+                      <% for (var index = 0; index < manufactureres.length;
+                      index++) { %> <% if
+                      (manufactureres[index].Value.manufactororId ==
+                      product.manufactororId) { %>
+                      <option
+                        selected
+                        value="<%= manufactureres[index].Value.manufactororId %>"
+                      >
+                        <%= manufactureres[index].Value.name %>
+                      </option>
+                      <% } else { %>
+                      <option
+                        value="<%= manufactureres[index].Value.manufactororId %>"
+                      >
+                        <%= manufactureres[index].Value.name %>
+                      </option>
+                      <% }} %>
                     </select>
                     <span
                       id="invalid-manufactororId"
@@ -280,6 +297,20 @@
                     <label class="form-control-label" for="type">Type</label>
                     <select name="type" id="type" class="form-control">
                       <option>--- Choose Product Type ---</option>
+                      <% for (var index = 0; index < types.length; index++) { %>
+                      <% if (types[index].Value.productTypeId == product.type) {
+                      %>
+                      <option
+                        selected
+                        value="<%= types[index].Value.productTypeId %>"
+                      >
+                        <%= types[index].Value.name %>
+                      </option>
+                      <% } else { %>
+                      <option value="<%= types[index].Value.productTypeId %>">
+                        <%= types[index].Value.name %>
+                      </option>
+                      <% }} %>
                     </select>
                     <span id="invalid-type" class="invalid-text-value"></span>
                   </div>
@@ -424,26 +455,27 @@
   }
 
   function getFormData() {
-    let data = new FormData();
-    data.append(code, $("#code").val());
-    data.append(name, $("#name").val());
-    data.append(manufactororId, $("#manufactororId").val());
-    data.append(color, $("#color").val());
-    data.append(cpu, $("#cpu").val());
-    data.append(ram, $("#ram").val());
-    data.append(screen, $("#screen").val());
-    data.append(keyboard, $("#keyboard").val());
-    data.append(storage, $("#storage").val());
-    data.append(network, $("#network").val());
-    data.append(usb, $("#usb").val());
-    data.append(origin, $("#origin").val());
-    data.append(yearOrigin, $("#yearOrigin").val());
-    data.append(type, $("#type").val());
-    data.append(vga, $("#vga").val());
-    data.append(owner, $("#owner").val());
-    data.append(description, $("#description").val());
-    data.append(primaryImage, $("#tempPrimaryImage").val());
-    data.append(subImage, $("#tempSubImage").val());
+    let data = {};
+    data.code = $("#code").val();
+    data.name = $("#name").val();
+    data.manufactororId = $("#manufactororId").val();
+    data.color = $("#color").val();
+    data.cpu = $("#cpu").val();
+    data.ram = $("#ram").val();
+    data.screen = $("#screen").val();
+    data.keyboard = $("#keyboard").val();
+    data.storage = $("#storage").val();
+    data.network = $("#network").val();
+    data.usb = $("#usb").val();
+    data.origin = $("#origin").val();
+    data.yearOrigin = $("#yearOrigin").val();
+    data.type = $("#type").val();
+    data.vga = $("#vga").val();
+    data.owner = $("#owner").val();
+    data.price = $("#price").val();
+    data.description = $("#description").val();
+    data.primaryImage = $("#tempPrimaryImage").val();
+    data.subImage = $("#tempSubImage").val();
     return data;
   }
 
@@ -457,7 +489,9 @@
       processData: false,
       contentType: false,
       success: function (res) {
-        console.log(res);
+        if (res.status) {
+          $("#tempPrimaryImage").val(res.filename);
+        }
       },
       error: function (jq, status, error) {
         console.log(jq);
@@ -465,23 +499,25 @@
     });
   });
 
-$(document).on("change", "#subImage", function (e) {
-  let data = new FormData();
-  data.append("primaryImage", $(this).prop("files")[0]);
-  $.ajax({
-    url: "/admin/upload",
-    type: "post",
-    data: data,
-    processData: false,
-    contentType: false,
-    success: function (res) {
-      console.log(res);
-    },
-    error: function (jq, status, error) {
-      console.log(jq);
-    },
+  $(document).on("change", "#subImage", function (e) {
+    let data = new FormData();
+    data.append("primaryImage", $(this).prop("files")[0]);
+    $.ajax({
+      url: "/admin/upload",
+      type: "post",
+      data: data,
+      processData: false,
+      contentType: false,
+      success: function (res) {
+        if (res.status) {
+          $("#tempSubImage").val(res.filename);
+        }
+      },
+      error: function (jq, status, error) {
+        console.log(jq);
+      },
+    });
   });
-});
 
   document
     .querySelector("#btn-form-edit")
@@ -491,8 +527,6 @@ $(document).on("change", "#subImage", function (e) {
       $.ajax({
         url: "/admin/products/edit",
         type: "post",
-        contentType: false,
-        processData: false,
         data: data,
         success: function (res) {
           console.log(res);

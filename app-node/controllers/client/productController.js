@@ -24,7 +24,7 @@ const getProduct = (req, res, next) => {
   }
 };
 
-const getAllProduct = (req, res, next) => {
+const getAllProduct = async (req, res, next) => {
   let org = req.query.org ? req.query.org : "supply";
   if (org) {
     try {
