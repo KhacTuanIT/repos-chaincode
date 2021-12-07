@@ -5486,7 +5486,7 @@ span.required {
   margin-right: 10px;
 }
 .sp-carousel-content .cart-plus-minus {
-  float: unset;
+  float: none;
   display: inline-block;
 }
 .sp-carousel-content .cart-quantity {
@@ -5681,4 +5681,8 @@ span.required {
 
 .hb-menu > nav > ul > li.active > a {
   color: #ffffff;
+}
+
+.content-wraper {
+  margin-top: 10px;
 }

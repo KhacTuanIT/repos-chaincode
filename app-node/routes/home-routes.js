@@ -78,6 +78,7 @@ const {
   addProductTypeAdminView,
 } = require("../controllers/admin/productTypeController");
 const bodyParser = require("body-parser");
+const { productDetail } = require("../controllers/client/productController");
 const router = express.Router();
 
 // #### client ####
@@ -89,6 +90,7 @@ router.get("/cart", cart);
 router.get("/contact", contact);
 router.get("/payment", payment);
 router.get("/products", product);
+router.get("/product-details/:id", productDetail);
 
 // register
 
@@ -109,7 +111,6 @@ router.get("/admin/map", mapView);
 router.get("/admin/tables", tablesView);
 router.get("/admin/login", loginView);
 router.get("/admin/register", registerView);
-
 
 router.post("/admin/upload", uploadFile);
 

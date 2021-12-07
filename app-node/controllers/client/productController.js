@@ -7,6 +7,61 @@ const product = (req, res, next) => {
   });
 };
 
+const productDetail = async (req, res, next) => {
+  let org = req.query.org ? req.query.org : "supply";
+  let productCode = req.params.id;
+  if (productCode) {
+    let result = helper.getProduct(org, productCode);
+    result
+      .then(async (data) => {
+        let product = JSON.parse(data.toString());
+        let type = await helper.getProductType(org, product.type);
+        let manufacturerResult = await helper.getManufacturer(
+          org,
+          product.manufactororId
+        );
+        let manufacturer = manufacturerResult
+          ? JSON.parse(manufacturerResult.toString())
+          : null;
+        let productRelates = [];
+        if (manufacturer) {
+          let productResults = await helper.getAllProduct(org);
+          let products = productResults
+            ? JSON.parse(productResults.toString())
+            : null;
+          if (products) {
+            products.forEach((pro) => {
+              if (manufacturer.manufactororId == pro.Value.manufactororId) {
+                productRelates.push(pro);
+              }
+            });
+          }
+        }
+        console.log(productRelates);
+        res.render("client/product-detail", {
+          layout: "client-layout",
+          page_name: "product",
+          product: product ? product : { code: "", name: "" },
+          type: type ? JSON.parse(type.toString()) : null,
+          manufacturer: manufacturer,
+          productRelates: productRelates,
+        });
+      })
+      .error((err) => {
+        console.log(err);
+        res.render("404", {
+          layout: "client-layout",
+          page_name: "product",
+        });
+      });
+  } else {
+    res.render("404", {
+      layout: "client-layout",
+      page_name: "product",
+    });
+  }
+};
+
 const getProduct = (req, res, next) => {
   let org = req.query.org;
   let productCode = req.query.productCode;
@@ -49,4 +104,5 @@ module.exports = {
   product,
   getProduct,
   getAllProduct,
+  productDetail,
 };
