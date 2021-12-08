@@ -200,7 +200,7 @@ class ProductContract extends Contract {
       {
         name: "Asus ZenBook Pro Duo",
         code: "LAP0000009",
-        manufactororId: "MAN0000001",
+        manufactororId: "MAN0000004",
         color: "Black",
         price: "2999",
         cpu: "Intel Core i9-9980HK",
@@ -272,7 +272,7 @@ class ProductContract extends Contract {
       {
         name: "Acer Helios 300",
         code: "LAP0000012",
-        manufactororId: "MAN0000001",
+        manufactororId: "MAN0000002",
         color: "Black",
         price: "899",
         cpu: "Intel Core i7-11700HQ",
@@ -320,7 +320,7 @@ class ProductContract extends Contract {
       {
         name: "Mac Mini M1 (2020)",
         code: "DES0000002",
-        manufactororId: "MAN0000002",
+        manufactororId: "MAN0000001",
         color: "Black",
         price: "699",
         cpu: "Intel Core i9-11700HQ",

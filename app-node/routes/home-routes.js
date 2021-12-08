@@ -45,6 +45,7 @@ const {
   getProductAPI,
   getAllProductAPI,
   initializeDataProduct,
+  getAllProductPagedAPI,
 } = require("../controllers/api/productController");
 const {
   initializeDataManufacturer,
@@ -193,6 +194,7 @@ router.post("/api/registry-user", addUser);
 // product api
 
 router.get("/api/products", getAllProductAPI);
+router.get("/api/products-paged", getAllProductPagedAPI);
 router.get("/api/product", getProductAPI);
 router.post("/api/product", addProduct);
 router.get("/api/get-product-history/:id", getHistoryProductAdmin);

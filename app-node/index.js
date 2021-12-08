@@ -20,7 +20,12 @@ app.use(
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(homeRoutes.routes);
-
+app.get("*", function (req, res, next) {
+  res.render("404", {
+    layout: "client-layout",
+    page_name: "product",
+  });
+});
 app.listen(3003, () =>
   console.log("App is listening on url http://localhost:3003")
 );

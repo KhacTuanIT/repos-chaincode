@@ -14,26 +14,46 @@
 <div class="content-wraper pt-60 pb-60 pt-sm-30">
   <div class="container">
     <div class="row">
-      <div class="col-lg-9 order-1 order-lg-2">
+      <div class="col-lg-3 order-1 order-lg-1">
+        <!-- category-sub-menu start -->
+        <div class="sidebar-categores-box mb-sm-1 mb-xs-1">
+          <div class="sidebar-title">
+            <h2>Type</h2>
+          </div>
+          <div class="category-tags">
+            <ul id="type-list"></ul>
+          </div>
+          <!-- category-sub-menu end -->
+        </div>
+        <!-- category-sub-menu start -->
+        <div class="sidebar-categores-box mb-sm-1 mb-xs-1">
+          <div class="sidebar-title">
+            <h2>Manufacturer</h2>
+          </div>
+          <div class="category-tags">
+            <ul id="manufacturer-list"></ul>
+          </div>
+          <!-- category-sub-menu end -->
+        </div>
+      </div>
+      <div class="col-lg-9 order-2 order-lg-2">
         <!-- shop-top-bar start -->
         <div class="shop-top-bar">
           <div class="shop-bar-inner">
             <div class="toolbar-amount">
-              <span>Showing 1 to 9 of 15</span>
+              <span id="totalProduct"></span>
             </div>
           </div>
           <!-- product-select-box start -->
           <div class="product-select-box">
             <div class="product-short">
               <p>Sort By:</p>
-              <select class="nice-select">
-                <option value="trending">Relevance</option>
-                <option value="sales">Name (A - Z)</option>
-                <option value="sales">Name (Z - A)</option>
-                <option value="rating">Price (Low &gt; High)</option>
-                <option value="date">Rating (Lowest)</option>
-                <option value="price-asc">Model (A - Z)</option>
-                <option value="price-asc">Model (Z - A)</option>
+              <select class="nice-select" id="filter" name="filter">
+                <option value="">Default</option>
+                <option value="az">Name (A - Z)</option>
+                <option value="za">Name (Z - A)</option>
+                <option value="aprice">Price (Low &gt; High)</option>
+                <option value="dprice">Price (High &gt; Low)</option>
               </select>
             </div>
           </div>
@@ -56,21 +76,10 @@
               <div class="row">
                 <div class="col-lg-6 col-md-6 pt-xs-15"></div>
                 <div class="col-lg-6 col-md-6">
-                  <ul class="pagination-box pt-xs-20 pb-xs-15">
-                    <li>
-                      <a href="#" class="Previous"
-                        ><i class="fa fa-chevron-left"></i> Previous</a
-                      >
-                    </li>
-                    <li class="active"><a href="#">1</a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li>
-                      <a href="#" class="Next">
-                        Next <i class="fa fa-chevron-right"></i
-                      ></a>
-                    </li>
-                  </ul>
+                  <ul
+                    class="pagination-box pt-xs-20 pb-xs-15"
+                    id="paginationArea"
+                  ></ul>
                 </div>
               </div>
             </div>
@@ -78,47 +87,526 @@
         </div>
         <!-- shop-products-wrapper end -->
       </div>
-      <div class="col-lg-3 order-2 order-lg-1">
-        <!-- category-sub-menu start -->
-        <div class="sidebar-categores-box mb-sm-0 mb-xs-0">
-          <div class="sidebar-title">
-            <h2>Type</h2>
-          </div>
-          <div class="category-tags">
-            <ul id="type-list"></ul>
-          </div>
-          <!-- category-sub-menu end -->
-        </div>
-        <!-- category-sub-menu start -->
-        <div class="sidebar-categores-box mb-sm-0 mb-xs-0">
-          <div class="sidebar-title">
-            <h2>Manufacturer</h2>
-          </div>
-          <div class="category-tags">
-            <ul id="manufacturer-list"></ul>
-          </div>
-          <!-- category-sub-menu end -->
-        </div>
-      </div>
     </div>
   </div>
 </div>
+<div class="hidden" id="tempData" data-destination="1"></div>
 <!-- Content Wraper Area End Here -->
 
 <script>
+  $(document).ajaxStart(function () {
+    window.scrollTo(0, 0);
+    $("#product-grid").html(
+      '<div class="view-loading"><div class="lds-hourglass"></div></div>'
+    );
+  });
   $(document).ready(function () {
+    const getSearchKey = () => {
+      let urlString = window.location.href;
+      let url = new URL(urlString);
+      let search = url.searchParams.get("keyword");
+      let type = url.searchParams.get("type");
+      let manufacturer = url.searchParams.get("manufacturer");
+      return { search, type, manufacturer };
+    };
+
+    const pagination = (page, total) => {
+      let start = total > 0 ? 1 : 0;
+      let end = Math.ceil(total / 9);
+      let startProduct = total > 0 ? (page - 1) * 9 + 1 : 0;
+      let endProduct = startProduct + 9 > total ? total : startProduct + 8;
+      $("#totalProduct").text(
+        "Showing " +
+          startProduct +
+          " - " +
+          endProduct +
+          " of " +
+          total +
+          ` item${total > 1 ? "s" : ""}`
+      );
+      let paginationContent = "";
+      if (page > 1) {
+        paginationContent +=
+          "<li>" +
+          '<a data-destination="1" class="product-paged Previous"' +
+          '><i class="fa fa-chevron-left"></i> Previous</a' +
+          ">" +
+          "</li>";
+      } else {
+        paginationContent +=
+          "<li>" +
+          '<a disabled="disabled" class="product-paged Previous"' +
+          '><i class="fa fa-chevron-left"></i> Previous</a' +
+          ">" +
+          "</li>";
+      }
+
+      if (end > 5) {
+        let middle = Math.ceil(end / 2);
+        if (page < middle) {
+          if (page < middle - 2) {
+            if (page - 2 > 1) {
+              paginationContent +=
+                '<li><a class="product-paged" data-destination="1">1</a></li>';
+              paginationContent += "<li><a>...</a></li>";
+              for (let i = page - 2; i <= page + 2; i++) {
+                if (i == page) {
+                  paginationContent +=
+                    '<li class="active"><a>' +
+                    i +
+                    "</a></li>";
+                } else {
+                  paginationContent +=
+                    '<li><a class="product-paged" data-destination="' +
+                    i +
+                    '">' +
+                    i +
+                    "</a></li>";
+                }
+              }
+              paginationContent += "<li><a>...</a></li>";
+              paginationContent +=
+                '<li><a class="product-paged" data-destination="' +
+                end +
+                '">' +
+                end +
+                "</a></li>";
+            } else {
+              for (let i = 1; i <= page + 2; i++) {
+                if (i == page) {
+                  paginationContent +=
+                    '<li class="active"><a>' +
+                    i +
+                    "</a></li>";
+                } else {
+                  paginationContent +=
+                    '<li><a class="product-paged" data-destination="' +
+                    i +
+                    '">' +
+                    i +
+                    "</a></li>";
+                }
+              }
+              paginationContent += "<li><a>...</a></li>";
+              paginationContent +=
+                '<li><a class="product-paged" data-destination="' +
+                end +
+                '">' +
+                end +
+                "</a></li>";
+            }
+          } else {
+            if (page - 2 > 1) {
+              paginationContent +=
+                '<li><a class="product-paged" data-destination="1">1</a></li>';
+              paginationContent += "<li><a>...</a></li>";
+              for (let i = page - 2; i <= middle; i++) {
+                if (i == page) {
+                  paginationContent +=
+                    '<li class="active"><a>' +
+                    i +
+                    "</a></li>";
+                } else {
+                  paginationContent +=
+                    '<li><a class="product-paged" data-destination="' +
+                    i +
+                    '">' +
+                    i +
+                    "</a></li>";
+                }
+              }
+              paginationContent += "<li><a>...</a></li>";
+              paginationContent +=
+                '<li><a class="product-paged" data-destination="' +
+                end +
+                '">' +
+                end +
+                "</a></li>";
+            } else {
+              for (let i = 1; i <= middle; i++) {
+                if (i == page) {
+                  paginationContent +=
+                    '<li class="active"><a>' +
+                    i +
+                    "</a></li>";
+                } else {
+                  paginationContent +=
+                    '<li><a class="product-paged" data-destination="' +
+                    i +
+                    '">' +
+                    i +
+                    "</a></li>";
+                }
+              }
+              paginationContent += "<li><a>...</a></li>";
+              paginationContent +=
+                '<li><a class="product-paged" data-destination="' +
+                end +
+                '">' +
+                end +
+                "</a></li>";
+            }
+          }
+        } else {
+          if (page > middle - 2) {
+            if (page + 2 < end) {
+              paginationContent +=
+                '<li><a class="product-paged" data-destination="1">1</a></li>';
+              paginationContent += "<li><a>...</a></li>";
+              for (let i = page - 2; i <= page + 2; i++) {
+                if (i == page) {
+                  paginationContent +=
+                    '<li class="active"><a>' +
+                    i +
+                    "</a></li>";
+                } else {
+                  paginationContent +=
+                    '<li><a class="product-paged" data-destination="' +
+                    i +
+                    '">' +
+                    i +
+                    "</a></li>";
+                }
+              }
+              paginationContent += "<li><a>...</a></li>";
+              paginationContent +=
+                '<li><a class="product-paged" data-destination="' +
+                end +
+                '">' +
+                end +
+                "</a></li>";
+            } else {
+              for (let i = page - 2; i <= end; i++) {
+                if (i == page) {
+                  paginationContent +=
+                    '<li class="active"><a>' +
+                    i +
+                    "</a></li>";
+                } else {
+                  paginationContent +=
+                    '<li><a class="product-paged" data-destination="' +
+                    i +
+                    '">' +
+                    i +
+                    "</a></li>";
+                }
+              }
+              paginationContent += "<li><a>...</a></li>";
+              paginationContent +=
+                '<li><a class="product-paged" data-destination="' +
+                end +
+                '">' +
+                end +
+                "</a></li>";
+            }
+          } else {
+            if (page + 2 < end) {
+              paginationContent +=
+                '<li><a class="product-paged" data-destination="1">1</a></li>';
+              paginationContent += "<li><a>...</a></li>";
+              for (let i = middle; i <= page + 2; i++) {
+                if (i == page) {
+                  paginationContent +=
+                    '<li class="active"><a>' +
+                    i +
+                    "</a></li>";
+                } else {
+                  paginationContent +=
+                    '<li><a class="product-paged" data-destination="' +
+                    i +
+                    '">' +
+                    i +
+                    "</a></li>";
+                }
+              }
+              paginationContent += "<li><a>...</a></li>";
+              paginationContent +=
+                '<li><a class="product-paged" data-destination="' +
+                end +
+                '">' +
+                end +
+                "</a></li>";
+            } else {
+              for (let i = middle; i <= end; i++) {
+                if (i == page) {
+                  paginationContent +=
+                    '<li class="active"><a>' +
+                    i +
+                    "</a></li>";
+                } else {
+                  paginationContent +=
+                    '<li><a class="product-paged" data-destination="' +
+                    i +
+                    '">' +
+                    i +
+                    "</a></li>";
+                }
+              }
+              paginationContent += "<li><a>...</a></li>";
+              paginationContent +=
+                '<li><a class="product-paged" data-destination="' +
+                end +
+                '">' +
+                end +
+                "</a></li>";
+            }
+          }
+        }
+      } else {
+        for (let i = 1; i <= end; i++) {
+          if (i == page) {
+            paginationContent +=
+              '<li class="active"><a>' +
+              i +
+              "</a></li>";
+          } else {
+            paginationContent +=
+              '<li><a class="product-paged" data-destination="' +
+              i +
+              '">' +
+              i +
+              "</a></li>";
+          }
+        }
+      }
+
+      if (page < end) {
+        paginationContent +=
+          "<li>" +
+          '<a data-destination="' +
+          end +
+          '" class="product-paged Next">' +
+          'Next <i class="fa fa-chevron-right"></i' +
+          "></a>" +
+          "</li>";
+      } else {
+        paginationContent +=
+          "<li>" +
+          '<a disabled="disabled" class="product-paged Next">' +
+          'Next <i class="fa fa-chevron-right"></i' +
+          "></a>" +
+          "</li>";
+      }
+      $("#paginationArea").html(paginationContent);
+    };
+
+    $(document).on("change", "#filter", function (e) {
+      let filter = $(this).val();
+      if (filter) {
+        $("#tempData").data("filter", filter);
+        let search = $("#tempData").data("keyword");
+        let destination = $("#tempData").data("destination");
+        let type = $("#tempData").data("type");
+        let manufacturer = $("#tempData").data("manufacturer");
+        type = type ? type : "";
+        manufacturer = manufacturer ? manufacturer : "";
+        search = search ? search : "";
+        destination = destination ? destination : "";
+        $.ajax({
+          url: "/api/products-paged",
+          type: "get",
+          data: {
+            org: "supply",
+            keyword: search,
+            filter: filter,
+            page: parseInt(destination),
+            type: type,
+            manufacturer: manufacturer,
+          },
+          success: function (res) {
+            if (res?.total > 0) {
+              let gridContent = "";
+              let listContent = "";
+              let { products, page, total } = res;
+              console.log(products);
+              let product = undefined;
+              products.forEach((prod) => {
+                product = prod.Value;
+                console.log(product.primaryImage);
+                gridContent +=
+                  '<div class="col-lg-4 col-md-4 col-sm-6 mt-40"><div class="single-product-wrap"><div class="product-image">' +
+                  '<a href="/product-details/' +
+                  product.code +
+                  '">';
+                if (
+                  product.primaryImage === "" ||
+                  product.primaryImage === "none"
+                ) {
+                  gridContent +=
+                    '<img src="/assets/images/product/large-size/1.jpg" />';
+                } else {
+                  gridContent +=
+                    '<img src="/images/' + product.primaryImage + '" />';
+                }
+                gridContent +=
+                  "</a>" +
+                  '</div><div class="product_desc">' +
+                  '<div class="product_desc_info"><div class="product-review"><h5 class="manufacturer">' +
+                  '<a href="/product-details/' +
+                  product.code +
+                  '">' +
+                  product.manufacturer[0].Value.name +
+                  '</a></h5></div><h4><a class="product_name" href="/product-details/' +
+                  product.code +
+                  '">' +
+                  product.name +
+                  "</a></h4>" +
+                  '<div class="price-box"><span class="new-price">$' +
+                  product.price +
+                  "</span></div>" +
+                  '<div class="price-box">CPU: ' +
+                  product.cpu +
+                  "</div>" +
+                  '<div class="price-box">RAM: ' +
+                  product.ram +
+                  "</div></div>" +
+                  '<div class="add-actions"><ul class="add-actions-link"><li class="add-cart active">' +
+                  '<a href="/product-details/' +
+                  product.code +
+                  '"> Add to cart </a></li>' +
+                  '<li><a title="quick view" class="quick-view-btn" href="#" data-toggle="modal" data-target="#exampleModalCenter">' +
+                  '<i class="fa fa-eye"></i></a></li></ul></div></div></div></div>';
+              });
+              pagination(page, total);
+              $("#product-grid").empty();
+              $("#product-grid").append(gridContent);
+            } else {
+              $("#product-grid").empty();
+              $("#product-grid").append(
+                '<div class="col-lg-12 col-md-12 col-sm-12 mt-40 d-flex justify-content-center">Not found any products</div>'
+              );
+            }
+          },
+          error: function (r, h, e) {
+            console.log(e);
+            $("#product-grid").empty();
+            $("#product-grid").append(
+              '<div class="col-lg-12 col-md-12 col-sm-12 mt-40 d-flex justify-content-center">Not found any products</div>'
+            );
+          },
+        });
+      }
+    });
+
+    $(document).on("click", ".product-paged", function (e) {
+      let destination = $(this).data("destination");
+      if (!$(this).attr("disabled")) {
+        if (destination) {
+          $("#tempData").data("destination", destination);
+          let search = $("#tempData").data("keyword");
+          let filter = $("#tempData").data("filter");
+          let type = $("#tempData").data("type");
+          let manufacturer = $("#tempData").data("manufacturer");
+          type = type ? type : "";
+          manufacturer = manufacturer ? manufacturer : "";
+          search = search ? search : "";
+          filter = filter ? filter : "";
+          $.ajax({
+            url: "/api/products-paged",
+            type: "get",
+            data: {
+              org: "supply",
+              keyword: search,
+              filter: filter,
+              page: parseInt(destination),
+              type: type,
+              manufacturer: manufacturer,
+            },
+            success: function (res) {
+              if (res?.total > 0) {
+                  let gridContent = "";
+                  let listContent = "";
+                  let { products, page, total } = res;
+                  console.log(products);
+                  let product = undefined;
+                  products.forEach((prod) => {
+                    product = prod.Value;
+                    console.log(product.primaryImage);
+                    gridContent +=
+                      '<div class="col-lg-4 col-md-4 col-sm-6 mt-40"><div class="single-product-wrap"><div class="product-image">' +
+                      '<a href="/product-details/' +
+                      product.code +
+                      '">';
+                    if (
+                      product.primaryImage === "" ||
+                      product.primaryImage === "none"
+                    ) {
+                      gridContent +=
+                        '<img src="/assets/images/product/large-size/1.jpg" />';
+                    } else {
+                      gridContent +=
+                        '<img src="/images/' + product.primaryImage + '" />';
+                    }
+                    gridContent +=
+                      "</a>" +
+                      '</div><div class="product_desc">' +
+                      '<div class="product_desc_info"><div class="product-review"><h5 class="manufacturer">' +
+                      '<a href="/product-details/' +
+                      product.code +
+                      '">' +
+                      product.manufacturer[0].Value.name +
+                      '</a></h5></div><h4><a class="product_name" href="/product-details/' +
+                      product.code +
+                      '">' +
+                      product.name +
+                      "</a></h4>" +
+                      '<div class="price-box"><span class="new-price">$' +
+                      product.price +
+                      "</span></div>" +
+                      '<div class="price-box">CPU: ' +
+                      product.cpu +
+                      "</div>" +
+                      '<div class="price-box">RAM: ' +
+                      product.ram +
+                      "</div></div>" +
+                      '<div class="add-actions"><ul class="add-actions-link"><li class="add-cart active">' +
+                      '<a href="/product-details/' +
+                      product.code +
+                      '"> Add to cart </a></li>' +
+                      '<li><a title="quick view" class="quick-view-btn" href="#" data-toggle="modal" data-target="#exampleModalCenter">' +
+                      '<i class="fa fa-eye"></i></a></li></ul></div></div></div></div>';
+                  });
+                  pagination(page, total);
+                  $("#product-grid").empty();
+                  $("#product-grid").append(gridContent);
+              } else {
+                $("#product-grid").empty();
+                $("#product-grid").append(
+                  '<div class="col-lg-12 col-md-12 col-sm-12 mt-40 d-flex justify-content-center">Not found any products</div>'
+                );
+              }
+            },
+            error: function (r, h, e) {
+              console.log(e);
+              $("#product-grid").empty();
+              $("#product-grid").append(
+                '<div class="col-lg-12 col-md-12 col-sm-12 mt-40 d-flex justify-content-center">Not found any products</div>'
+              );
+            },
+          });
+        }
+      }
+    });
+
     const loadProduct = () => {
+      let { search, type, manufacturer } = getSearchKey();
+      $("#tempData").data("keyword", search);
+      $("#tempData").data("type", type);
+      $("#tempData").data("manufacturer", manufacturer);
       $.ajax({
-        url: "/api/products",
+        url: "/api/products-paged",
         type: "get",
         data: {
           org: "supply",
+          keyword: search,
+          type: type,
+          manufacturer: manufacturer,
         },
         success: function (res) {
-          if (res?.products) {
+          if (res?.total > 0) {
             let gridContent = "";
             let listContent = "";
-            let { products } = res;
+            let { products, page, total } = res;
             console.log(products);
             let product = undefined;
             products.forEach((prod) => {
@@ -154,7 +642,13 @@
                 "</a></h4>" +
                 '<div class="price-box"><span class="new-price">$' +
                 product.price +
-                "</span></div></div>" +
+                "</span></div>" +
+                '<div class="price-box">CPU: ' +
+                product.cpu +
+                "</div>" +
+                '<div class="price-box">RAM: ' +
+                product.ram +
+                "</div></div>" +
                 '<div class="add-actions"><ul class="add-actions-link"><li class="add-cart active">' +
                 '<a href="/product-details/' +
                 product.code +
@@ -162,6 +656,7 @@
                 '<li><a title="quick view" class="quick-view-btn" href="#" data-toggle="modal" data-target="#exampleModalCenter">' +
                 '<i class="fa fa-eye"></i></a></li></ul></div></div></div></div>';
             });
+            pagination(page, total);
             $("#product-grid").empty();
             $("#product-grid").append(gridContent);
           } else {
@@ -182,6 +677,9 @@
     };
 
     const loadType = () => {
+      $("#type-list").html(
+        '<div class="view-loading"><div class="lds-hourglass"></div></div>'
+      );
       $.ajax({
         url: "/api/product-types",
         type: "get",
@@ -212,6 +710,9 @@
     };
 
     const loadManufacturer = () => {
+      $("#manufacturer-list").html(
+        '<div class="view-loading"><div class="lds-hourglass"></div></div>'
+      );
       $.ajax({
         url: "/api/manufactureres",
         type: "get",
