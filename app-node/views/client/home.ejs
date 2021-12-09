@@ -57,15 +57,17 @@
                   <div class="add-actions">
                     <ul class="add-actions-link">
                       <li class="add-cart active">
-                        <a href="#">Add to cart</a>
+                        <a
+                          data-key="<%= laptops[index].Value.code %>"
+                          class="add-item-to-cart"
+                          >Add to cart</a
+                        >
                       </li>
                       <li>
                         <a
-                          href="#"
                           title="quick view"
                           class="quick-view-btn"
-                          data-toggle="modal"
-                          data-target="#exampleModalCenter"
+                          data-key="<%= laptops[index].Value.code %>"
                           ><i class="fa fa-eye"></i
                         ></a>
                       </li>
@@ -134,24 +136,26 @@
                       >
                     </div>
                     <div class="price-box">
-                      CPU: <%= laptops[index].Value.cpu %>
+                      CPU: <%= desktops[index].Value.cpu %>
                     </div>
                     <div class="price-box">
-                      RAM: <%= laptops[index].Value.ram %>
+                      RAM: <%= desktops[index].Value.ram %>
                     </div>
                   </div>
                   <div class="add-actions">
                     <ul class="add-actions-link">
                       <li class="add-cart active">
-                        <a href="#">Add to cart</a>
+                        <a
+                          data-key="<%= desktops[index].Value.code %>"
+                          class="add-item-to-cart"
+                          >Add to cart</a
+                        >
                       </li>
                       <li>
                         <a
-                          href="#"
                           title="quick view"
                           class="quick-view-btn"
-                          data-toggle="modal"
-                          data-target="#exampleModalCenter"
+                          data-key="<%= desktops[index].Value.code %>"
                           ><i class="fa fa-eye"></i
                         ></a>
                       </li>

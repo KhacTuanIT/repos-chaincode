@@ -43,6 +43,10 @@
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css" />
     <!-- Helper CSS -->
     <link rel="stylesheet" href="/assets/css/helper.css" />
+    <!-- Timeline CSS -->
+    <link rel="stylesheet" href="/assets/css/timeline.css" />
+    <!-- Toastr CSS -->
+    <link rel="stylesheet" href="/assets/css/toastr/toastr.min.css" />
     <!-- Main Style CSS -->
     <link rel="stylesheet" href="/assets/css/style.css" />
     <!-- Responsive CSS -->
@@ -88,6 +92,8 @@
     <script src="/assets/js/venobox.min.js"></script>
     <!-- Nice Select js -->
     <script src="/assets/js/jquery.nice-select.min.js"></script>
+    <!-- Toastr js -->
+    <script src="/assets/js/toastr/toastr.min.js"></script>
   </head>
 
   <body>
@@ -139,7 +145,7 @@
               </div>
               <!-- Header Logo Area End Here -->
               <!-- Begin Header Middle Right Area -->
-              <div class="col-lg-9 pl-0 mt-md-5 ml-sm-15 ml-xs-15 ">
+              <div class="col-lg-9 pl-0 mt-md-5 ml-sm-15 ml-xs-15">
                 <!-- Begin Header Middle Searchbox Area -->
                 <form action="/products" class="hm-searchbox">
                   <input
@@ -469,7 +475,7 @@
       <!-- Begin Quick View | Modal Area -->
       <div class="modal fade modal-wrapper" id="exampleModalCenter">
         <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
+          <div class="modal-content timeline-bg">
             <div class="modal-body">
               <button
                 type="button"
@@ -480,157 +486,8 @@
                 <span aria-hidden="true">&times;</span>
               </button>
               <div class="modal-inner-area row">
-                <div class="col-lg-5 col-md-6 col-sm-6">
-                  <!-- Product Details Left -->
-                  <div class="product-details-left">
-                    <div class="product-details-images slider-navigation-1">
-                      <div class="lg-image">
-                        <img
-                          src="/assets/images/product/large-size/1.jpg"
-                          alt="product image"
-                        />
-                      </div>
-                      <div class="lg-image">
-                        <img
-                          src="/assets/images/product/large-size/2.jpg"
-                          alt="product image"
-                        />
-                      </div>
-                      <div class="lg-image">
-                        <img
-                          src="/assets/images/product/large-size/3.jpg"
-                          alt="product image"
-                        />
-                      </div>
-                      <div class="lg-image">
-                        <img
-                          src="/assets/images/product/large-size/4.jpg"
-                          alt="product image"
-                        />
-                      </div>
-                      <div class="lg-image">
-                        <img
-                          src="/assets/images/product/large-size/5.jpg"
-                          alt="product image"
-                        />
-                      </div>
-                      <div class="lg-image">
-                        <img
-                          src="/assets/images/product/large-size/6.jpg"
-                          alt="product image"
-                        />
-                      </div>
-                    </div>
-                    <div class="product-details-thumbs slider-thumbs-1">
-                      <div class="sm-image">
-                        <img
-                          src="/assets/images/product/small-size/1.jpg"
-                          alt="product image thumb"
-                        />
-                      </div>
-                      <div class="sm-image">
-                        <img
-                          src="/assets/images/product/small-size/2.jpg"
-                          alt="product image thumb"
-                        />
-                      </div>
-                      <div class="sm-image">
-                        <img
-                          src="/assets/images/product/small-size/3.jpg"
-                          alt="product image thumb"
-                        />
-                      </div>
-                      <div class="sm-image">
-                        <img
-                          src="/assets/images/product/small-size/4.jpg"
-                          alt="product image thumb"
-                        />
-                      </div>
-                      <div class="sm-image">
-                        <img
-                          src="/assets/images/product/small-size/5.jpg"
-                          alt="product image thumb"
-                        />
-                      </div>
-                      <div class="sm-image">
-                        <img
-                          src="/assets/images/product/small-size/6.jpg"
-                          alt="product image thumb"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <!--// Product Details Left -->
-                </div>
-
-                <div class="col-lg-7 col-md-6 col-sm-6">
-                  <div class="product-details-view-content pt-60">
-                    <div class="product-info">
-                      <h2>Today is a good day Framed poster</h2>
-                      <span class="product-details-ref"
-                        >Reference: demo_15</span
-                      >
-                      <div class="rating-box pt-20">
-                        <!-- <ul class="rating rating-with-review-item">
-                                                    <li><i class="fa fa-star-o"></i></li>
-                                                    <li><i class="fa fa-star-o"></i></li>
-                                                    <li><i class="fa fa-star-o"></i></li>
-                                                    <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                    <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                </ul> -->
-                      </div>
-                      <div class="price-box pt-20">
-                        <span class="new-price new-price-2">$57.98</span>
-                      </div>
-                      <div class="product-desc">
-                        <p>
-                          <span
-                            >100% cotton double printed dress. Black and white
-                            striped top and orange high waisted skater skirt
-                            bottom. Lorem ipsum dolor sit amet, consectetur
-                            adipisicing elit. quibusdam corporis, earum facilis
-                            et nostrum dolorum accusamus similique eveniet quia
-                            pariatur.
-                          </span>
-                        </p>
-                      </div>
-                      <div class="product-variants">
-                        <div class="produt-variants-size">
-                          <label>Dimension</label>
-                          <select class="nice-select">
-                            <option value="1" title="S" selected="selected">
-                              40x60cm
-                            </option>
-                            <option value="2" title="M">60x90cm</option>
-                            <option value="3" title="L">80x120cm</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="single-add-to-cart">
-                        <form action="#" class="cart-quantity">
-                          <div class="quantity">
-                            <label>Quantity</label>
-                            <div class="cart-plus-minus">
-                              <input
-                                class="cart-plus-minus-box"
-                                value="1"
-                                type="text"
-                              />
-                              <div class="dec qtybutton">
-                                <i class="fa fa-angle-down"></i>
-                              </div>
-                              <div class="inc qtybutton">
-                                <i class="fa fa-angle-up"></i>
-                              </div>
-                            </div>
-                          </div>
-                          <button class="add-to-cart" type="submit">
-                            Add to cart
-                          </button>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
+                <div class="container">
+                  <div class="timeline" id="product-timeline"></div>
                 </div>
               </div>
             </div>
@@ -643,5 +500,148 @@
     <script src="/assets/js/scrollUp.min.js"></script>
     <!-- Main/Activator js -->
     <script src="/assets/js/main.js"></script>
+    <script>
+      $(document).ready(function () {
+        const loadCartItems = async () => {
+          $.ajax({
+            url: "/api/get-cart-items",
+            type: "get",
+            success: function (res) {
+              if (res.status) {
+                let { cart } = res;
+                if (cart.products) {
+                  console.log(cart);
+                }
+              }
+            },
+            error: function (jq, status, err) {
+              console.log(jq);
+              let responseError = JSON.parse(jq.responseText);
+              toastr.error(responseError.toString());
+            },
+          });
+        };
+
+        loadCartItems();
+
+        $(document).on("click", ".add-item-to-cart", function () {
+          let key = this.getAttribute("data-key");
+          $.ajax({
+            url: `/api/add-cart-item/${key}`,
+            type: "post",
+            success: function (res) {
+              console.log(res);
+              if (res.status) {
+                toastr.success(res.message);
+              } else {
+                toastr.error(res.message);
+              }
+            },
+            error: function (jq, status, err) {
+              console.log(jq);
+              let responseError = JSON.parse(jq.responseText);
+              toastr.error(responseError.toString());
+            },
+          });
+        });
+
+        $(document).on("click", ".quick-view-btn", function () {
+          let key = this.getAttribute("data-key");
+          document.getElementById("product-timeline").innerHTML =
+            '<div class="view-loading"><div class="lds-hourglass"></div></div>';
+          $.ajax({
+            url: `/api/get-product-history/${key}`,
+            type: "get",
+            success: function (res) {
+              if (res.status) {
+                let { history } = res;
+                let historyContent = "";
+                history.forEach((his) => {
+                  historyContent +=
+                    '<div class="timeline-section">' +
+                    '<div class="timeline-date">' +
+                    his.Timestamp +
+                    "</div>" +
+                    '<div class="row">' +
+                    '<div class="col-sm-4 img-thumbnail"><img style="width: 100%;" alt="' +
+                    his.Value.name +
+                    '" src="/images/' +
+                    his.Value.primaryImage +
+                    '" /></div>' +
+                    '<div class="col-sm-8">' +
+                    '<div class="timeline-box">' +
+                    '<div class="box-title">';
+                  if (his.Value.is_delete) {
+                    historyContent +=
+                      "<i" +
+                      ' class="fa fa-asterisk text-warning"' +
+                      ' aria-hidden="true"' +
+                      "></i><span class='text-warning'>Deleted</span> [TxId: " +
+                      his.TxId +
+                      "]";
+                  } else {
+                    if (his.Value.updated_by != "") {
+                      historyContent +=
+                        "<i" +
+                        ' class="fa fa-asterisk text-info"' +
+                        ' aria-hidden="true"' +
+                        "></i><span class='text-info'>Updated</span> [TxId: " +
+                        his.TxId +
+                        "]";
+                    } else {
+                      historyContent +=
+                        "<i" +
+                        ' class="fa fa-asterisk text-success"' +
+                        ' aria-hidden="true"' +
+                        "></i><span class='text-success'>Created</span> [TxId: " +
+                        his.TxId +
+                        "]";
+                    }
+                  }
+                  historyContent +=
+                    "</div>" +
+                    '<div class="box-content">' +
+                    '<a class="btn btn-xs btn-default pull-right"' +
+                    ">Details</a" +
+                    ">";
+                  for (const [key, value] of Object.entries(his.Value)) {
+                    if (key === "manufacturer") {
+                      historyContent +=
+                        '<div class="box-item">' +
+                        "<strong>" +
+                        key +
+                        ":</strong>" +
+                        value.Value.name +
+                        "</div>";
+                    } else {
+                      historyContent +=
+                        '<div class="box-item">' +
+                        "<strong>" +
+                        key +
+                        ":</strong>" +
+                        value +
+                        "</div>";
+                    }
+                  }
+                  historyContent +=
+                    "</div>" +
+                    '<div class="box-footer">- ' +
+                    his.Value.docType +
+                    "</div>" +
+                    "</div>" +
+                    "</div>" +
+                    "</div>" +
+                    "</div>";
+                });
+
+                document.getElementById("product-timeline").innerHTML =
+                  historyContent;
+              }
+            },
+          });
+          $("#exampleModalCenter").modal("show");
+        });
+      });
+    </script>
   </body>
 </html>

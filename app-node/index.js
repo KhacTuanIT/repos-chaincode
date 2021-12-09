@@ -1,12 +1,23 @@
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
+const session = require("express-session");
+const { secret } = require("./utils/config/credentials");
 const path = require("path");
 const bodyParser = require("body-parser");
 const homeRoutes = require("./routes/home-routes");
 const { body, validationResult } = require("express-validator");
 
-const app = express();
+const sessionOptions = {
+  secret: secret,
+  cookie: {
+    maxAge: 86400,
+  },
+  saveUninitialized: true,
+  resave: true,
+};
 
+const app = express();
+app.use(session(sessionOptions));
 app.use(expressLayouts);
 app.set("view engine", "ejs");
 app.use(bodyParser.json({ limit: "50mb" }));

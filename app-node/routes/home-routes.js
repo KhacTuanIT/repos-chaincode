@@ -80,6 +80,11 @@ const {
 } = require("../controllers/admin/productTypeController");
 const bodyParser = require("body-parser");
 const { productDetail } = require("../controllers/client/productController");
+const {
+  getCartItems,
+  addProductToCart,
+  removeProductFromCart,
+} = require("../controllers/api/orderController");
 const router = express.Router();
 
 // #### client ####
@@ -210,6 +215,12 @@ router.get("/api/get-product-type-history/:id", getHistoryProductTypeAdmin);
 router.get("/api/manufacturer", getManufacturerAPI);
 router.get("/api/manufactureres", getAllManufacturerAPI);
 router.get("/api/get-manufacturer-history/:id", getHistoryManufacturerAdmin);
+
+// order
+
+router.get("/api/get-cart-items", getCartItems);
+router.post("/api/add-cart-item/:id", addProductToCart);
+router.post("/api/remove-cart-item/:id", removeProductFromCart);
 
 //
 

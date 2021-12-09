@@ -1212,7 +1212,7 @@ textarea:focus {
   z-index: 1050;
 }
 .modal-wrapper .modal-dialog {
-  max-width: 880px;
+  max-width: 1080px;
 }
 .modal-wrapper .close {
   color: #333333;
@@ -5714,6 +5714,12 @@ span.required {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.img-thumbnail {
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 0 1px #f5f5f5, 0 0 6px #f9f9f9;
 }
 
 /*----------------------------------------------------------------------------------------------------*/
