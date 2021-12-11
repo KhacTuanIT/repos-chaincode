@@ -32,6 +32,22 @@ const removeProductFromCart = async (req, res, next) => {
   try {
     let cart = new Cart(req.session.cart ? req.session.cart : {});
     cart.remove(productCode);
+    req.session.cart = cart;
+    res.json({ status: true, message: "Remove product from cart succefully" });
+  } catch (error) {
+    res.status(500).json({
+      status: false,
+      message: "Server is updating! Please waiting a few...",
+    });
+  }
+};
+
+const minusProductFromCart = async (req, res, next) => {
+  let productCode = req.params.id;
+  try {
+    let cart = new Cart(req.session.cart ? req.session.cart : {});
+    cart.minus(productCode);
+    req.session.cart = cart;
     res.json({ status: true, message: "Remove product from cart succefully" });
   } catch (error) {
     res.status(500).json({
@@ -46,6 +62,8 @@ const getCartItems = async (req, res, next) => {
     return res.json({
       cart: {
         products: null,
+        totalItems: 0,
+        totalPrice: 0
       },
       status: true,
       message: "Get cart successfully",
@@ -56,6 +74,7 @@ const getCartItems = async (req, res, next) => {
     cart: {
       products: cart.getItems(),
       totalPrice: cart.totalPrice,
+      totalItems: cart.totalItems
     },
     status: true,
     message: "Get cart successfully",
@@ -66,4 +85,5 @@ module.exports = {
   addProductToCart,
   removeProductFromCart,
   getCartItems,
+  minusProductFromCart
 };

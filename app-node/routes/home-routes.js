@@ -14,13 +14,10 @@ const {
 const {
   about,
   account,
-  cart,
   contact,
   home,
   payment,
   product,
-  getProduct,
-  getAllProduct,
   register,
   registerClientView,
   loginClient,
@@ -84,7 +81,9 @@ const {
   getCartItems,
   addProductToCart,
   removeProductFromCart,
+  minusProductFromCart,
 } = require("../controllers/api/orderController");
+const { cartView } = require("../controllers/client/cartController");
 const router = express.Router();
 
 // #### client ####
@@ -92,7 +91,7 @@ const router = express.Router();
 router.get("/", home);
 router.get("/about", about);
 router.get("/account", account);
-router.get("/cart", cart);
+router.get("/cart", cartView);
 router.get("/contact", contact);
 router.get("/payment", payment);
 router.get("/products", product);
@@ -221,6 +220,7 @@ router.get("/api/get-manufacturer-history/:id", getHistoryManufacturerAdmin);
 router.get("/api/get-cart-items", getCartItems);
 router.post("/api/add-cart-item/:id", addProductToCart);
 router.post("/api/remove-cart-item/:id", removeProductFromCart);
+router.post("/api/minus-cart-item/:id", minusProductFromCart);
 
 //
 
