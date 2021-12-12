@@ -216,6 +216,28 @@ class SupplyContract extends Contract {
     return JSON.stringify(allOrders);
   }
 
+  async queryAllOrdersByUserId(ctx, userId) {
+    const startKey = "";
+    const endKey = "";
+    const allOrders = [];
+    for await (const { key, value } of ctx.stub.getStateByRange(
+      startKey,
+      endKey
+    )) {
+      const strValue = Buffer.from(value).toString("utf8");
+      let record;
+      try {
+        record = JSON.parse(strValue);
+        if (record.docType === "order" && buyerId === userId) {
+          allOrders.push({ Key: key, Value: record });
+        }
+      } catch (error) {
+        throw new Error(error);
+      }
+    }
+    return JSON.stringify(allOrders);
+  }
+
   async getOrderHistory(ctx, orderId) {
     if (orderId.length < 1) {
       throw new Error("orderId is required as input");

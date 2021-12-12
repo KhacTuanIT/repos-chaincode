@@ -37,8 +37,11 @@ const home = async (req, res, next) => {
       desktops: desktops,
     });
   } catch (error) {
-      console.log(error);
-    res.render("404", { layout: "client-layout", page_name: "error" });
+    console.log(error);
+    res.render("404", {
+      layout: "client-layout",
+      page_name: "error",
+    });
   }
 };
 

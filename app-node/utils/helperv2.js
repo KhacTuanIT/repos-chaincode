@@ -676,7 +676,9 @@ const addUserForOrg = async function (user) {
       "createUser",
       user.userId,
       user.username,
-      user.fullname,
+      user.firstname,
+      user.middlename,
+      user.lastname,
       user.password,
       user.email,
       user.address,
@@ -726,7 +728,7 @@ const getUser = async function (org, userId) {
   }
 };
 
-const getAllUser = async function (org) {
+const getAllUser = async function (org, manager) {
   try {
     let ccp = await getCCP();
 
@@ -752,7 +754,76 @@ const getAllUser = async function (org) {
 
     const contract = network.getContract("teco", "UserContract");
 
-    const result = await contract.evaluateTransaction("queryAllUserByManager");
+    const result = await contract.evaluateTransaction(
+      "queryAllUserByManager",
+      manager
+    );
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const loginUser = async function (user) {
+  try {
+    let ccp = await getCCP();
+
+    const walletPath = await getWalletPath(user.org);
+    const wallet = await Wallets.newFileSystemWallet(walletPath);
+
+    const userIdentity = await wallet.get("admin");
+    if (!userIdentity) {
+      return;
+    }
+
+    const gateway = new Gateway();
+    await gateway.connect(ccp, {
+      wallet,
+      identity: "admin",
+      discovery: { enabled: true, asLocalhost: true },
+    });
+
+    const network = await gateway.getNetwork("ecsupply");
+
+    const contract = network.getContract("teco", "UserContract");
+
+    const result = await contract.evaluateTransaction(
+      "login",
+      user.userId,
+      user.password
+    );
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const getUserByUsername = async function (user) {
+  try {
+    let ccp = await getCCP();
+    const walletPath = await getWalletPath(user.org);
+    const wallet = await Wallets.newFileSystemWallet(walletPath);
+
+    const userIdentity = await wallet.get("admin");
+    if (!userIdentity) {
+      return;
+    }
+
+    const gateway = new Gateway();
+    await gateway.connect(ccp, {
+      wallet,
+      identity: "admin",
+      discovery: { enabled: true, asLocalhost: true },
+    });
+
+    const network = await gateway.getNetwork("ecsupply");
+
+    const contract = network.getContract("teco", "UserContract");
+
+    const result = await contract.evaluateTransaction(
+      "getUserByUsername",
+      user.username
+    );
     return result;
   } catch (error) {
     throw new Error(error);
@@ -1295,5 +1366,7 @@ module.exports = {
   editProductType,
   deleteProductType,
   getHistoryProductType,
-  getBase64
+  getBase64,
+  loginUser,
+  getUserByUsername,
 };

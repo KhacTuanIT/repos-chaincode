@@ -92,10 +92,10 @@ class UserContract extends Contract {
   }
 
   async queryUser(ctx, userId) {
-    const user = ctx.stub.getState(userId);
+    const user = await ctx.stub.getState(userId);
     if (!user || user.length === 0)
       throw new Error(`User ${userId} doesn't exists in the system!`);
-    return user.toString();
+    return JSON.stringify(user);
   }
 
   async queryAllUserByManager(ctx, manager) {
@@ -122,7 +122,7 @@ class UserContract extends Contract {
   }
 
   async changePassword(ctx, userId, newPassword, updated_by) {
-    const user = ctx.stub.getState(userId);
+    const user = await ctx.stub.getState(userId);
     if (!user || user.length === 0)
       throw new Error(`User ${userId} doesn't exists in the system!`);
     if (user.password === this._hashCode(newPassword)) {
@@ -151,7 +151,7 @@ class UserContract extends Contract {
     updated_by
   ) {
     try {
-      const user = ctx.stub.getState(userId);
+      const user = await ctx.stub.getState(userId);
       if (!user || user.length === 0) {
         throw new Error(`User ${userId} doesn't exists in the system!`);
       }
@@ -174,15 +174,44 @@ class UserContract extends Contract {
     }
   }
 
+  async getUserByUsername(ctx, username) {
+    const startKey = "";
+    const endKey = "";
+    let expectedUser = undefined;
+    for await (const { key, value } of ctx.stub.getStateByRange(
+      startKey,
+      endKey
+    )) {
+      const strValue = Buffer.from(value).toString("utf8");
+      let record;
+      try {
+        record = JSON.parse(strValue);
+        if (record.username === username) {
+          expectedUser = record;
+        }
+      } catch (error) {
+        throw new Error(error);
+      }
+    }
+    if (expectedUser) {
+      return JSON.stringify(expectedUser);
+    }
+    return JSON.stringify({ username: "" });
+  }
+
   async login(ctx, userId, password) {
-    const user = ctx.stub.getState(userId);
+    const user = await ctx.stub.getState(userId);
     if (!user || user.length === 0)
       throw new Error(`User ${userId} doesn't exists in the system!`);
-    user = JSON.parse(user.toString());
-    if (user.password === this._hashCode(password)) {
-      return true;
+    let userParse = JSON.parse(user.toString());
+    let hash = this._hashCode(password);
+    if (userParse.password === hash) {
+      return JSON.stringify({ status: true, password: hash });
     }
-    return false;
+    return JSON.stringify({
+      status: false,
+      password: hash,
+    });
   }
 
   async getUserHistory(ctx, userId) {

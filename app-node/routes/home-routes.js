@@ -84,14 +84,16 @@ const {
   minusProductFromCart,
 } = require("../controllers/api/orderController");
 const { cartView } = require("../controllers/client/cartController");
+const { validateAccount, logout } = require("../controllers/client/accountController");
+const { isAuthorized } = require("../controllers/client/authController");
 const router = express.Router();
 
 // #### client ####
 
 router.get("/", home);
 router.get("/about", about);
-router.get("/account", account);
-router.get("/cart", cartView);
+router.get("/account", isAuthorized, account);
+router.get("/cart", isAuthorized, cartView);
 router.get("/contact", contact);
 router.get("/payment", payment);
 router.get("/products", product);
@@ -100,12 +102,16 @@ router.get("/product-details/:id", productDetail);
 // register
 
 router.get("/register", registerClientView);
-router.post("/register", register);
+router.post("/register", validateAccount("register"), register);
 
 // login
 
 router.get("/login", loginClientView);
-router.post("/login", loginClient);
+router.post("/login", validateAccount("loginClient"), loginClient);
+
+// logout
+
+router.get("/logout", logout);
 
 // #### admin ####
 
