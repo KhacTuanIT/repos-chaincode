@@ -154,7 +154,12 @@
       url: "/register",
       type: "post",
       data: $("#form-register").serialize(),
-      success: function (res) {},
+      success: function (res) {
+        toastr.success(res.message);
+        setTimeout(() => {
+          window.location.href = "/login";
+        }, 3000);
+      },
       error: function (jq, status, err) {
         let responseError = JSON.parse(jq.responseText);
         console.log(responseError);

@@ -693,6 +693,84 @@ const addUserForOrg = async function (user) {
   }
 };
 
+const changeUserInformation = async function (user) {
+  try {
+    let ccp = await getCCP();
+    const walletPath = await getWalletPath(user.org);
+    const wallet = await Wallets.newFileSystemWallet(walletPath);
+
+    const userIdentity = await wallet.get("admin");
+    if (!userIdentity) {
+      return;
+    }
+
+    const gateway = new Gateway();
+    await gateway.connect(ccp, {
+      wallet,
+      identity: "admin",
+      discovery: { enabled: true, asLocalhost: true },
+    });
+
+    const network = await gateway.getNetwork("ecsupply");
+
+    const contract = network.getContract("teco", "UserContract");
+    user.role = "";
+    user.manager = "";
+    user.updated_by = "admin";
+
+    const result = await contract.submitTransaction(
+      "changeUserInformation",
+      user.userId,
+      user.firstname,
+      user.middlename,
+      user.lastname,
+      user.email,
+      user.address,
+      user.role,
+      user.manager,
+      user.org,
+      user.updated_by
+    );
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const changePassword = async function (user) {
+  try {
+    let ccp = await getCCP();
+    const walletPath = await getWalletPath(user.org);
+    const wallet = await Wallets.newFileSystemWallet(walletPath);
+
+    const userIdentity = await wallet.get("admin");
+    if (!userIdentity) {
+      return;
+    }
+
+    const gateway = new Gateway();
+    await gateway.connect(ccp, {
+      wallet,
+      identity: "admin",
+      discovery: { enabled: true, asLocalhost: true },
+    });
+
+    const network = await gateway.getNetwork("ecsupply");
+
+    const contract = network.getContract("teco", "UserContract");
+
+    const result = await contract.submitTransaction(
+      "changePassword",
+      user.userId,
+      user.password,
+      "admin"
+    );
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 const getUser = async function (org, userId) {
   try {
     let ccp = await getCCP();
@@ -1369,4 +1447,6 @@ module.exports = {
   getBase64,
   loginUser,
   getUserByUsername,
+  changeUserInformation,
+  changePassword,
 };

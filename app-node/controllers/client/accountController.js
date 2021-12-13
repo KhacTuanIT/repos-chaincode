@@ -106,6 +106,7 @@ const loginClientView = (req, res, next) => {
   res.render("client/login", {
     layout: "client-layout",
     page_name: "login",
+    message: null,
   });
 };
 
@@ -161,8 +162,8 @@ const loginClient = async (req, res, next) => {
     } catch (error) {
       await res.status(500).json({
         status: false,
-        message: "Login failed! ERR: " + JSON.stringify(error.message),
-        errors: [{ password: "Username or password incorrect" }],
+        message: "Confirm password is not match",
+        errors: [{ confirmPassword: "Confirm password is not match" }],
       });
     }
   } else {
@@ -170,6 +171,94 @@ const loginClient = async (req, res, next) => {
       status: false,
       message: "Login failed! ERR: data not appropriate",
     });
+  }
+};
+
+const changePassword = async (req, res, next) => {
+  const { confirmPassword, password, userId } = req.body;
+  let org = req.body.org ? req.body.org : "supply";
+  if (confirmPassword != password) {
+    await res.status(500).json({
+      status: false,
+      message: "Login failed! ERR: " + JSON.stringify(error.message),
+      errors: [{ password: "Username or password incorrect" }],
+    });
+  } else {
+    try {
+      let user = {
+        userId,
+        password,
+        org,
+        updated_by: "admin",
+      };
+      let result = await helper.changePassword(user);
+      let userParse = JSON.parse(result.toString());
+      if (userParse) {
+        await res.json({
+          status: true,
+          message: "Change password successfully",
+          errors: null,
+        });
+      } else {
+        await res.status(404).json({
+          status: false,
+          message: "Not found any user to change password",
+          errors: null,
+        });
+      }
+    } catch (error) {
+      await res.status(500).json({
+        status: false,
+        message: "Fail to change password. Err: " + error.message,
+        errors: null,
+      });
+    }
+  }
+};
+
+const changeUserInformation = async (req, res, next) => {
+  const { firstname, middlename, lastname, userId, email, address } = req.body;
+  let org = req.body.org ? req.body.org : "supply";
+  if (confirmPassword != password) {
+    await res.status(500).json({
+      status: false,
+      message: "Login failed! ERR: " + JSON.stringify(error.message),
+      errors: [{ password: "Username or password incorrect" }],
+    });
+  } else {
+    try {
+      let user = {
+        userId,
+        firstname,
+        middlename,
+        lastname,
+        email,
+        address,
+        org,
+        updated_by: "admin",
+      };
+      let result = await helper.changeUserInformation(user);
+      let userParse = JSON.parse(result.toString());
+      if (userParse) {
+        await res.json({
+          status: true,
+          message: "Change user information successfully",
+          errors: null,
+        });
+      } else {
+        await res.status(404).json({
+          status: false,
+          message: "Not found any user to change user information",
+          errors: null,
+        });
+      }
+    } catch (error) {
+      await res.status(500).json({
+        status: false,
+        message: "Fail to change user information. Err: " + error.message,
+        errors: null,
+      });
+    }
   }
 };
 
@@ -199,6 +288,19 @@ const validateAccount = (method) => {
         body("password", "Password is required").notEmpty(),
       ];
     }
+    case "changePassword": {
+      return [
+        body("password", "Password is required").notEmpty(),
+        body("confirmPassword", "Confirm password is required").notEmpty(),
+      ];
+    }
+    case "changeUserInformation": {
+      return [
+        body("firstname", "First name is required").notEmpty(),
+        body("lastname", "Last name is required").notEmpty(),
+        body("email", "Email is required").notEmpty(),
+      ];
+    }
   }
 };
 
@@ -210,4 +312,6 @@ module.exports = {
   loginClientView,
   validateAccount,
   logout,
+  changeUserInformation,
+  changePassword
 };

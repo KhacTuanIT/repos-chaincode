@@ -84,7 +84,12 @@ const {
   minusProductFromCart,
 } = require("../controllers/api/orderController");
 const { cartView } = require("../controllers/client/cartController");
-const { validateAccount, logout } = require("../controllers/client/accountController");
+const {
+  validateAccount,
+  logout,
+  changePassword,
+  changeUserInformation,
+} = require("../controllers/client/accountController");
 const { isAuthorized } = require("../controllers/client/authController");
 const router = express.Router();
 
@@ -93,6 +98,9 @@ const router = express.Router();
 router.get("/", home);
 router.get("/about", about);
 router.get("/account", isAuthorized, account);
+router.post("/account/change-password", isAuthorized, changePassword);
+router.post("/account/change-user-info", isAuthorized, changeUserInformation);
+
 router.get("/cart", isAuthorized, cartView);
 router.get("/contact", contact);
 router.get("/payment", payment);

@@ -37,18 +37,18 @@
             <h6>Features</h6>
             <ul>
               <li>
-                <a>Change password</a>
+                <a id="btn-change-password-form">Change password</a>
               </li>
               <li>
-                <a>Change information</a>
+                <a id="btn-change-user-info-form">Change information</a>
               </li>
               <li><a>Orders</a></li>
             </ul>
           </div>
         </div>
       </div>
-      <div class="col-8">
-        <form>
+      <div class="col-8" id="playground-form">
+        <form id="form-detail">
           <div class="row">
             <div class="col-12">
               <h4>Account</h4>
@@ -156,9 +156,242 @@
             </div>
           </div> -->
         </form>
+        <form id="form-change-info" class="hidden">
+          <input type="hidden" name="userId" value="<%= user.userId %>" />
+          <div class="row">
+            <div class="col-12">
+              <h4>Change user information</h4>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="input-group">
+                <div class="col-third">
+                  <input
+                    class="profile-input"
+                    type="text"
+                    name="firstname"
+                    placeholder="First name"
+                    value="<%= user.firstName %>"
+                  />
+                  <span id="invalid-firstname"></span>
+                </div>
+                <div class="col-third">
+                  <input
+                    class="profile-input"
+                    type="text"
+                    name="middlename"
+                    placeholder="Middle name"
+                    value="<%= user.middleName %>"
+                  />
+                  <span id="invalid-middlename"></span>
+                </div>
+                <div class="col-third">
+                  <input
+                    class="profile-input"
+                    type="text"
+                    name="lastname"
+                    placeholder="Last name"
+                    value="<%= user.lastName %>"
+                  />
+                  <span id="invalid-lastname"></span>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="input-group input-group-icon">
+                <input
+                  class="profile-input"
+                  type="email"
+                  name="email"
+                  placeholder="Email Adress"
+                  value="<%= user.email %>"
+                />
+                <div class="input-icon"><i class="fa fa-envelope"></i></div>
+              </div>
+              <span id="invalid-email"></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <h4>Address Details</h4>
+              <div class="input-group input-group-icon">
+                <input
+                  class="profile-input"
+                  type="text"
+                  name="address"
+                  placeholder="Address"
+                  value="<%= user.address %>"
+                />
+                <div class="input-icon"><i class="fa fa-mark-alt"></i></div>
+              </div>
+              <span id="invalid-address"></span>
+            </div>
+          </div>
+          <div class="row pr-0">
+            <div class="col-sm-6 pr-0">
+              <input
+                class="form-control"
+                type="button"
+                id="form-change-info-submit"
+                value="Save"
+              />
+            </div>
+          </div>
+        </form>
+        <form id="form-change-password" class="hidden">
+          <input type="hidden" name="userId" value="<%= user.userId %>" />
+          <div class="row">
+            <div class="col-12">
+              <h4>Change password</h4>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="input-group input-group-icon">
+                <input
+                  class="profile-input"
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  value=""
+                />
+                <div class="input-icon"><i class="fa fa-lock"></i></div>
+              </div>
+              <span id="invalid-password"></span>
+            </div>
+            <div class="col-12">
+              <div class="input-group input-group-icon">
+                <input
+                  class="profile-input"
+                  type="password"
+                  name="confirmPassword"
+                  placeholder="Confirm password"
+                  value=""
+                />
+                <div class="input-icon"><i class="fa fa-lock"></i></div>
+              </div>
+              <span id="invalid-confirmPassword"></span>
+            </div>
+          </div>
+          <div class="row pr-0">
+            <div class="col-sm-6 pr-0">
+              <input
+                class="form-control"
+                type="button"
+                id="change-password-submit"
+                value="Save"
+              />
+            </div>
+          </div>
+        </form>
       </div>
     </div>
   </div>
 </div>
 <% } %>
 <!--Shopping Cart Area End-->
+
+<script>
+  function clearAfterDelay(e) {
+    setTimeout(() => {
+      e.text("");
+    }, 15000);
+  }
+  $(document).on("click", "#btn-change-password-form", function (e) {
+    console.log("click");
+    let forms = $("#playground-form form");
+    for (let i = 0; i < forms.length; i++) {
+      if (!forms[i].classList.contains("hidden")) {
+        forms[i].classList.add("hidden");
+      }
+    }
+    $("#form-change-password").removeClass("hidden");
+  });
+  $(document).on("click", "#btn-change-user-info-form", function (e) {
+    let forms = $("#playground-form form");
+    for (let i = 0; i < forms.length; i++) {
+      if (!forms[i].classList.contains("hidden")) {
+        forms[i].classList.add("hidden");
+      }
+    }
+    $("#form-change-info").removeClass("hidden");
+  });
+  $(document).on("click", ".default", function () {
+    let forms = $("#playground-form form");
+    for (let i = 0; i < forms.length; i++) {
+      if (!forms[i].classList.contains("hidden")) {
+        forms[i].classList.add("hidden");
+      }
+    }
+    $("#form-detail").removeClass("hidden");
+  });
+
+  $(document).on("click", "#change-password-submit", function (e) {
+    $.ajax({
+      url: "/account/change-password",
+      type: "post",
+      data: $("#form-change-password").serialize(),
+      success: function (res) {
+        toastr.success(res.message);
+        let forms = $("#playground-form form");
+        for (let i = 0; i < forms.length; i++) {
+          if (!forms[i].classList.contains("hidden")) {
+            forms[i].classList.add("hidden");
+          }
+        }
+        $("#form-detail").removeClass("hidden");
+      },
+      error: function (jq, status, error) {
+        let responseError = JSON.parse(jq.responseText);
+        console.log(responseError);
+        responseError.errors.forEach((error) => {
+          if (!$("#" + error.param).hasClass("invalid-error-input")) {
+            $("#" + error.param).addClass("invalid-error-input");
+            setTimeout(() => {
+              if ($("#" + error.param).hasClass("invalid-error-input")) {
+                $("#" + error.param).removeClass("invalid-error-input");
+              }
+            }, 5000);
+          }
+          $("#invalid-" + error.param).text(error.msg);
+          clearAfterDelay($("#invalid-" + error.param));
+        });
+      },
+    });
+  });
+
+$(document).on("click", "#form-change-info-submit", function (e) {
+  $.ajax({
+    url: "/account/change-user-info",
+    type: "post",
+    data: $("#form-change-info").serialize(),
+    success: function (res) {
+      toastr.success(res.message);
+      let forms = $("#playground-form form");
+      for (let i = 0; i < forms.length; i++) {
+        if (!forms[i].classList.contains("hidden")) {
+          forms[i].classList.add("hidden");
+        }
+      }
+      $("#form-detail").removeClass("hidden");
+    },
+    error: function (jq, status, error) {
+      let responseError = JSON.parse(jq.responseText);
+      console.log(responseError);
+      responseError.errors.forEach((error) => {
+        if (!$("#" + error.param).hasClass("invalid-error-input")) {
+          $("#" + error.param).addClass("invalid-error-input");
+          setTimeout(() => {
+            if ($("#" + error.param).hasClass("invalid-error-input")) {
+              $("#" + error.param).removeClass("invalid-error-input");
+            }
+          }, 5000);
+        }
+        $("#invalid-" + error.param).text(error.msg);
+        clearAfterDelay($("#invalid-" + error.param));
+      });
+    },
+  });
+});
+</script>

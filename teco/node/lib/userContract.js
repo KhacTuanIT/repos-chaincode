@@ -122,7 +122,7 @@ class UserContract extends Contract {
   }
 
   async changePassword(ctx, userId, newPassword, updated_by) {
-    const user = await ctx.stub.getState(userId);
+    let user = await ctx.stub.getState(userId);
     if (!user || user.length === 0)
       throw new Error(`User ${userId} doesn't exists in the system!`);
     if (user.password === this._hashCode(newPassword)) {
@@ -151,7 +151,7 @@ class UserContract extends Contract {
     updated_by
   ) {
     try {
-      const user = await ctx.stub.getState(userId);
+      let user = await ctx.stub.getState(userId);
       if (!user || user.length === 0) {
         throw new Error(`User ${userId} doesn't exists in the system!`);
       }
