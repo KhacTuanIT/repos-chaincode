@@ -1387,6 +1387,500 @@ const getHistoryProductType = async function (productTypeId, org) {
 };
 
 // ##### ####### #####
+// ##### ORDERS  #####
+// ##### ####### #####
+
+const addOrder = async function (order, org) {
+  try {
+    let ccp = await getCCP();
+    console.log(org);
+    const walletPath = await getWalletPath(org);
+    const wallet = await Wallets.newFileSystemWallet(walletPath);
+
+    console.log(wallet);
+    const userIdentity = await wallet.get("admin");
+    if (!userIdentity) {
+      return;
+    }
+    const gateway = new Gateway();
+    await gateway.connect(ccp, {
+      wallet,
+      identity: "admin",
+      discovery: { enabled: true, asLocalhost: true },
+    });
+
+    const network = await gateway.getNetwork("ecsupply");
+
+    const contract = network.getContract("teco", "SupplyContract");
+
+    const result = await contract.submitTransaction(
+      "orderProduct",
+      order.orderId,
+      order.price,
+      order.retailerId,
+      order.updated_by,
+      order.buyerId
+    );
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const createOrderDetail = async function (orderDetail, org) {
+  try {
+    let ccp = await getCCP();
+    const walletPath = await getWalletPath(org);
+    const wallet = await Wallets.newFileSystemWallet(walletPath);
+
+    const userIdentity = await wallet.get("admin");
+    if (!userIdentity) {
+      return;
+    }
+    const gateway = new Gateway();
+    await gateway.connect(ccp, {
+      wallet,
+      identity: "admin",
+      discovery: { enabled: true, asLocalhost: true },
+    });
+
+    const network = await gateway.getNetwork("ecsupply");
+
+    const contract = network.getContract("teco", "OrderDetailContract");
+
+    const result = await contract.submitTransaction(
+      "createOrderDetail",
+      orderDetail.orderDetailId,
+      orderDetail.orderId,
+      orderDetail.productId,
+      orderDetail.price,
+      orderDetail.quantity,
+      orderDetail.updated_by
+    );
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const updateOrderDetail = async function (orderDetail, org) {
+  try {
+    let ccp = await getCCP();
+    const walletPath = await getWalletPath(org);
+    const wallet = await Wallets.newFileSystemWallet(walletPath);
+
+    const userIdentity = await wallet.get("admin");
+    if (!userIdentity) {
+      return;
+    }
+    const gateway = new Gateway();
+    await gateway.connect(ccp, {
+      wallet,
+      identity: "admin",
+      discovery: { enabled: true, asLocalhost: true },
+    });
+
+    const network = await gateway.getNetwork("ecsupply");
+
+    const contract = network.getContract("teco", "OrderDetailContract");
+
+    const result = await contract.submitTransaction(
+      "updateOrderDetail",
+      orderDetail.orderDetailId,
+      orderDetail.orderId,
+      orderDetail.productId,
+      orderDetail.price,
+      orderDetail.quantity,
+      orderDetail.updated_by
+    );
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const receiceOrder = async function (orderId, userId, org) {
+  try {
+    let ccp = await getCCP();
+    console.log(org);
+    const walletPath = await getWalletPath(org);
+    const wallet = await Wallets.newFileSystemWallet(walletPath);
+
+    console.log(wallet);
+    const userIdentity = await wallet.get("admin");
+    if (!userIdentity) {
+      return;
+    }
+    const gateway = new Gateway();
+    await gateway.connect(ccp, {
+      wallet,
+      identity: "admin",
+      discovery: { enabled: true, asLocalhost: true },
+    });
+
+    const network = await gateway.getNetwork("ecsupply");
+
+    const contract = network.getContract("teco", "SupplyContract");
+
+    const result = await contract.submitTransaction(
+      "receiveOrder",
+      orderId,
+      userId
+    );
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const assignShipper = async function (orderId, newShipperId, userId, org) {
+  try {
+    let ccp = await getCCP();
+    console.log(org);
+    const walletPath = await getWalletPath(org);
+    const wallet = await Wallets.newFileSystemWallet(walletPath);
+
+    console.log(wallet);
+    const userIdentity = await wallet.get("admin");
+    if (!userIdentity) {
+      return;
+    }
+    const gateway = new Gateway();
+    await gateway.connect(ccp, {
+      wallet,
+      identity: "admin",
+      discovery: { enabled: true, asLocalhost: true },
+    });
+
+    const network = await gateway.getNetwork("ecsupply");
+
+    const contract = network.getContract("teco", "SupplyContract");
+
+    const result = await contract.submitTransaction(
+      "assignShipper",
+      orderId,
+      newShipperId,
+      userId
+    );
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const createShipment = async function (orderId, newTrackingInfo, userId, org) {
+  try {
+    let ccp = await getCCP();
+    console.log(org);
+    const walletPath = await getWalletPath(org);
+    const wallet = await Wallets.newFileSystemWallet(walletPath);
+
+    console.log(wallet);
+    const userIdentity = await wallet.get("admin");
+    if (!userIdentity) {
+      return;
+    }
+    const gateway = new Gateway();
+    await gateway.connect(ccp, {
+      wallet,
+      identity: "admin",
+      discovery: { enabled: true, asLocalhost: true },
+    });
+
+    const network = await gateway.getNetwork("ecsupply");
+
+    const contract = network.getContract("teco", "SupplyContract");
+
+    const result = await contract.submitTransaction(
+      "createShipment",
+      orderId,
+      newTrackingInfo,
+      userId
+    );
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const transportShipment = async function (orderId, userId, org) {
+  try {
+    let ccp = await getCCP();
+    console.log(org);
+    const walletPath = await getWalletPath(org);
+    const wallet = await Wallets.newFileSystemWallet(walletPath);
+
+    console.log(wallet);
+    const userIdentity = await wallet.get("admin");
+    if (!userIdentity) {
+      return;
+    }
+    const gateway = new Gateway();
+    await gateway.connect(ccp, {
+      wallet,
+      identity: "admin",
+      discovery: { enabled: true, asLocalhost: true },
+    });
+
+    const network = await gateway.getNetwork("ecsupply");
+
+    const contract = network.getContract("teco", "SupplyContract");
+
+    const result = await contract.submitTransaction(
+      "transportShipment",
+      orderId,
+      userId
+    );
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const receiveShipment = async function (orderId, userId, org) {
+  try {
+    let ccp = await getCCP();
+    const walletPath = await getWalletPath(org);
+    const wallet = await Wallets.newFileSystemWallet(walletPath);
+
+    const userIdentity = await wallet.get("admin");
+    if (!userIdentity) {
+      return;
+    }
+    const gateway = new Gateway();
+    await gateway.connect(ccp, {
+      wallet,
+      identity: "admin",
+      discovery: { enabled: true, asLocalhost: true },
+    });
+
+    const network = await gateway.getNetwork("ecsupply");
+
+    const contract = network.getContract("teco", "SupplyContract");
+
+    const result = await contract.submitTransaction(
+      "receiveShipment",
+      orderId,
+      userId
+    );
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const queryOrder = async function (orderId, org) {
+  try {
+    let ccp = await getCCP();
+    const walletPath = await getWalletPath(org);
+    const wallet = await Wallets.newFileSystemWallet(walletPath);
+
+    const userIdentity = await wallet.get("admin");
+    if (!userIdentity) {
+      return;
+    }
+    const gateway = new Gateway();
+    await gateway.connect(ccp, {
+      wallet,
+      identity: "admin",
+      discovery: { enabled: true, asLocalhost: true },
+    });
+
+    const network = await gateway.getNetwork("ecsupply");
+
+    const contract = network.getContract("teco", "SupplyContract");
+
+    const result = await contract.evaluateTransaction("queryOrder", orderId);
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const queryOrderDetail = async function (orderDetailId, org) {
+  try {
+    let ccp = await getCCP();
+    const walletPath = await getWalletPath(org);
+    const wallet = await Wallets.newFileSystemWallet(walletPath);
+
+    const userIdentity = await wallet.get("admin");
+    if (!userIdentity) {
+      return;
+    }
+    const gateway = new Gateway();
+    await gateway.connect(ccp, {
+      wallet,
+      identity: "admin",
+      discovery: { enabled: true, asLocalhost: true },
+    });
+
+    const network = await gateway.getNetwork("ecsupply");
+
+    const contract = network.getContract("teco", "OrderDetailContract");
+
+    const result = await contract.evaluateTransaction(
+      "queryOrderDetail",
+      orderDetailId
+    );
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const queryAllOrderDetailByOrderid = async function (orderId, org) {
+  try {
+    let ccp = await getCCP();
+    const walletPath = await getWalletPath(org);
+    const wallet = await Wallets.newFileSystemWallet(walletPath);
+
+    const userIdentity = await wallet.get("admin");
+    if (!userIdentity) {
+      return;
+    }
+    const gateway = new Gateway();
+    await gateway.connect(ccp, {
+      wallet,
+      identity: "admin",
+      discovery: { enabled: true, asLocalhost: true },
+    });
+
+    const network = await gateway.getNetwork("ecsupply");
+
+    const contract = network.getContract("teco", "OrderDetailContract");
+
+    const result = await contract.evaluateTransaction(
+      "queryAllOrderDetailsByOrderId",
+      orderId
+    );
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const getOrderDetailHistory = async function (orderDetailId, org) {
+  try {
+    let ccp = await getCCP();
+    const walletPath = await getWalletPath(org);
+    const wallet = await Wallets.newFileSystemWallet(walletPath);
+
+    const userIdentity = await wallet.get("admin");
+    if (!userIdentity) {
+      return;
+    }
+    const gateway = new Gateway();
+    await gateway.connect(ccp, {
+      wallet,
+      identity: "admin",
+      discovery: { enabled: true, asLocalhost: true },
+    });
+
+    const network = await gateway.getNetwork("ecsupply");
+
+    const contract = network.getContract("teco", "OrderDetailContract");
+
+    const result = await contract.evaluateTransaction(
+      "getOrderDetailHistory",
+      orderDetailId
+    );
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const queryAllOrders = async function (org) {
+  try {
+    let ccp = await getCCP();
+    const walletPath = await getWalletPath(org);
+    const wallet = await Wallets.newFileSystemWallet(walletPath);
+
+    const userIdentity = await wallet.get("admin");
+    if (!userIdentity) {
+      return;
+    }
+    const gateway = new Gateway();
+    await gateway.connect(ccp, {
+      wallet,
+      identity: "admin",
+      discovery: { enabled: true, asLocalhost: true },
+    });
+
+    const network = await gateway.getNetwork("ecsupply");
+
+    const contract = network.getContract("teco", "SupplyContract");
+
+    const result = await contract.evaluateTransaction("queryAllOrders");
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const queryAllOrdersByUserId = async function (userId, org) {
+  try {
+    let ccp = await getCCP();
+    const walletPath = await getWalletPath(org);
+    const wallet = await Wallets.newFileSystemWallet(walletPath);
+
+    const userIdentity = await wallet.get("admin");
+    if (!userIdentity) {
+      return;
+    }
+    const gateway = new Gateway();
+    await gateway.connect(ccp, {
+      wallet,
+      identity: "admin",
+      discovery: { enabled: true, asLocalhost: true },
+    });
+
+    const network = await gateway.getNetwork("ecsupply");
+
+    const contract = network.getContract("teco", "SupplyContract");
+
+    const result = await contract.evaluateTransaction(
+      "queryAllOrdersByUserId",
+      userId
+    );
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const getHistoryOrder = async function (orderId, org) {
+  try {
+    let ccp = await getCCP();
+    const walletPath = await getWalletPath(org);
+    const wallet = await Wallets.newFileSystemWallet(walletPath);
+
+    const userIdentity = await wallet.get("admin");
+    if (!userIdentity) {
+      return;
+    }
+    const gateway = new Gateway();
+    await gateway.connect(ccp, {
+      wallet,
+      identity: "admin",
+      discovery: { enabled: true, asLocalhost: true },
+    });
+
+    const network = await gateway.getNetwork("ecsupply");
+
+    const contract = network.getContract("teco", "SupplyContract");
+
+    const result = await contract.evaluateTransaction(
+      "getOrderHistory",
+      orderId
+    );
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+// ##### ####### #####
 // ##### EXPANDS #####
 // ##### ####### #####
 
@@ -1405,6 +1899,15 @@ function getBase64(file) {
   reader.onerror = function (error) {
     return null;
   };
+}
+
+function uuidv4() {
+  return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
+    (
+      c ^
+      (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
+    ).toString(16)
+  );
 }
 
 exports.getRegisteredUser = getRegisteredUser;
@@ -1449,4 +1952,20 @@ module.exports = {
   getUserByUsername,
   changeUserInformation,
   changePassword,
+  addOrder,
+  receiceOrder,
+  receiveShipment,
+  createShipment,
+  assignShipper,
+  transportShipment,
+  queryOrder,
+  queryAllOrders,
+  queryAllOrdersByUserId,
+  getHistoryOrder,
+  createOrderDetail,
+  updateOrderDetail,
+  getOrderDetailHistory,
+  queryOrderDetail,
+  queryAllOrderDetailByOrderid,
+  uuidv4,
 };

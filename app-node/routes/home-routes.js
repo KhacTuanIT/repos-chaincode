@@ -83,7 +83,7 @@ const {
   removeProductFromCart,
   minusProductFromCart,
 } = require("../controllers/api/orderController");
-const { cartView } = require("../controllers/client/cartController");
+const { cartView, addOrder } = require("../controllers/client/cartController");
 const {
   validateAccount,
   logout,
@@ -91,6 +91,7 @@ const {
   changeUserInformation,
 } = require("../controllers/client/accountController");
 const { isAuthorized } = require("../controllers/client/authController");
+const { queryOrderByUserId } = require("../controllers/client/cartController");
 const router = express.Router();
 
 // #### client ####
@@ -106,6 +107,11 @@ router.get("/contact", contact);
 router.get("/payment", payment);
 router.get("/products", product);
 router.get("/product-details/:id", productDetail);
+
+// order
+
+router.get('/orders/:id', isAuthorized, queryOrderByUserId);
+router.post('/orders/', isAuthorized, addOrder);
 
 // register
 

@@ -219,46 +219,38 @@ const changePassword = async (req, res, next) => {
 const changeUserInformation = async (req, res, next) => {
   const { firstname, middlename, lastname, userId, email, address } = req.body;
   let org = req.body.org ? req.body.org : "supply";
-  if (confirmPassword != password) {
-    await res.status(500).json({
-      status: false,
-      message: "Login failed! ERR: " + JSON.stringify(error.message),
-      errors: [{ password: "Username or password incorrect" }],
-    });
-  } else {
-    try {
-      let user = {
-        userId,
-        firstname,
-        middlename,
-        lastname,
-        email,
-        address,
-        org,
-        updated_by: "admin",
-      };
-      let result = await helper.changeUserInformation(user);
-      let userParse = JSON.parse(result.toString());
-      if (userParse) {
-        await res.json({
-          status: true,
-          message: "Change user information successfully",
-          errors: null,
-        });
-      } else {
-        await res.status(404).json({
-          status: false,
-          message: "Not found any user to change user information",
-          errors: null,
-        });
-      }
-    } catch (error) {
-      await res.status(500).json({
+  try {
+    let user = {
+      userId,
+      firstname,
+      middlename,
+      lastname,
+      email,
+      address,
+      org,
+      updated_by: "admin",
+    };
+    let result = await helper.changeUserInformation(user);
+    let userParse = JSON.parse(result.toString());
+    if (userParse) {
+      await res.json({
+        status: true,
+        message: "Change user information successfully",
+        errors: null,
+      });
+    } else {
+      await res.status(404).json({
         status: false,
-        message: "Fail to change user information. Err: " + error.message,
+        message: "Not found any user to change user information",
         errors: null,
       });
     }
+  } catch (error) {
+    await res.status(500).json({
+      status: false,
+      message: "Fail to change user information. Err: " + error.message,
+      errors: null,
+    });
   }
 };
 

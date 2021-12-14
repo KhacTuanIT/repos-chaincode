@@ -55,7 +55,7 @@
                   </li>
                   <li>Total <span id="cart-total-checkout">$0.00</span></li>
                 </ul>
-                <a href="#">Proceed to checkout</a>
+                <a id="checkout">Proceed to checkout</a>
               </div>
             </div>
           </div>
@@ -67,6 +67,20 @@
 <!--Shopping Cart Area End-->
 
 <script>
+  $(document).on("click", "#checkout", function () {
+    $.ajax({
+      url: "/orders/",
+      type: "post",
+      success: function (res) {
+        console.log(res);
+      },
+      error: function (jq, status, err) {
+        console.log(jq);
+        let responseError = JSON.parse(jq.responseText);
+        toastr.error(responseError.toString());
+      },
+    });
+  });
   const loadCartItems = async () => {
     $.ajax({
       url: "/api/get-cart-items",

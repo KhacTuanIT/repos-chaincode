@@ -25,7 +25,7 @@
             alt="user"
           />
           <h3>
-            <%= user.lastName + ' ' + user.middleName + ' ' + user.lastName %>
+            <%= user.lastName + ' ' + user.middleName + ' ' + user.firstName %>
           </h3>
           <h6><%= user.email %></h6>
           <p><%= user.address %></p>
@@ -361,37 +361,33 @@
     });
   });
 
-$(document).on("click", "#form-change-info-submit", function (e) {
-  $.ajax({
-    url: "/account/change-user-info",
-    type: "post",
-    data: $("#form-change-info").serialize(),
-    success: function (res) {
-      toastr.success(res.message);
-      let forms = $("#playground-form form");
-      for (let i = 0; i < forms.length; i++) {
-        if (!forms[i].classList.contains("hidden")) {
-          forms[i].classList.add("hidden");
-        }
-      }
-      $("#form-detail").removeClass("hidden");
-    },
-    error: function (jq, status, error) {
-      let responseError = JSON.parse(jq.responseText);
-      console.log(responseError);
-      responseError.errors.forEach((error) => {
-        if (!$("#" + error.param).hasClass("invalid-error-input")) {
-          $("#" + error.param).addClass("invalid-error-input");
-          setTimeout(() => {
-            if ($("#" + error.param).hasClass("invalid-error-input")) {
-              $("#" + error.param).removeClass("invalid-error-input");
-            }
-          }, 5000);
-        }
-        $("#invalid-" + error.param).text(error.msg);
-        clearAfterDelay($("#invalid-" + error.param));
-      });
-    },
+  $(document).on("click", "#form-change-info-submit", function (e) {
+    $.ajax({
+      url: "/account/change-user-info",
+      type: "post",
+      data: $("#form-change-info").serialize(),
+      success: function (res) {
+        toastr.success(res.message);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      },
+      error: function (jq, status, error) {
+        let responseError = JSON.parse(jq.responseText);
+        console.log(responseError);
+        responseError.errors.forEach((error) => {
+          if (!$("#" + error.param).hasClass("invalid-error-input")) {
+            $("#" + error.param).addClass("invalid-error-input");
+            setTimeout(() => {
+              if ($("#" + error.param).hasClass("invalid-error-input")) {
+                $("#" + error.param).removeClass("invalid-error-input");
+              }
+            }, 5000);
+          }
+          $("#invalid-" + error.param).text(error.msg);
+          clearAfterDelay($("#invalid-" + error.param));
+        });
+      },
+    });
   });
-});
 </script>
