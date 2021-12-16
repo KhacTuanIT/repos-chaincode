@@ -4,33 +4,12 @@ const { Contract, Context } = require("fabric-contract-api");
 const Order = require("./order.js");
 const OrderStates = require("./order.js").orderStates;
 
-class SupplyContext extends Context {
-  constructor() {
-    super();
-  }
-}
-
 class SupplyContract extends Contract {
-  constructor() {
-    super("teco.papernet.supplycontract");
-  }
-
-  createContext() {
-    return new SupplyContext();
-  }
-
   async initSupply() {
     console.log("instantiate the contract");
   }
 
-  async orderProduct(
-    ctx,
-    orderId,
-    price,
-    retailerId,
-    updated_by,
-    buyerId
-  ) {
+  async orderProduct(ctx, orderId, price, retailerId, updated_by, buyerId) {
     var orderAsBytes = await ctx.stub.getState(orderId);
     if (orderAsBytes && orderAsBytes.length > 0) {
       throw new Error(

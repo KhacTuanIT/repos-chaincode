@@ -10,7 +10,8 @@ const { body, validationResult } = require("express-validator");
 const sessionOptions = {
   secret: secret,
   cookie: {
-    maxAge: 86400,
+    expires: new Date(Date.now() + 60 * 10000),
+    maxAge: 60 * 10000,
   },
   saveUninitialized: true,
   resave: true,
