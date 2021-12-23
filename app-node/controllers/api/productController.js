@@ -39,6 +39,9 @@ const getAllProductAPI = (req, res, next) => {
       let products = helper.getAllProduct(org);
       products.then((data) => {
         let resultProducts = JSON.parse(data != null ? data.toString() : "{}");
+        resultProducts = resultProducts.filter(
+          (p) => p.Value.is_delete == false
+        );
         let listProductReturn = [];
         let productReturnItem = undefined;
         let manufactureres = helper.getAllManufacturer(org);
@@ -84,7 +87,9 @@ const getAllProductPagedAPI = (req, res, next) => {
       let products = helper.getAllProduct(org);
       products.then((data) => {
         let resultProducts = JSON.parse(data != null ? data.toString() : "{}");
-        console.log(resultProducts);
+        resultProducts = resultProducts.filter(
+          (p) => p.Value.is_delete == false
+        );
         let skip = (page - 1) * 9;
         let total = resultProducts.length;
         let take = skip + 9 > total ? total - skip : 9;

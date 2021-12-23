@@ -49,13 +49,13 @@ const productDetail = async (req, res, next) => {
           });
         })
         .error((err) => {
-          console.log(err);
+          res.render("404", {
+            layout: "client-layout",
+            page_name: "product",
+          });
         });
     } catch (error) {
-      res.render("404", {
-        layout: "client-layout",
-        page_name: "product",
-      });
+      console.log(err);
     }
   } else {
     res.render("404", {
