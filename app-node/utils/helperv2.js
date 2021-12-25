@@ -56,7 +56,6 @@ const getRegisteredUser = async (
 
   const walletPath = await getWalletPath(userOrg);
   const wallet = await Wallets.newFileSystemWallet(walletPath);
-  console.log(`Wallet path: ${walletPath}`);
 
   const userIdentity = await wallet.get(username);
   if (userIdentity) {
@@ -389,11 +388,9 @@ const getProduct = async function (org, productCode) {
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
     const userIdentity = await wallet.get("admin");
-    console.log(userIdentity);
     if (!userIdentity) {
       return;
     }
-    console.log("pass");
 
     const gateway = new Gateway();
     await gateway.connect(ccp, {
@@ -452,11 +449,9 @@ const getAllProduct = async function (org) {
 const addProduct = async function (product, org) {
   try {
     let ccp = await getCCP();
-    console.log(org);
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    console.log(wallet);
     const userIdentity = await wallet.get("admin");
     if (!userIdentity) {
       return;
@@ -503,11 +498,9 @@ const addProduct = async function (product, org) {
 const editProduct = async function (product, org) {
   try {
     let ccp = await getCCP();
-    console.log(org);
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    console.log(wallet);
     const userIdentity = await wallet.get("admin");
     if (!userIdentity) {
       return;
@@ -554,11 +547,9 @@ const editProduct = async function (product, org) {
 const deleteProduct = async function (productCode, updated_by, org) {
   try {
     let ccp = await getCCP();
-    console.log(org);
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    console.log(wallet);
     const userIdentity = await wallet.get("admin");
     if (!userIdentity) {
       return;
@@ -588,11 +579,9 @@ const deleteProduct = async function (productCode, updated_by, org) {
 const getProductHistory = async function (productCode, org) {
   try {
     let ccp = await getCCP();
-    console.log(org);
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    console.log(wallet);
     const userIdentity = await wallet.get("admin");
     if (!userIdentity) {
       return;
@@ -782,11 +771,9 @@ const getUser = async function (org, userId) {
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
     const userIdentity = await wallet.get("admin");
-    console.log(userIdentity);
     if (!userIdentity) {
       return;
     }
-    console.log("pass");
 
     const gateway = new Gateway();
     await gateway.connect(ccp, {
@@ -943,11 +930,9 @@ const initDataManufacturer = async (org) => {
 const addManufacturer = async function (manufacturer, org) {
   try {
     let ccp = await getCCP();
-    console.log(org);
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    console.log(wallet);
     const userIdentity = await wallet.get("admin");
     if (!userIdentity) {
       return;
@@ -978,11 +963,9 @@ const addManufacturer = async function (manufacturer, org) {
 const editManufacturer = async function (manufacturer, org) {
   try {
     let ccp = await getCCP();
-    console.log(org);
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    console.log(wallet);
     const userIdentity = await wallet.get("admin");
     if (!userIdentity) {
       return;
@@ -1013,11 +996,9 @@ const editManufacturer = async function (manufacturer, org) {
 const deleteManufacturer = async function (manufactororId, updated_by, org) {
   try {
     let ccp = await getCCP();
-    console.log(org);
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    console.log(wallet);
     const userIdentity = await wallet.get("admin");
     if (!userIdentity) {
       return;
@@ -1047,11 +1028,9 @@ const deleteManufacturer = async function (manufactororId, updated_by, org) {
 const getHistoryManufacturer = async function (manufactororId, org) {
   try {
     let ccp = await getCCP();
-    console.log(org);
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    console.log(wallet);
     const userIdentity = await wallet.get("admin");
     if (!userIdentity) {
       return;
@@ -1088,7 +1067,6 @@ const getManufacturer = async function (org, manufactororId) {
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
     const userIdentity = await wallet.get("admin");
-    console.log(userIdentity);
     if (!userIdentity) {
       return;
     }
@@ -1190,7 +1168,6 @@ const getProductType = async function (org, productTypeId) {
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
     const userIdentity = await wallet.get("admin");
-    console.log(userIdentity);
     if (!userIdentity) {
       return;
     }
@@ -1252,11 +1229,9 @@ const getAllProductType = async function (org) {
 const addProductType = async function (productType, org) {
   try {
     let ccp = await getCCP();
-    console.log(org);
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    console.log(wallet);
     const userIdentity = await wallet.get("admin");
     if (!userIdentity) {
       return;
@@ -1287,11 +1262,9 @@ const addProductType = async function (productType, org) {
 const editProductType = async function (productType, org) {
   try {
     let ccp = await getCCP();
-    console.log(org);
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    console.log(wallet);
     const userIdentity = await wallet.get("admin");
     if (!userIdentity) {
       return;
@@ -1322,11 +1295,9 @@ const editProductType = async function (productType, org) {
 const deleteProductType = async function (productTypeId, updated_by, org) {
   try {
     let ccp = await getCCP();
-    console.log(org);
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    console.log(wallet);
     const userIdentity = await wallet.get("admin");
     if (!userIdentity) {
       return;
@@ -1356,11 +1327,9 @@ const deleteProductType = async function (productTypeId, updated_by, org) {
 const getHistoryProductType = async function (productTypeId, org) {
   try {
     let ccp = await getCCP();
-    console.log(org);
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    console.log(wallet);
     const userIdentity = await wallet.get("admin");
     if (!userIdentity) {
       return;
@@ -1393,11 +1362,9 @@ const getHistoryProductType = async function (productTypeId, org) {
 const addOrder = async function (order, org) {
   try {
     let ccp = await getCCP();
-    console.log(org);
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    console.log(wallet);
     const userIdentity = await wallet.get("admin");
     if (!userIdentity) {
       return;
@@ -1502,11 +1469,9 @@ const updateOrderDetail = async function (orderDetail, org) {
 const receiceOrder = async function (orderId, userId, org) {
   try {
     let ccp = await getCCP();
-    console.log(org);
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    console.log(wallet);
     const userIdentity = await wallet.get("admin");
     if (!userIdentity) {
       return;
@@ -1536,11 +1501,9 @@ const receiceOrder = async function (orderId, userId, org) {
 const assignShipper = async function (orderId, newShipperId, userId, org) {
   try {
     let ccp = await getCCP();
-    console.log(org);
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    console.log(wallet);
     const userIdentity = await wallet.get("admin");
     if (!userIdentity) {
       return;
@@ -1571,11 +1534,9 @@ const assignShipper = async function (orderId, newShipperId, userId, org) {
 const createShipment = async function (orderId, newTrackingInfo, userId, org) {
   try {
     let ccp = await getCCP();
-    console.log(org);
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    console.log(wallet);
     const userIdentity = await wallet.get("admin");
     if (!userIdentity) {
       return;
@@ -1606,11 +1567,9 @@ const createShipment = async function (orderId, newTrackingInfo, userId, org) {
 const transportShipment = async function (orderId, userId, org) {
   try {
     let ccp = await getCCP();
-    console.log(org);
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    console.log(wallet);
     const userIdentity = await wallet.get("admin");
     if (!userIdentity) {
       return;

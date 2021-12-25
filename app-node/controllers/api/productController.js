@@ -126,7 +126,6 @@ const getAllProductPagedAPI = (req, res, next) => {
               break;
           }
           total = tempProducts.length;
-          console.log(total);
           pageProducts = tempProducts.slice(skip, skip + take);
         }
         let listProductReturn = [];
@@ -170,7 +169,6 @@ const initializeDataProduct = (req, res, next) => {
     try {
       let products = helper.initDataProduct(org);
       products.then((data) => {
-        console.log(JSON.stringify(data));
         res.json({ status: true });
       });
     } catch (error) {

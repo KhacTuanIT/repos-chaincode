@@ -14,6 +14,17 @@ module.exports = function Cart(cart) {
     this.totalPrice += parseInt(cartItem.item.price);
   };
 
+  this.addSpecific = function (item, id, amount) {
+    var cartItem = this.items[id];
+    if (!cartItem) {
+      cartItem = this.items[id] = { item: item, quantity: 0, price: 0 };
+    }
+    cartItem.quantity += amount;
+    cartItem.price = parseInt(cartItem.item.price) * cartItem.quantity;
+    this.totalItems += amount;
+    this.totalPrice += parseInt(cartItem.item.price) * amount;
+  };
+
   this.remove = function (id) {
     this.totalItems -= this.items[id].quantity;
     this.totalPrice -= this.items[id].price;

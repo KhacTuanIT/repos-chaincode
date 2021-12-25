@@ -128,6 +128,12 @@
                   id="register-btn"
                   class="register-button mt-0"
                 >
+                  <div id="loader-register" class="lds-ring hidden">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
                   Register
                 </button>
               </div>
@@ -150,6 +156,14 @@
     }, 15000);
   }
   $(document).on("click", "#register-btn", function () {
+    let _this = $(this);
+    _this.attr("disabled", "disabled");
+    let spin = $("#register-btn > div");
+    if (spin) {
+      if (spin.hasClass("hidden")) {
+        spin.removeClass("hidden");
+      }
+    }
     $.ajax({
       url: "/register",
       type: "post",
@@ -161,6 +175,12 @@
         }, 3000);
       },
       error: function (jq, status, err) {
+        _this.removeAttr("disabled");
+        if (spin) {
+          if (!spin.hasClass("hidden")) {
+            spin.addClass("hidden");
+          }
+        }
         let responseError = JSON.parse(jq.responseText);
         console.log(responseError);
         responseError.errors.forEach((error) => {

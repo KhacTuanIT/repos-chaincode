@@ -55,7 +55,15 @@
                   </li>
                   <li>Total <span id="cart-total-checkout">$0.00</span></li>
                 </ul>
-                <a id="checkout">Proceed to checkout</a>
+                <a id="checkout">
+                  <div id="loader-register" class="lds-ring hidden">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
+                  Proceed to checkout
+                </a>
               </div>
             </div>
           </div>
@@ -68,13 +76,27 @@
 
 <script>
   $(document).on("click", "#checkout", function () {
+    let _this = $(this);
+    _this.attr("disabled", "disabled");
+    let spin = $("#checkout > div");
+    if (spin) {
+      if (spin.hasClass("hidden")) {
+        spin.removeClass("hidden");
+      }
+    }
     $.ajax({
       url: "/orders/",
       type: "post",
       success: function (res) {
-        console.log(res);
+        window.location.href = "/account";
       },
       error: function (jq, status, err) {
+        _this.removeAttr("disabled");
+        if (spin) {
+          if (!spin.hasClass("hidden")) {
+            spin.addClass("hidden");
+          }
+        }
         console.log(jq);
         let responseError = JSON.parse(jq.responseText);
         toastr.error(responseError.toString());

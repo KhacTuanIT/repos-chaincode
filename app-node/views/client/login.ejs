@@ -15,7 +15,10 @@
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 mt-3 text-center">
-        <% if (message != null) { %><span class="alert alert-danger"><%= message %></span> <% } %>
+        <% if (message != null) { %><span class="alert alert-danger"
+          ><%= message %></span
+        >
+        <% } %>
       </div>
       <div class="col-sm-12 col-md-12 col-xs-12 col-lg-6 mt-3">
         <!-- Login Form s-->
@@ -67,6 +70,12 @@
                   id="login-btn"
                   class="register-button mt-0"
                 >
+                  <div id="loader-register" class="lds-ring hidden">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
                   Login
                 </button>
               </div>
@@ -83,47 +92,59 @@
 <!-- Login Content Area End Here -->
 
 <script>
-    function clearAfterDelay(e) {
-      setTimeout(() => {
-        e.text("");
-      }, 15000);
+  function clearAfterDelay(e) {
+    setTimeout(() => {
+      e.text("");
+    }, 15000);
+  }
+  $(document).on("click", "#login-btn", function () {
+    let _this = $(this);
+    _this.attr("disabled", "disabled");
+    let spin = $("#login-btn > div");
+    if (spin) {
+      if (spin.hasClass("hidden")) {
+        spin.removeClass("hidden");
+      }
     }
-    $(document).on("click", "#login-btn", function () {
-      $.ajax({
-        url: "/login",
-        type: "post",
-        data: $("#form-login").serialize(),
-        success: function (res) {
-          if (res.status) {
-            if (window.location.pathname.includes('login')) {
-              window.location.href = "/";
-            }
-            else {
-              window.location.href = window.location.href;
-            }
+    $.ajax({
+      url: "/login",
+      type: "post",
+      data: $("#form-login").serialize(),
+      success: function (res) {
+        if (res.status) {
+          if (window.location.pathname.includes("login")) {
+            window.location.href = "/";
+          } else {
+            window.location.href = window.location.href;
           }
-          else {
-            toastr.danger(
-              res.message ? res.message : "Server is updating now..."
-            );
+        } else {
+          toastr.danger(
+            res.message ? res.message : "Server is updating now..."
+          );
+        }
+      },
+      error: function (jq, status, err) {
+        _this.removeAttr("disabled");
+        if (spin) {
+          if (!spin.hasClass("hidden")) {
+            spin.addClass("hidden");
           }
-        },
-        error: function (jq, status, err) {
-          let responseError = JSON.parse(jq.responseText);
-          console.log(responseError);
-          responseError.errors.forEach((error) => {
-            if (!$("#" + error.param).hasClass("invalid-error-input")) {
-              $("#" + error.param).addClass("invalid-error-input");
-              setTimeout(() => {
-                if ($("#" + error.param).hasClass("invalid-error-input")) {
-                  $("#" + error.param).removeClass("invalid-error-input");
-                }
-              }, 5000);
-            }
-            $("#invalid-" + error.param).text(error.msg);
-            clearAfterDelay($("#invalid-" + error.param));
-          });
-        },
-      });
+        }
+        let responseError = JSON.parse(jq.responseText);
+        console.log(responseError);
+        responseError.errors.forEach((error) => {
+          if (!$("#" + error.param).hasClass("invalid-error-input")) {
+            $("#" + error.param).addClass("invalid-error-input");
+            setTimeout(() => {
+              if ($("#" + error.param).hasClass("invalid-error-input")) {
+                $("#" + error.param).removeClass("invalid-error-input");
+              }
+            }, 5000);
+          }
+          $("#invalid-" + error.param).text(error.msg);
+          clearAfterDelay($("#invalid-" + error.param));
+        });
+      },
     });
-  </script>
+  });
+</script>

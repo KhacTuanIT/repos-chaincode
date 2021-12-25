@@ -89,7 +89,7 @@
                 <div class="quantity">
                   <label>Quantity</label>
                   <div class="cart-plus-minus">
-                    <input class="cart-plus-minus-box" value="1" type="text" />
+                    <input class="cart-plus-minus-box" name="productAmount" id="productAmount" value="1" type="text" />
                     <div class="dec qtybutton">
                       <i class="fa fa-angle-down"></i>
                     </div>
@@ -98,7 +98,7 @@
                     </div>
                   </div>
                 </div>
-                <button class="add-to-cart" type="submit">Add to cart</button>
+                <button class="add-to-cart-detail add-to-cart" data-key="<%= product.code %>" type="button">Add to cart</button>
               </form>
             </div>
             <div class="block-reassurance">

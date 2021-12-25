@@ -38,7 +38,6 @@ const productDetail = async (req, res, next) => {
               });
             }
           }
-          console.log(productRelates);
           res.render("client/product-detail", {
             layout: "client-layout",
             page_name: "product",
@@ -48,14 +47,13 @@ const productDetail = async (req, res, next) => {
             productRelates: productRelates,
           });
         })
-        .error((err) => {
-          res.render("404", {
-            layout: "client-layout",
-            page_name: "product",
-          });
-        });
+        
     } catch (error) {
-      console.log(err);
+      console.log(error);
+      res.render("404", {
+        layout: "client-layout",
+        page_name: "product",
+      });
     }
   } else {
     res.render("404", {

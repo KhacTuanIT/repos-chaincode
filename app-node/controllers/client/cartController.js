@@ -45,6 +45,7 @@ const addOrder = async (req, res, next) => {
               console.log(rs);
             }
           });
+          delete req.session.cart;
           await res.json({
             status: true,
             message: `Add order for ${buyerId} successfully!`,

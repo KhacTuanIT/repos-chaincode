@@ -593,6 +593,29 @@
           });
         });
 
+        $(document).on("click", ".add-to-cart-detail", function () {
+          let key = this.getAttribute("data-key");
+          let amount = document.getElementById('productAmount')?.value;
+          $.ajax({
+            url: `/api/add-cart-item/${key}`,
+            data: { amount },
+            type: "post",
+            success: function (res) {
+              if (res.status) {
+                toastr.success(res.message);
+                loadCartItems();
+              } else {
+                toastr.error(res.message);
+              }
+            },
+            error: function (jq, status, err) {
+              console.log(jq);
+              let responseError = JSON.parse(jq.responseText);
+              toastr.error(responseError.toString());
+            },
+          });
+        });
+
         $(document).on("click", ".quick-view-btn", function () {
           let key = this.getAttribute("data-key");
           document.getElementById("product-timeline").innerHTML =
