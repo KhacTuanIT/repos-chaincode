@@ -27,11 +27,12 @@ And then, create a new folder same level with source code folder. Copy bash file
 sudo ./startnetwork.sh
 ```
 
-Waiting to the blockchain network up.
+Waiting to the blockchain network up. This will take of you about 20 minutes.
+This script will install new network, start network, create and install channel into network. Install chaincode into network, commit, approve, and discover and query the chaincode.
 
 ## How to run web application
 
-Let into folder: ./vars/app/app-node and run below script to install node package:
+Let go into folder: **./vars/app/app-node** and run below script to install node package:
 
 ```bash
 npm install
