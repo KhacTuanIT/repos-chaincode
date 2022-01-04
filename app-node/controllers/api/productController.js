@@ -163,6 +163,26 @@ const getAllProductPagedAPI = (req, res, next) => {
   }
 };
 
+const getProductNameAPI = (req, res, next) => {
+  let org = req.query.org ? req.query.org : "supply";
+  let productCode = req.query.productCode;
+  if (org) {
+    try {
+      let product = helper.getProduct(org, productCode);
+      product.then((data) => {
+        let result = JSON.parse(data.toString());
+        res.json({
+          name: result.name,
+        });
+      });
+    } catch (error) {
+      res.status(500).json("Cannot get product. ERR: " + error.message);
+    }
+  } else {
+    res.status(404).json("Not fould any records");
+  }
+};
+
 const initializeDataProduct = (req, res, next) => {
   let org = req.body.org ? req.body.org : "supply";
   if (org) {
@@ -214,4 +234,5 @@ module.exports = {
   getAllProductAPI,
   initializeDataProduct,
   getAllProductPagedAPI,
+  getProductNameAPI,
 };

@@ -43,6 +43,7 @@ const {
   getAllProductAPI,
   initializeDataProduct,
   getAllProductPagedAPI,
+  getProductNameAPI,
 } = require("../controllers/api/productController");
 const {
   initializeDataManufacturer,
@@ -82,8 +83,17 @@ const {
   addProductToCart,
   removeProductFromCart,
   minusProductFromCart,
+  createShipment,
+  receiveShipment,
+  receiveOrder,
+  assignShipper,
+  transitShipment,
 } = require("../controllers/api/orderController");
-const { cartView, addOrder } = require("../controllers/client/cartController");
+const {
+  cartView,
+  addOrder,
+  queryOrder,
+} = require("../controllers/client/cartController");
 const {
   validateAccount,
   logout,
@@ -92,6 +102,11 @@ const {
 } = require("../controllers/client/accountController");
 const { isAuthorized } = require("../controllers/client/authController");
 const { queryOrderByUserId } = require("../controllers/client/cartController");
+const {
+  orderAdminView,
+  queryAllOrderAdmin,
+  getHistoryOrderAdmin,
+} = require("../controllers/admin/orderController");
 const router = express.Router();
 
 // #### client ####
@@ -110,8 +125,9 @@ router.get("/product-details/:id", productDetail);
 
 // order
 
-router.get('/orders/:id', isAuthorized, queryOrderByUserId);
-router.post('/orders/', isAuthorized, addOrder);
+router.get("/orders/", isAuthorized, queryOrderByUserId);
+router.get("/orders/:id", isAuthorized, queryOrder);
+router.post("/orders/", isAuthorized, addOrder);
 
 // register
 
@@ -210,6 +226,9 @@ router.post(
   deleteProductAdmin
 );
 
+// orders
+router.get("/admin/orders", orderAdminView);
+
 // #### api ####
 
 router.post("/api/enroll-admin", enrollAdmin);
@@ -220,6 +239,7 @@ router.post("/api/registry-user", addUser);
 router.get("/api/products", getAllProductAPI);
 router.get("/api/products-paged", getAllProductPagedAPI);
 router.get("/api/product", getProductAPI);
+router.get("/api/product-name", getProductNameAPI);
 router.post("/api/product", addProduct);
 router.get("/api/get-product-history/:id", getHistoryProductAdmin);
 
@@ -237,10 +257,18 @@ router.get("/api/get-manufacturer-history/:id", getHistoryManufacturerAdmin);
 
 // order
 
+router.get("/api/orders", queryAllOrderAdmin);
 router.get("/api/get-cart-items", getCartItems);
 router.post("/api/add-cart-item/:id", addProductToCart);
 router.post("/api/remove-cart-item/:id", removeProductFromCart);
 router.post("/api/minus-cart-item/:id", minusProductFromCart);
+router.get("/api/get-order-history/:id", getHistoryOrderAdmin);
+
+router.post("/api/orders/create-shipment/:id", createShipment);
+router.post("/api/orders/receiver-shipment/:id", receiveShipment);
+router.post("/api/orders/receive-order/:id", receiveOrder);
+router.post("/api/orders/assign-shipment/:id", assignShipper);
+router.post("/api/orders/transit-shipment/:id", transitShipment);
 
 //
 

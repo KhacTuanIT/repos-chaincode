@@ -20,7 +20,12 @@ const addOrder = async (req, res, next) => {
         let allOrderResult = await helper.queryAllOrders(org);
         let allOrder = JSON.parse(allOrderResult.toString());
         if (allOrder) {
-          order.orderId = "OD" + ("000000" + allOrder.length).slice(-7);
+          let count = allOrder.length > 0 ? allOrder.length + 1 : 1;
+          order.orderId =
+            "OD" +
+            ("000000" + count).slice(
+              -7
+            );
         } else {
           order.orderId = "OD" + "0000001".slice(-7);
         }
@@ -32,17 +37,22 @@ const addOrder = async (req, res, next) => {
           let orderDetail = undefined;
 
           cartItems.forEach(async (item) => {
-            orderDetail = {
-              orderDetailId: helper.uuidv4(),
-              orderId: order.orderId,
-              productId: item.item.code,
-              price: item.item.price,
-              quantity: item.quantity,
-              updated_by: "",
-            };
-            let rs = await helper.createOrderDetail(orderDetail, org);
-            if (rs) {
-              console.log(rs);
+            try {
+              console.log(item);
+              orderDetail = {
+                orderDetailId: helper.uuidv4(),
+                orderId: order.orderId,
+                productId: item.item.code,
+                price: item.item.price,
+                quantity: item.quantity,
+                updated_by: "",
+              };
+              let rs = await helper.createOrderDetail(orderDetail, org);
+              if (rs) {
+                console.log(rs);
+              }
+            } catch (error) {
+              console.log(error);
             }
           });
           delete req.session.cart;
@@ -75,18 +85,25 @@ const addOrder = async (req, res, next) => {
 };
 
 const queryOrderByUserId = async (req, res, next) => {
-  let userId = req.params.id;
+  let userId = req.session.userId;
   let org = req.query.org ? req.query.org : "supply";
-  try {
-    let result = await helper.queryAllOrdersByUserId(userId, org);
-    let allOrder = JSON.parse(result.toString());
-    await res.json({
-      status: true,
-      message: `Get order for ${buyerId} successfully!`,
-      data: allOrder,
-    });
-  } catch (error) {
-    res.status(500).json({
+  if (userId) {
+    try {
+      let result = await helper.queryAllOrdersByUserId(userId, org);
+      let allOrder = JSON.parse(result.toString());
+      await res.json({
+        status: true,
+        message: `Get order for ${userId} successfully!`,
+        data: allOrder,
+      });
+    } catch (error) {
+      res.status(500).json({
+        status: false,
+        message: "Get order fail. ERR: " + error.message,
+      });
+    }
+  } else {
+    res.status(401).json({
       status: false,
       message: "Get order fail. ERR: " + error.message,
     });

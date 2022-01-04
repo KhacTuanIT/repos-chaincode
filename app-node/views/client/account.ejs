@@ -13,93 +13,73 @@
 <!-- Li's Breadcrumb Area End Here -->
 <!--Shopping Cart Area Strat-->
 <% if (user) { %>
-<div class="Shopping-cart-area pt-60 pb-60">
-  <div class="container">
-    <div class="row">
-      <div class="col-4">
-        <div class="card-container">
-          <span class="default">Default</span>
-          <img
-            class="round"
-            src="https://randomuser.me/api/portraits/women/79.jpg"
-            alt="user"
-          />
-          <h3>
-            <%= user.lastName + ' ' + user.middleName + ' ' + user.firstName %>
-          </h3>
-          <h6><%= user.email %></h6>
-          <p><%= user.address %></p>
-          <!-- <div class="buttons">
+  <div class="Shopping-cart-area pt-60 pb-60">
+    <div class="container">
+      <div class="row">
+        <div class="col-4">
+          <div class="card-container">
+            <span class="default">Default</span>
+            <img class="round" src="https://randomuser.me/api/portraits/women/79.jpg" alt="user" />
+            <h3>
+              <%= user.lastName + ' ' + user.middleName + ' ' + user.firstName %>
+            </h3>
+            <h6>
+              <%= user.email %>
+            </h6>
+            <p>
+              <%= user.address %>
+            </p>
+            <!-- <div class="buttons">
             <button class="primary">Message</button>
             <button class="primary ghost">Following</button>
           </div> -->
-          <div class="skills">
-            <h6>Features</h6>
-            <ul>
-              <li>
-                <a id="btn-change-password-form">Change password</a>
-              </li>
-              <li>
-                <a id="btn-change-user-info-form">Change information</a>
-              </li>
-              <li><a>Orders</a></li>
-            </ul>
+            <div class="skills">
+              <h6>Features</h6>
+              <ul>
+                <li>
+                  <a id="btn-change-password-form">Change password</a>
+                </li>
+                <li>
+                  <a id="btn-change-user-info-form">Change information</a>
+                </li>
+                <li><a id="btn-get-orders">Orders</a></li>
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col-8" id="playground-form">
-        <form id="form-detail">
-          <div class="row">
-            <div class="col-12">
-              <h4>Account</h4>
+        <div class="col-8" id="playground-form">
+          <form id="form-detail">
+            <div class="row">
+              <div class="col-12">
+                <h4>Account</h4>
+              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-12">
-              <div class="input-group">
-                <div class="col-third">
-                  <input
-                    class="profile-input"
-                    type="text"
-                    readonly
-                    placeholder="First name"
-                    value="<%= user.firstName %>"
-                  />
+            <div class="row">
+              <div class="col-12">
+                <div class="input-group">
+                  <div class="col-third">
+                    <input class="profile-input" type="text" readonly placeholder="First name"
+                      value="<%= user.firstName %>" />
+                  </div>
+                  <div class="col-third">
+                    <input class="profile-input" type="text" readonly placeholder="Middle name"
+                      value="<%= user.middleName %>" />
+                  </div>
+                  <div class="col-third">
+                    <input class="profile-input" type="text" readonly placeholder="Last name"
+                      value="<%= user.lastName %>" />
+                  </div>
                 </div>
-                <div class="col-third">
-                  <input
-                    class="profile-input"
-                    type="text"
-                    readonly
-                    placeholder="Middle name"
-                    value="<%= user.middleName %>"
-                  />
-                </div>
-                <div class="col-third">
-                  <input
-                    class="profile-input"
-                    type="text"
-                    readonly
-                    placeholder="Last name"
-                    value="<%= user.lastName %>"
-                  />
+              </div>
+              <div class="col-12">
+                <div class="input-group input-group-icon">
+                  <input class="profile-input" type="email" readonly placeholder="Email Adress"
+                    value="<%= user.email %>" />
+                  <div class="input-icon"><i class="fa fa-envelope"></i></div>
                 </div>
               </div>
             </div>
-            <div class="col-12">
-              <div class="input-group input-group-icon">
-                <input
-                  class="profile-input"
-                  type="email"
-                  readonly
-                  placeholder="Email Adress"
-                  value="<%= user.email %>"
-                />
-                <div class="input-icon"><i class="fa fa-envelope"></i></div>
-              </div>
-            </div>
-          </div>
-          <!-- <div class="row">
+            <!-- <div class="row">
             <div class="col-12">
               <h4>Date of Birth</h4>
               <div class="input-group">
@@ -130,16 +110,16 @@
               </div>
             </div>
           </div> -->
-          <div class="row">
-            <div class="col-12">
-              <h4>Address Details</h4>
-              <div class="input-group input-group-icon">
-                <%= user.address %>
+            <div class="row">
+              <div class="col-12">
+                <h4>Address Details</h4>
+                <div class="input-group input-group-icon">
+                  <%= user.address %>
+                </div>
+                <div class="input-group input-group-icon"></div>
               </div>
-              <div class="input-group input-group-icon"></div>
             </div>
-          </div>
-          <!-- <div class="row pr-0">
+            <!-- <div class="row pr-0">
             <h4>Terms and Conditions</h4>
               <div class="input-group">
                 <input class="profile-input" id="terms" type="checkbox"/>
@@ -155,216 +135,314 @@
               />
             </div>
           </div> -->
-        </form>
-        <form id="form-change-info" class="hidden">
-          <input type="hidden" name="userId" value="<%= user.userId %>" />
-          <div class="row">
-            <div class="col-12">
-              <h4>Change user information</h4>
+          </form>
+          <form id="form-change-info" class="hidden">
+            <input type="hidden" name="userId" value="<%= user.userId %>" />
+            <div class="row">
+              <div class="col-12">
+                <h4>Change user information</h4>
+              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-12">
-              <div class="input-group">
-                <div class="col-third">
-                  <input
-                    class="profile-input"
-                    type="text"
-                    name="firstname"
-                    placeholder="First name"
-                    value="<%= user.firstName %>"
-                  />
-                  <span id="invalid-firstname"></span>
-                </div>
-                <div class="col-third">
-                  <input
-                    class="profile-input"
-                    type="text"
-                    name="middlename"
-                    placeholder="Middle name"
-                    value="<%= user.middleName %>"
-                  />
-                  <span id="invalid-middlename"></span>
-                </div>
-                <div class="col-third">
-                  <input
-                    class="profile-input"
-                    type="text"
-                    name="lastname"
-                    placeholder="Last name"
-                    value="<%= user.lastName %>"
-                  />
-                  <span id="invalid-lastname"></span>
+            <div class="row">
+              <div class="col-12">
+                <div class="input-group">
+                  <div class="col-third">
+                    <input class="profile-input" type="text" name="firstname" placeholder="First name"
+                      value="<%= user.firstName %>" />
+                    <span id="invalid-firstname"></span>
+                  </div>
+                  <div class="col-third">
+                    <input class="profile-input" type="text" name="middlename" placeholder="Middle name"
+                      value="<%= user.middleName %>" />
+                    <span id="invalid-middlename"></span>
+                  </div>
+                  <div class="col-third">
+                    <input class="profile-input" type="text" name="lastname" placeholder="Last name"
+                      value="<%= user.lastName %>" />
+                    <span id="invalid-lastname"></span>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="col-12">
-              <div class="input-group input-group-icon">
-                <input
-                  class="profile-input"
-                  type="email"
-                  name="email"
-                  placeholder="Email Adress"
-                  value="<%= user.email %>"
-                />
-                <div class="input-icon"><i class="fa fa-envelope"></i></div>
+              <div class="col-12">
+                <div class="input-group input-group-icon">
+                  <input class="profile-input" type="email" name="email" placeholder="Email Adress"
+                    value="<%= user.email %>" />
+                  <div class="input-icon"><i class="fa fa-envelope"></i></div>
+                </div>
+                <span id="invalid-email"></span>
               </div>
-              <span id="invalid-email"></span>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-12">
-              <h4>Address Details</h4>
-              <div class="input-group input-group-icon">
-                <input
-                  class="profile-input"
-                  type="text"
-                  name="address"
-                  placeholder="Address"
-                  value="<%= user.address %>"
-                />
-                <div class="input-icon"><i class="fa fa-mark-alt"></i></div>
+            <div class="row">
+              <div class="col-12">
+                <h4>Address Details</h4>
+                <div class="input-group input-group-icon">
+                  <input class="profile-input" type="text" name="address" placeholder="Address"
+                    value="<%= user.address %>" />
+                  <div class="input-icon"><i class="fa fa-street-view"></i></div>
+                </div>
+                <span id="invalid-address"></span>
               </div>
-              <span id="invalid-address"></span>
             </div>
-          </div>
-          <div class="row pr-0">
-            <div class="col-sm-6 pr-0">
-              <input
-                class="form-control"
-                type="button"
-                id="form-change-info-submit"
-                value="Save"
-              />
-            </div>
-          </div>
-        </form>
-        <form id="form-change-password" class="hidden">
-          <input type="hidden" name="userId" value="<%= user.userId %>" />
-          <div class="row">
-            <div class="col-12">
-              <h4>Change password</h4>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-12">
-              <div class="input-group input-group-icon">
-                <input
-                  class="profile-input"
-                  type="password"
-                  name="password"
-                  placeholder="Password"
-                  value=""
-                />
-                <div class="input-icon"><i class="fa fa-lock"></i></div>
+            <div class="row pr-0">
+              <div class="col-sm-6 pr-0">
+                <div class="lds-ring-profile lds-ring hidden">
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                </div>
+                <input class="form-control profile-button" type="button" id="form-change-info-submit" value="Save" />
               </div>
-              <span id="invalid-password"></span>
             </div>
-            <div class="col-12">
-              <div class="input-group input-group-icon">
-                <input
-                  class="profile-input"
-                  type="password"
-                  name="confirmPassword"
-                  placeholder="Confirm password"
-                  value=""
-                />
-                <div class="input-icon"><i class="fa fa-lock"></i></div>
+          </form>
+          <form id="form-change-password" class="hidden">
+            <input type="hidden" name="userId" value="<%= user.userId %>" />
+            <div class="row">
+              <div class="col-12">
+                <h4>Change password</h4>
               </div>
-              <span id="invalid-confirmPassword"></span>
             </div>
-          </div>
-          <div class="row pr-0">
-            <div class="col-sm-6 pr-0">
-              <input
-                class="form-control"
-                type="button"
-                id="change-password-submit"
-                value="Save"
-              />
+            <div class="row">
+              <div class="col-12">
+                <div class="input-group input-group-icon">
+                  <input class="profile-input" type="password" name="password" placeholder="Password" value="" />
+                  <div class="input-icon"><i class="fa fa-lock"></i></div>
+                </div>
+                <span id="invalid-password"></span>
+              </div>
+              <div class="col-12">
+                <div class="input-group input-group-icon">
+                  <input class="profile-input" type="password" name="confirmPassword" placeholder="Confirm password"
+                    value="" />
+                  <div class="input-icon"><i class="fa fa-lock"></i></div>
+                </div>
+                <span id="invalid-confirmPassword"></span>
+              </div>
             </div>
-          </div>
-        </form>
-        <form class="table-responsive">
-          <table class="table table-hover table-bordered">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Handle</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td colspan="2">Larry the Bird</td>
-                <td>@twitter</td>
-              </tr>
-            </tbody>
-          </table>
-        </form>
+            <div class="row pr-0">
+              <div class="col-sm-6 pr-0">
+                <div class="lds-ring-profile lds-ring hidden">
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                </div>
+                <input class="form-control profile-button" type="button" id="change-password-submit" value="Save" />
+              </div>
+            </div>
+          </form>
+          <form id="form-orders" class="hidden">
+            <div class="row">
+              <div class="col-12">
+                <h4>Your orders</h4>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-hover table-bordered">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Order code</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Status</th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody id="order-table-body">
+                  <div id="loader-register" class="lds-ring-profile lds-ring hidden bg-primary">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
+                </tbody>
+              </table>
+            </div>
+          </form>
+          <form id="form-order-details" class="hidden">
+            <div class="row">
+              <div class="col-12">
+                <h4>Order details</h4>
+              </div>
+            </div>
+            <div class="order-detail-box" id="order-detail-frame">
+              <div class="order-detail-id">Order ID: <span>OD010100</span></div>
+              <div class="order-detail-row">
+                <div><img src="" /></div>
+                <div>Product 1</div>
+                <div>Price</div>
+                <div>X 2</div>
+              </div>
+              <div class="order-detail-row">
+                <div><img src="" /></div>
+                <div>Product 3</div>
+                <div>Price</div>
+                <div>X 2</div>
+              </div>
+              <div class="order-detail-total">
+                <div>Total: $<span>2000</span></div>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<% } %>
-<!--Shopping Cart Area End-->
+  <% } %>
+    <!--Shopping Cart Area End-->
 
-<script>
-  function clearAfterDelay(e) {
-    setTimeout(() => {
-      e.text("");
-    }, 15000);
-  }
-  $(document).on("click", "#btn-change-password-form", function (e) {
-    console.log("click");
-    let forms = $("#playground-form form");
-    for (let i = 0; i < forms.length; i++) {
-      if (!forms[i].classList.contains("hidden")) {
-        forms[i].classList.add("hidden");
+    <script>
+      const mapOrderState = (state) => {
+        state = state - 1;
+        const orderState = [
+          "ORDER_CREATED",
+          "ORDER_RECEIVED",
+          "SHIPMENT_ASSIGNED",
+          "SHIPMENT_CREATED",
+          "SHIPMENT_IN_TRANSIT",
+          "SHIPMENT_RECEIVED",
+          "ORDER_CLOSED",
+        ];
+        return orderState[state];
       }
-    }
-    $("#form-change-password").removeClass("hidden");
-  });
-  $(document).on("click", "#btn-change-user-info-form", function (e) {
-    let forms = $("#playground-form form");
-    for (let i = 0; i < forms.length; i++) {
-      if (!forms[i].classList.contains("hidden")) {
-        forms[i].classList.add("hidden");
+      function clearAfterDelay(e) {
+        setTimeout(() => {
+          e.text("");
+        }, 15000);
       }
-    }
-    $("#form-change-info").removeClass("hidden");
-  });
-  $(document).on("click", ".default", function () {
-    let forms = $("#playground-form form");
-    for (let i = 0; i < forms.length; i++) {
-      if (!forms[i].classList.contains("hidden")) {
-        forms[i].classList.add("hidden");
-      }
-    }
-    $("#form-detail").removeClass("hidden");
-  });
+      $(document).on("click", "#btn-change-password-form", function (e) {
+        console.log("click");
+        let forms = $("#playground-form form");
+        for (let i = 0; i < forms.length; i++) {
+          if (!forms[i].classList.contains("hidden")) {
+            forms[i].classList.add("hidden");
+          }
+        }
+        $("#form-change-password").removeClass("hidden");
+      });
+      $(document).on("click", "#btn-change-user-info-form", function (e) {
+        let forms = $("#playground-form form");
+        for (let i = 0; i < forms.length; i++) {
+          if (!forms[i].classList.contains("hidden")) {
+            forms[i].classList.add("hidden");
+          }
+        }
+        $("#form-change-info").removeClass("hidden");
+      });
+      $(document).on("click", "#btn-get-orders", function (e) {
+        let forms = $("#playground-form form");
+        for (let i = 0; i < forms.length; i++) {
+          if (!forms[i].classList.contains("hidden")) {
+            forms[i].classList.add("hidden");
+          }
+        }
+        $.ajax({
+          url: "/orders",
+          success: function (res) {
+            if (res.data) {
+              const { data } = res;
+              let count = 1;
+              let tableContent = "";
+              data.forEach((orderItem) => {
+                console.log(orderItem);
+                const { Key, Value } = orderItem;
+                tableContent += `<tr>
+              <th scope="row" class="table-counter">${count}</th>
+              <td>${Key}</td>
+                  <td>$${Value.price}</td>
+                  <td class="order-state-${mapOrderState(Value.currentOrderState).toLowerCase()}"><span>${mapOrderState(Value.currentOrderState)}</span></td>
+                  <td class="td-last"><a data-key="${Key}" class="btn-order-detail"><i class="fa fa-file-text"></i></a></td>
+                </tr>`;
+                count += 1;
+              });
+              $("#order-table-body").html(tableContent);
+            }
+          },
+          error: function (jq, status, err) {
+            let responseError = JSON.parse(jq.responseText);
+            console.log(responseError);
+          },
+        });
+        $("#form-orders").removeClass("hidden");
+      });
 
-  $(document).on("click", "#change-password-submit", function (e) {
-    $.ajax({
-      url: "/account/change-password",
-      type: "post",
-      data: $("#form-change-password").serialize(),
-      success: function (res) {
-        toastr.success(res.message);
+      function setProductDetailInfo(ids) {
+        ids.forEach(productCode => {
+          $.ajax({
+            url: '/api/product',
+            data: {
+              productCode
+            },
+            success: function (res) {
+              if (res) {
+                const { product } = res;
+                $('#product-image-' + productCode).attr('src', '/images/' + product.primaryImage);
+                $('#product-name-' + productCode).text('$' + product.name);
+              }
+            },
+            error: function (jq, status, err) {
+              let responseError = JSON.parse(jq.responseText);
+              console.log(responseError);
+            }
+          })
+        })
+      }
+
+      $(document).on('click', '.btn-order-detail', function () {
+        const key = $(this).data('key');
+        $.ajax({
+          url: `/orders/${key}`,
+          success: function (res) {
+            let { data } = res;
+            let tableContent = '';
+            let ids = [];
+            if (data) {
+              let total = 0;
+              tableContent += `<div class="order-detail-id">Order ID: <span>${key}</span><span class="close-order-detail"><i class="fa fa-times"></i></span></div>`;
+              data.forEach(item => {
+                const { Value } = item;
+                total += parseInt(Value.price);
+                ids.push(Value.productId);
+                tableContent += `<div class="order-detail-row">
+                <div><img src="" id="product-image-${Value.productId}" /></div>
+                <div id="product-name-${Value.productId}">
+                  <div id="loader-register" class="lds-ring bg-primary">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
+                </div>
+                <div>${Value.price}</div>
+                <div>X ${Value.quantity}</div>
+              </div>`;
+              });
+              tableContent += `<div class="order-detail-total">
+                <div>Total: $<span>${total}</span></div>
+              </div>`;
+            }
+            if (ids) {
+              setProductDetailInfo(ids);
+            }
+            $('#form-order-details').removeClass('hidden');
+            $('#order-detail-frame').html(tableContent);
+          },
+          error: function (jq, status, err) {
+            let responseError = JSON.parse(jq.responseText);
+            console.log(responseError);
+          }
+        })
+      });
+
+      $(document).on('click', '.close-order-detail', function () {
+        let parent = $('#form-order-details');
+        $('#order-detail-frame').html('');
+        if (!parent.hasClass('hidden')) {
+          parent.addClass('hidden');
+        }
+      });
+
+      $(document).on("click", ".default", function () {
         let forms = $("#playground-form form");
         for (let i = 0; i < forms.length; i++) {
           if (!forms[i].classList.contains("hidden")) {
@@ -372,53 +450,110 @@
           }
         }
         $("#form-detail").removeClass("hidden");
-      },
-      error: function (jq, status, error) {
-        let responseError = JSON.parse(jq.responseText);
-        console.log(responseError);
-        responseError.errors.forEach((error) => {
-          if (!$("#" + error.param).hasClass("invalid-error-input")) {
-            $("#" + error.param).addClass("invalid-error-input");
-            setTimeout(() => {
-              if ($("#" + error.param).hasClass("invalid-error-input")) {
-                $("#" + error.param).removeClass("invalid-error-input");
-              }
-            }, 5000);
-          }
-          $("#invalid-" + error.param).text(error.msg);
-          clearAfterDelay($("#invalid-" + error.param));
-        });
-      },
-    });
-  });
+      });
 
-  $(document).on("click", "#form-change-info-submit", function (e) {
-    $.ajax({
-      url: "/account/change-user-info",
-      type: "post",
-      data: $("#form-change-info").serialize(),
-      success: function (res) {
-        toastr.success(res.message);
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-      },
-      error: function (jq, status, error) {
-        let responseError = JSON.parse(jq.responseText);
-        console.log(responseError);
-        responseError.errors.forEach((error) => {
-          if (!$("#" + error.param).hasClass("invalid-error-input")) {
-            $("#" + error.param).addClass("invalid-error-input");
-            setTimeout(() => {
-              if ($("#" + error.param).hasClass("invalid-error-input")) {
-                $("#" + error.param).removeClass("invalid-error-input");
-              }
-            }, 5000);
+      $(document).on("click", "#change-password-submit", function (e) {
+        let _this = $(this);
+        _this.attr("disabled", "disabled");
+        let spin = _this.parent().children(".lds-ring-profile");
+        console.log(spin);
+        if (spin) {
+          if (spin.hasClass("hidden")) {
+            spin.removeClass("hidden");
           }
-          $("#invalid-" + error.param).text(error.msg);
-          clearAfterDelay($("#invalid-" + error.param));
+        }
+        $.ajax({
+          url: "/account/change-password",
+          type: "post",
+          data: $("#form-change-password").serialize(),
+          success: function (res) {
+            _this.removeAttr("disabled");
+            if (spin) {
+              if (!spin.hasClass("hidden")) {
+                spin.addClass("hidden");
+              }
+            }
+            toastr.success(res.message);
+            let forms = $("#playground-form form");
+            for (let i = 0; i < forms.length; i++) {
+              if (!forms[i].classList.contains("hidden")) {
+                forms[i].classList.add("hidden");
+              }
+            }
+            $("#form-detail").removeClass("hidden");
+          },
+          error: function (jq, status, error) {
+            _this.removeAttr("disabled");
+            if (spin) {
+              if (!spin.hasClass("hidden")) {
+                spin.addClass("hidden");
+              }
+            }
+            let responseError = JSON.parse(jq.responseText);
+            console.log(responseError);
+            responseError.errors.forEach((error) => {
+              if (!$("#" + error.param).hasClass("invalid-error-input")) {
+                $("#" + error.param).addClass("invalid-error-input");
+                setTimeout(() => {
+                  if ($("#" + error.param).hasClass("invalid-error-input")) {
+                    $("#" + error.param).removeClass("invalid-error-input");
+                  }
+                }, 5000);
+              }
+              $("#invalid-" + error.param).text(error.msg);
+              clearAfterDelay($("#invalid-" + error.param));
+            });
+          },
         });
-      },
-    });
-  });
-</script>
+      });
+
+      $(document).on("click", "#form-change-info-submit", function (e) {
+        let _this = $(this);
+        _this.attr("disabled", "disabled");
+        let spin = _this.parent().children(".lds-ring-profile");
+        if (spin) {
+          if (spin.hasClass("hidden")) {
+            spin.removeClass("hidden");
+          }
+        }
+        $.ajax({
+          url: "/account/change-user-info",
+          type: "post",
+          data: $("#form-change-info").serialize(),
+          success: function (res) {
+            _this.removeAttr("disabled");
+            if (spin) {
+              if (!spin.hasClass("hidden")) {
+                spin.addClass("hidden");
+              }
+            }
+            toastr.success(res.message);
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          },
+          error: function (jq, status, error) {
+            _this.removeAttr("disabled");
+            if (spin) {
+              if (!spin.hasClass("hidden")) {
+                spin.addClass("hidden");
+              }
+            }
+            let responseError = JSON.parse(jq.responseText);
+            console.log(responseError);
+            responseError.errors.forEach((error) => {
+              if (!$("#" + error.param).hasClass("invalid-error-input")) {
+                $("#" + error.param).addClass("invalid-error-input");
+                setTimeout(() => {
+                  if ($("#" + error.param).hasClass("invalid-error-input")) {
+                    $("#" + error.param).removeClass("invalid-error-input");
+                  }
+                }, 5000);
+              }
+              $("#invalid-" + error.param).text(error.msg);
+              clearAfterDelay($("#invalid-" + error.param));
+            });
+          },
+        });
+      });
+    </script>

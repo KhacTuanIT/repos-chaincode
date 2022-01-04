@@ -1,19 +1,20 @@
 fabric:
- cas:
- - "ca1.supply.teco.com"
- - "ca1.delivery.teco.com"
- peers:
- - "peer1.supply.teco.com"
- - "peer2.supply.teco.com"
- - "peer1.delivery.teco.com"
- - "peer2.delivery.teco.com"
- orderers:
- - "orderer1.teco.com"
- netname: "teconetwork"
- settings:
-  ca:
-   FABRIC_LOGGING_SPEC: DEBUG
-  peer:
-   FABRIC_LOGGING_SPEC: DEBUG
-  orderer:
-   FABRIC_LOGGING_SPEC: DEBUG
+  cas:
+    - "ca1.supply.teco.com"
+    - "ca1.delivery.teco.com"
+  peers:
+    - "peer1.supply.teco.com"
+    - "peer2.supply.teco.com"
+    - "peer1.delivery.teco.com"
+    - "peer2.delivery.teco.com"
+  orderers:
+    - "orderer1.teco.com"
+  netname: "teconetwork"
+  endpoint_address: 14.225.255.39
+  settings:
+    ca:
+      FABRIC_LOGGING_SPEC: DEBUG
+    peer:
+      FABRIC_LOGGING_SPEC: DEBUG
+    orderer:
+      FABRIC_LOGGING_SPEC: DEBUG

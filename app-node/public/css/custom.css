@@ -18,3 +18,79 @@
     margin-left: 0 !important;
   }
 }
+
+.context-menu {
+  display: none;
+  position: absolute;
+  z-index: 10;
+  padding: 12px 0;
+  width: 240px;
+  background-color: #fff;
+  border: solid 1px #dfdfdf;
+  box-shadow: 1px 1px 2px #cfcfcf;
+}
+
+.context-menu--active {
+  display: block;
+}
+
+.context-menu__items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.context-menu__item {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.context-menu__item:last-child {
+  margin-bottom: 0;
+}
+
+.context-menu__link {
+  display: block;
+  padding: 4px 12px;
+  color: #93aa00b1;
+  text-decoration: none;
+}
+
+.context-menu__link:hover {
+  color: #fff;
+  background-color: #8baa009a;
+}
+
+.order-state-order_created > span,
+.order-state-order_received > span,
+.order-state-shipment_assigned > span,
+.order-state-shipment_created > span,
+.order-state-shipment_in_transit > span,
+.order-state-shipment_received > span,
+.order-state-order_closed > span {
+  padding: 4px 8px;
+  border-radius: 4;
+}
+
+.order-state-order_closed > span {
+  background-color: rgba(228, 12, 43, 0.8);
+  color: #fff;
+}
+
+.order-state-shipment_assigned > span,
+.order-state-shipment_in_transit > span {
+  background-color: seagreen;
+  color: #ddd;
+}
+
+.order-state-order_received > span,
+.order-state-shipment_received > span {
+  background-color: sandybrown;
+  color: #ddd;
+}
+
+.order-state-order_created > span,
+.order-state-shipment_created > span {
+  background-color: rgba(12, 228, 43, 0.6);
+  color: #ffffff;
+}

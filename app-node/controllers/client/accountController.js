@@ -1,6 +1,8 @@
 const helper = require("./../../utils/helperv2");
 const { body, validationResult } = require("express-validator");
 
+const uuid = require("uuid");
+
 const account = async (req, res, next) => {
   let org = req.query.org ? req.query.org : "supply";
   try {
@@ -69,27 +71,36 @@ const register = async (req, res, next) => {
         const existUserResult = await helper.getUserByUsername(user);
         const existUser = JSON.stringify(existUserResult.toString());
         if (existUser.username != "") {
-          const allUserResult = await helper.getAllUser(org, "");
-          let allUser = allUserResult
-            ? JSON.parse(allUserResult.toString())
-            : "[]";
-          user.userId = "US" + ("000000" + allUser.length).slice(-7);
+          user.userId = uuid.v4();
           user.role = "client";
           user.manager = "";
           user.updated_by = "";
           user.address = "";
           console.log(user);
-          const result = await helper.addUserForOrg(user);
-          await res.json({
-            message: `Add user for ${org} successfully!`,
-            data: JSON.parse(result.toString()),
-          });
+          const enroll = await helper.registerAndGetSecret(
+            user.userId,
+            "client",
+            user.org
+          );
+          if (enroll.success == true) {
+            const result = await helper.addUserForOrg(user);
+            await res.json({
+              message: `Add user for ${org} successfully!`,
+              data: JSON.parse(result.toString()),
+              result: enroll,
+            });
+          } else {
+            await res.status(500).json({
+              message: enroll.message,
+            });
+          }
         } else {
           await res.status(500).json({
             message: "Add user failed! ERR: username is exists in system!",
           });
         }
       } catch (error) {
+        console.log(error);
         await res.status(500).json({
           message: "Add user failed! ERR: " + JSON.stringify(error.message),
         });
@@ -162,8 +173,13 @@ const loginClient = async (req, res, next) => {
     } catch (error) {
       await res.status(500).json({
         status: false,
-        message: "Confirm password is not match",
-        errors: [{ confirmPassword: "Confirm password is not match" }],
+        message: `${error.message}`,
+        errors: [
+          {
+            param: "password",
+            msg: "Username or password does not exists, please create one!",
+          },
+        ],
       });
     }
   } else {
@@ -305,5 +321,5 @@ module.exports = {
   validateAccount,
   logout,
   changeUserInformation,
-  changePassword
+  changePassword,
 };

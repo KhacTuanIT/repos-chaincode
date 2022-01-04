@@ -5740,10 +5740,64 @@ span.required {
   display: none !important;
 }
 
+.td-last {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.td-last > a > i {
+  color: #222;
+}
+
+.td-last > a:hover {
+  color: #777;
+  cursor: pointer;
+}
+
+.td-last > a:hover > i {
+  color: #777;
+  cursor: pointer;
+}
+
 #register-btn {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.order-state-order_created > span,
+.order-state-order_received > span,
+.order-state-shipment_assigned > span,
+.order-state-shipment_created > span,
+.order-state-shipment_in_transit > span,
+.order-state-shipment_received > span,
+.order-state-order_closed > span {
+  padding: 4px 8px;
+  border-radius: 4;
+}
+
+.order-state-order_closed > span {
+  background-color: rgba(228, 12, 43, 0.8);
+  color: #fff;
+}
+
+.order-state-shipment_assigned > span,
+.order-state-shipment_in_transit > span {
+  background-color: seagreen;
+  color: #ddd;
+}
+
+.order-state-order_received > span,
+.order-state-shipment_received > span {
+  background-color: sandybrown;
+  color: #ddd;
+}
+
+.order-state-order_created > span,
+.order-state-shipment_created > span {
+  background-color: rgba(12, 228, 43, 0.6);
+  color: #ffffff;
 }
 
 /*----------------------------------------------------------------------------------------------------*/
@@ -5790,6 +5844,13 @@ span.required {
   transform: translateY(-42%);
   width: 26px;
   height: 26px;
+}
+
+.lds-ring-profile {
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  transform: translateY(0);
 }
 .lds-ring div {
   box-sizing: border-box;

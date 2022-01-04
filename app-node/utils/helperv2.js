@@ -6,6 +6,7 @@ const FabricCAServices = require("fabric-ca-client");
 const fs = require("fs");
 
 const util = require("util");
+const crypto = require("crypto");
 
 const getCCP = async () => {
   let ccpPath = path.resolve(__dirname, "../connection.json");
@@ -42,91 +43,95 @@ const getAffiliation = async (org) => {
   return org + ".department1";
 };
 
-const getRegisteredUser = async (
-  username,
-  password,
-  userType,
-  userOrg,
-  isJson
-) => {
-  let ccp = await getCCP();
+const getRegisteredUser = async (userId, userType, userOrg) => {
+  try {
+    let ccp = await getCCP();
 
-  const caURL = await getCaUrl(userOrg, ccp);
-  const ca = new FabricCAServices(caURL);
+    const caURL = await getCaUrl(userOrg, ccp);
+    const ca = new FabricCAServices(caURL);
 
-  const walletPath = await getWalletPath(userOrg);
-  const wallet = await Wallets.newFileSystemWallet(walletPath);
+    const walletPath = await getWalletPath(userOrg);
+    const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-  const userIdentity = await wallet.get(username);
-  if (userIdentity) {
+    const userIdentity = await wallet.get(userId);
+    if (userIdentity) {
+      console.log(
+        `An identity for the user ${userId} already exists in the wallet`
+      );
+      var response = {
+        success: false,
+        message: `An identity for the user ${userId} already exists in the wallet`,
+      };
+      return response;
+    }
+
+    let adminIdentity = await wallet.get("admin");
+    if (!adminIdentity) {
+      console.log(
+        'An identity for the admin user "Admin" does not exist in the wallet'
+      );
+      await enrollAdmin(userOrg);
+      adminIdentity = await wallet.get("admin");
+      console.log("Admin enrolled successfully");
+    }
+
+    const provider = wallet
+      .getProviderRegistry()
+      .getProvider(adminIdentity.type);
+    const adminUser = await provider.getUserContext(adminIdentity, "admin");
+    let secret;
+    try {
+      secret = await ca.register(
+        {
+          enrollmentID: userId,
+          role: "client",
+          attrs: [
+            {
+              name: "usertype",
+              value: userType,
+            },
+          ],
+          maxEnrollments: 15,
+        },
+        adminUser
+      );
+    } catch (error) {
+      return error.message;
+    }
+
+    const enrollment = await ca.enroll({
+      enrollmentID: userId,
+      enrollmentSecret: secret,
+    });
+
+    let x509Identity = {
+      credentials: {
+        certificate: enrollment.certificate,
+        privateKey: enrollment.key.toBytes(),
+      },
+      mspId: await getMspId(userOrg),
+      type: "X.509",
+    };
+
+    const result = await wallet.put(userId, x509Identity);
     console.log(
-      `An identity for the user ${username} already exists in the wallet`
+      `Successfully registered and enrolled admin user ${userId} and imported it into the wallet`
     );
+
     var response = {
       success: true,
-      message: username + " enroled successfully",
+      message: userId + " enrolled Successfully",
+      privateKey: enrollment.key.toBytes(),
+      data: result,
+    };
+    return response;
+  } catch (error) {
+    var response = {
+      success: false,
+      message: error.message,
     };
     return response;
   }
-
-  let adminIdentity = await wallet.get("admin1");
-  if (!adminIdentity) {
-    console.log(
-      'An identity for the admin user "Admin" does not exist in the wallet'
-    );
-    await enrollAdmin(userOrg);
-    adminIdentity = await wallet.get("admin1");
-    console.log("Admin enrolled successfully");
-  }
-
-  const provider = wallet.getProviderRegistry().getProvider(adminIdentity.type);
-  const adminUser = await provider.getUserContext(adminIdentity, "admin1");
-  let secret;
-  try {
-    secret = await ca.register(
-      {
-        enrollmentID: username,
-        enrollmentSecret: password,
-        role: "client",
-        attrs: [
-          {
-            name: "usertype",
-            value: userType,
-          },
-        ],
-        maxEnrollments: 15,
-      },
-      adminUser
-    );
-  } catch (error) {
-    return error.message;
-  }
-
-  const enrollment = await ca.enroll({
-    enrollmentID: username,
-    enrollmentSecret: secret,
-  });
-
-  let x509Identity = {
-    credentials: {
-      certificate: enrollment.certificate,
-      privateKey: enrollment.key.toBytes(),
-    },
-    mspId: await getMspId(userOrg),
-    type: "X.509",
-  };
-
-  // await wallet.put(username, x509Identity);
-  console.log(
-    `Successfully registered and enrolled admin user ${username} and imported it into the wallet`
-  );
-
-  var response = {
-    success: true,
-    message: username + " enrolled Successfully",
-    privateKey: enrollment.key.toBytes(),
-  };
-  return response;
 };
 
 const isUserRegistered = async (username, userOrg) => {
@@ -162,7 +167,6 @@ const enrollAdmin = async (org) => {
 
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
-    console.log(`Wallet path: ${walletPath}`);
 
     const identity = await wallet.get("admin");
     if (identity) {
@@ -263,6 +267,7 @@ const enrollAdminV2 = async (org) => {
     return {
       success: true,
       message: "Enrolled successfully admin for " + org,
+      privateKey: enrollment.key.toBytes(),
     };
   } catch (error) {
     console.error(`Failed to enroll admin user "tuantk": ${error}`);
@@ -270,29 +275,89 @@ const enrollAdminV2 = async (org) => {
   }
 };
 
-const registerAndGetSecret = async (username, password, userType, userOrg) => {
+const registerV2 = async (org, userId) => {
+  console.log("calling enroll Admin method");
+  try {
+    const ccp = await getCCP();
+    console.log("CCP: ", ccp);
+    const caInfo = await getCaInfo(org, ccp);
+    console.log("CA INFO: ", caInfo);
+    const caTLSCACerts = caInfo.tlsCACerts.pem;
+    const ca = new FabricCAServices(
+      caInfo.url,
+      { trustedRoots: caTLSCACerts, verify: false },
+      caInfo.caName
+    );
+
+    const walletPath = await getWalletPath(org);
+    const wallet = await Wallets.newFileSystemWallet(walletPath);
+    console.log(`Wallet path: ${walletPath}`);
+
+    const identity = await wallet.get(userId);
+    if (identity) {
+      console.log(
+        'An identity for the admin user "tuantk" already exists in the wallet'
+      );
+      return {
+        success: false,
+        message:
+          'An identity for the admin user "tuantk" already exists in the wallet',
+      };
+    }
+
+    const enrollment = await ca.enroll({
+      enrollmentID: userId,
+      attr_reqs: [
+        {
+          name: "usertype",
+          value: "admin",
+          ecert: true,
+        },
+      ],
+    });
+
+    let x509Identity = {
+      credentials: {
+        certificate: enrollment.certificate,
+        privateKey: enrollment.key.toBytes(),
+      },
+      mspId: await getMspId(org),
+      type: "X.509",
+    };
+
+    await wallet.put(userId, x509Identity);
+    console.log(
+      'Successfully enrolled admin user "tuantk" and imported it into the wallet'
+    );
+    return {
+      success: true,
+      message: "Enrolled successfully admin for " + org,
+      privateKey: enrollment.key.toBytes(),
+    };
+  } catch (error) {
+    console.error(`Failed to enroll admin user "tuantk": ${error}`);
+    return;
+  }
+};
+
+const registerAndGetSecret = async (userId, userType, userOrg) => {
   try {
     let ccp = await getCCP();
 
     const caURL = await getCaUrl(userOrg, ccp);
-    console.log("caURL: ", caURL);
 
     const ca = new FabricCAServices(caURL);
-    console.log("CA: ", ca);
     const walletPath = await getWalletPath(userOrg);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
-    console.log(`Wallet path: ${walletPath}`);
-    console.log(`Wallet: ${wallet}`);
 
-    const userIdentity = await wallet.get(username);
-    console.log("USER IDENTITY: ", userIdentity);
+    const userIdentity = await wallet.get(userId);
     if (userIdentity) {
       console.log(
-        `An identity for the user ${username} already exists in the wallet`
+        `An identity for the user ${userId} already exists in the wallet`
       );
       var response = {
-        success: true,
-        message: username + " enrolled Successfully",
+        success: false,
+        message: `An identity for the user ${userId} already exists in the wallet`,
       };
       return response;
     }
@@ -311,17 +376,11 @@ const registerAndGetSecret = async (username, password, userType, userOrg) => {
     const provider = wallet
       .getProviderRegistry()
       .getProvider(adminIdentity.type);
-    console.log("PROVIDER: ", provider);
     const adminUser = await provider.getUserContext(adminIdentity, "admin");
-    console.log("ADMIN USER: ", adminUser);
 
-    // const aff = await getAffiliation(userOrg);
-    // console.log("AFF: ", aff);
     let secret = await ca.register(
       {
-        // affiliation: aff,
-        enrollmentID: username,
-        enrollmentSecret: password,
+        enrollmentID: userId,
         role: "client",
         attrs: [
           {
@@ -332,16 +391,31 @@ const registerAndGetSecret = async (username, password, userType, userOrg) => {
       },
       adminUser
     );
+    const enrollment = await ca.enroll({
+      enrollmentID: userId,
+      enrollmentSecret: secret,
+    });
+    let x509Identity = {
+      credentials: {
+        certificate: enrollment.certificate,
+        privateKey: enrollment.key.toBytes(),
+      },
+      mspId: await getMspId(userOrg),
+      type: "X.509",
+    };
+
+    const result = await wallet.put(userId, x509Identity);
     var response = {
       success: true,
-      message: username + " register successfully",
+      message: userId + " register successfully",
       secret: secret,
+      data: result,
     };
 
     return response;
   } catch (error) {
     console.log("ERROR REGISTER: ", error);
-    return error.message;
+    return error;
   }
 };
 
@@ -1647,9 +1721,12 @@ const queryOrder = async function (orderId, org) {
 
     const network = await gateway.getNetwork("ecsupply");
 
-    const contract = network.getContract("teco", "SupplyContract");
+    const contract = network.getContract("teco", "OrderDetailContract");
 
-    const result = await contract.evaluateTransaction("queryOrder", orderId);
+    const result = await contract.evaluateTransaction(
+      "queryAllOrderDetailsByOrderId",
+      orderId
+    );
     return result;
   } catch (error) {
     throw new Error(error);
@@ -1861,11 +1938,11 @@ function getBase64(file) {
 }
 
 function uuidv4() {
-  return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
-    (
-      c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
-    ).toString(16)
-  );
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    var r = (Math.random() * 16) | 0,
+      v = c == "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
 }
 
 exports.getRegisteredUser = getRegisteredUser;

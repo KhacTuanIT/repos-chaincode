@@ -10,8 +10,8 @@ const { body, validationResult } = require("express-validator");
 const sessionOptions = {
   secret: secret,
   cookie: {
-    expires: new Date(Date.now() + 60 * 10000),
-    maxAge: 60 * 10000,
+    expires: new Date(Date.now() + 60 * 60 * 5 * 1000),
+    maxAge: 60 * 60 * 5 * 1000,
   },
   saveUninitialized: true,
   resave: true,
@@ -33,7 +33,7 @@ app.use(
 app.use(express.static(path.join(__dirname, "public")));
 app.use(homeRoutes.routes);
 app.get("/admin/*", function (req, res, next) {
-  res.render("404", {
+  res.render("404-admin", {
     layout: "layout",
     page_name: "product",
   });
