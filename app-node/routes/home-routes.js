@@ -1,6 +1,9 @@
 const express = require("express");
 const { body, validationResult } = require("express-validator");
 
+var multer = require("multer");
+var upload = multer({ dest: "uploads/" });
+
 const {
   indexView,
   iconsView,
@@ -10,6 +13,7 @@ const {
   loginView,
   registerView,
   uploadFile,
+  uploadFileClient,
 } = require("../controllers/adminController");
 const {
   about,
@@ -99,6 +103,7 @@ const {
   logout,
   changePassword,
   changeUserInformation,
+  downloadCertificate,
 } = require("../controllers/client/accountController");
 const { isAuthorized } = require("../controllers/client/authController");
 const { queryOrderByUserId } = require("../controllers/client/cartController");
@@ -109,11 +114,14 @@ const {
 } = require("../controllers/admin/orderController");
 const router = express.Router();
 
+//
+
 // #### client ####
 
 router.get("/", home);
 router.get("/about", about);
 router.get("/account", isAuthorized, account);
+router.get("/account/download-cert", isAuthorized, downloadCertificate);
 router.post("/account/change-password", isAuthorized, changePassword);
 router.post("/account/change-user-info", isAuthorized, changeUserInformation);
 
@@ -137,7 +145,13 @@ router.post("/register", validateAccount("register"), register);
 // login
 
 router.get("/login", loginClientView);
-router.post("/login", validateAccount("loginClient"), loginClient);
+// router.post("/login", validateAccount("loginClient"), loginClient);
+router.post(
+  "/login",
+  upload.single("key"),
+  validateAccount("loginClient"),
+  loginClient
+);
 
 // logout
 
@@ -154,6 +168,7 @@ router.get("/admin/login", loginView);
 router.get("/admin/register", registerView);
 
 router.post("/admin/upload", uploadFile);
+router.post("/upload-keys", uploadFileClient);
 
 // manufacturer
 

@@ -1,7 +1,21 @@
 const helper = require("./../../utils/helperv2");
 const { body, validationResult } = require("express-validator");
-
 const uuid = require("uuid");
+const fs = require("fs");
+const path = require("path");
+const getKeys = (id) => {
+  const filePath = path.join(__dirname, "../../public/keys/" + id);
+  var result = undefined;
+  fs.readFile(filePath, { encoding: "utf-8" }, function (err, data) {
+    if (!err) {
+      result = data;
+    } else {
+      console.log(err);
+    }
+  });
+  console.log(fs);
+  return result;
+};
 
 const account = async (req, res, next) => {
   let org = req.query.org ? req.query.org : "supply";
@@ -76,7 +90,6 @@ const register = async (req, res, next) => {
           user.manager = "";
           user.updated_by = "";
           user.address = "";
-          console.log(user);
           const enroll = await helper.registerAndGetSecret(
             user.userId,
             "client",
@@ -84,10 +97,23 @@ const register = async (req, res, next) => {
           );
           if (enroll.success == true) {
             const result = await helper.addUserForOrg(user);
+            const wallet = await helper.getWallet(user.org, user.userId);
+            const filePath = path.join(
+              __dirname,
+              "../../public/keys/" + user.userId
+            );
+            fs.writeFileSync(
+              filePath,
+              JSON.stringify(wallet, null, 2),
+              "utf-8"
+            );
+            req.session.userId = user.userId;
+            req.session.email = existUser.email;
             await res.json({
               message: `Add user for ${org} successfully!`,
               data: JSON.parse(result.toString()),
               result: enroll,
+              wallet: wallet,
             });
           } else {
             await res.status(500).json({
@@ -117,12 +143,12 @@ const loginClientView = (req, res, next) => {
   res.render("client/login", {
     layout: "client-layout",
     page_name: "login",
-    message: null,
+    message: "Please save the certificate file to use for login!",
   });
 };
 
 const loginClient = async (req, res, next) => {
-  const { username, password, org } = req.body;
+  const { username, password, org, fileid } = req.body;
   let user = {
     username,
     password,
@@ -137,21 +163,53 @@ const loginClient = async (req, res, next) => {
     }
     try {
       const existUserResult = await helper.getUserByUsername(user);
-      console.log(existUserResult);
       const existUser = JSON.parse(existUserResult.toString());
-      console.log(existUser);
       if (existUser) {
         user.userId = existUser.userId;
         const result = await helper.loginUser(user);
         const userParse = JSON.parse(result.toString());
+
         if (userParse.status) {
-          req.session.userId = user.userId;
-          req.session.email = existUser.email;
-          await res.json({
-            status: true,
-            message: `Login successfully!`,
-            data: "",
-          });
+          const wallet = await helper.getWallet(
+            existUser.org,
+            existUser.userId
+          );
+          const filePath = path.join(
+            __dirname,
+            "../../public/validate-keys/" + fileid
+          );
+          fs.readFile(
+            filePath,
+            { encoding: "utf-8" },
+            async function (err, data) {
+              if (!err) {
+                const key = JSON.parse(data);
+                if (JSON.stringify(key) === JSON.stringify(wallet)) {
+                  req.session.userId = user.userId;
+                  req.session.email = existUser.email;
+                  await res.json({
+                    status: true,
+                    message: `Login successfully!`,
+                    data: "",
+                  });
+                } else {
+                  await res.status(500).json({
+                    status: false,
+                    message: `Authorize fail! Your credentials incorrect!`,
+                    data: null,
+                    errors: [
+                      {
+                        param: "key",
+                        msg: "Authorize fail! Your credentials incorrect!",
+                      },
+                    ],
+                  });
+                }
+              } else {
+                console.log(err);
+              }
+            }
+          );
         } else {
           await res.status(500).json({
             status: false,
@@ -188,6 +246,14 @@ const loginClient = async (req, res, next) => {
       message: "Login failed! ERR: data not appropriate",
     });
   }
+};
+
+const downloadCertificate = (req, res, next) => {
+  const filePath = path.join(
+    __dirname,
+    "../../public/keys/" + req.session.userId
+  );
+  res.download(filePath);
 };
 
 const changePassword = async (req, res, next) => {
@@ -322,4 +388,5 @@ module.exports = {
   logout,
   changeUserInformation,
   changePassword,
+  downloadCertificate,
 };

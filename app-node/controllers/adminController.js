@@ -1,15 +1,24 @@
-const path = require('path');
+const path = require("path");
 const multer = require("multer");
 var storage = multer.diskStorage({
   destination: function (req, file, callback) {
-    callback(null, path.join(__dirname, '../public/images/'));
+    callback(null, path.join(__dirname, "../public/images/"));
   },
   filename: function (req, file, callback) {
     callback(null, file.fieldname + "-" + Date.now() + "." + file.originalname);
   },
 });
+var storageKey = multer.diskStorage({
+  destination: function (req, file, callback) {
+    callback(null, path.join(__dirname, "../public/validate-keys/"));
+  },
+  filename: function (req, file, callback) {
+    callback(null, file.originalname);
+  },
+});
 
 var upload = multer({ storage: storage }).single("primaryImage");
+var uploadKey = multer({ storage: storageKey }).single("key");
 
 const indexView = (req, res, next) => {
   res.render("admin/home", { page_name: "dashboard" });
@@ -42,10 +51,20 @@ const tablesView = (req, res, next) => {
 const uploadFile = async (req, res, next) => {
   upload(req, res, function (err) {
     if (err) {
-        console.log(err);
+      console.log(err);
       return res.end("Error uploading file.");
     }
-    res.json({ status: true, filename: res.req.file.filename});
+    res.json({ status: true, filename: res.req.file.filename });
+  });
+};
+
+const uploadFileClient = async (req, res, next) => {
+  uploadKey(req, res, function (err) {
+    if (err) {
+      console.log(err);
+      return res.end("Error uploading file.");
+    }
+    res.json({ status: true, filename: res.req.file.filename });
   });
 };
 
@@ -58,4 +77,5 @@ module.exports = {
   profileView,
   tablesView,
   uploadFile,
+  uploadFileClient,
 };

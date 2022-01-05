@@ -10,7 +10,6 @@ fabric:
   orderers:
     - "orderer1.teco.com"
   netname: "teconetwork"
-  endpoint_address: 14.225.255.39
   settings:
     ca:
       FABRIC_LOGGING_SPEC: DEBUG

@@ -405,6 +405,8 @@ const registerAndGetSecret = async (userId, userType, userOrg) => {
     };
 
     const result = await wallet.put(userId, x509Identity);
+    console.log("RESULT");
+    console.log(result);
     var response = {
       success: true,
       message: userId + " register successfully",
@@ -416,6 +418,28 @@ const registerAndGetSecret = async (userId, userType, userOrg) => {
   } catch (error) {
     console.log("ERROR REGISTER: ", error);
     return error;
+  }
+};
+
+const getWallet = async (org, userId) => {
+  try {
+    const ccp = await getCCP();
+    const caInfo = await getCaInfo(org, ccp);
+    const caTLSCACerts = caInfo.tlsCACerts.pem;
+    const ca = new FabricCAServices(
+      caInfo.url,
+      { trustedRoots: caTLSCACerts, verify: false },
+      caInfo.caName
+    );
+
+    const walletPath = await getWalletPath(org);
+    const wallet = await Wallets.newFileSystemWallet(walletPath);
+    console.log(`Wallet path: ${walletPath}`);
+
+    return await wallet.get(userId);
+  } catch (error) {
+    console.error(`Failed to enroll admin user: ${error}`);
+    return;
   }
 };
 
@@ -2003,4 +2027,5 @@ module.exports = {
   queryOrderDetail,
   queryAllOrderDetailByOrderid,
   uuidv4,
+  getWallet
 };

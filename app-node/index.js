@@ -5,8 +5,6 @@ const { secret } = require("./utils/config/credentials");
 const path = require("path");
 const bodyParser = require("body-parser");
 const homeRoutes = require("./routes/home-routes");
-const { body, validationResult } = require("express-validator");
-
 const sessionOptions = {
   secret: secret,
   cookie: {
@@ -21,7 +19,7 @@ const app = express();
 app.use(session(sessionOptions));
 app.use(expressLayouts);
 app.set("view engine", "ejs");
-app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
     extended: true,

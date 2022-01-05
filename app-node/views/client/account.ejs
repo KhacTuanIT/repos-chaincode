@@ -19,6 +19,7 @@
         <div class="col-4">
           <div class="card-container">
             <span class="default">Default</span>
+            <a href="/account/download-cert" class="cert" id="download-cert">Cert file</a>
             <img class="round" src="https://randomuser.me/api/portraits/women/79.jpg" alt="user" />
             <h3>
               <%= user.lastName + ' ' + user.middleName + ' ' + user.firstName %>
@@ -556,4 +557,17 @@
           },
         });
       });
+
+      // $(document).on('click', '#download-cert', function () {
+      //   $.ajax({
+      //     type: 'get',
+      //     url: '/account/download-cert',
+      //     success: function (res) {
+      //       console.log(res)
+      //     },
+      //     error: function (jq, status, err) {
+      //       console.log(jq);
+      //     }
+      //   })
+      // })
     </script>
