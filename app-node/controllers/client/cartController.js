@@ -21,11 +21,7 @@ const addOrder = async (req, res, next) => {
         let allOrder = JSON.parse(allOrderResult.toString());
         if (allOrder) {
           let count = allOrder.length > 0 ? allOrder.length + 1 : 1;
-          order.orderId =
-            "OD" +
-            ("000000" + count).slice(
-              -7
-            );
+          order.orderId = "OD" + ("000000" + count).slice(-7);
         } else {
           order.orderId = "OD" + "0000001".slice(-7);
         }
@@ -292,6 +288,28 @@ const receiveShipment = async (req, res, next) => {
   }
 };
 
+const queryOrderHistory = async (req, res, next) => {
+  let orderId = req.params.id;
+  let org = req.query.org ? req.query.org : "supply";
+  try {
+    console.log(orderId);
+    let orderHistory = await helper.getHistoryOrder(orderId, org);
+    console.log(orderHistory);
+    let orderHistoryParse = JSON.parse(orderHistory.toString());
+    await res.json({
+      status: true,
+      message: "get successfully",
+      data: orderHistoryParse,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      status: false,
+      message: "Receive shipment for order fail. ERR: " + error.message,
+    });
+  }
+};
+
 module.exports = {
   cartView,
   addOrder,
@@ -303,4 +321,5 @@ module.exports = {
   transportShipment,
   createShipment,
   assignShipper,
+  queryOrderHistory,
 };

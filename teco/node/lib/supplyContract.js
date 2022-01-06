@@ -202,7 +202,7 @@ class SupplyContract extends Contract {
       let record;
       try {
         record = JSON.parse(strValue);
-        if (record.docType === "order" && buyerId === userId) {
+        if (record.docType === "order" && record.buyerId === userId) {
           allOrders.push({ Key: key, Value: record });
         }
       } catch (error) {

@@ -20,7 +20,9 @@
           <div class="card-container">
             <span class="default">Default</span>
             <a href="/account/download-cert" class="cert" id="download-cert">Cert file</a>
-            <img class="round" src="https://randomuser.me/api/portraits/women/79.jpg" alt="user" />
+            <img class="round"
+              src="https://www.nicepng.com/png/full/128-1280406_view-user-icon-png-user-circle-icon-png.png" width="100"
+              alt="user" />
             <h3>
               <%= user.lastName + ' ' + user.middleName + ' ' + user.firstName %>
             </h3>
@@ -30,10 +32,6 @@
             <p>
               <%= user.address %>
             </p>
-            <!-- <div class="buttons">
-            <button class="primary">Message</button>
-            <button class="primary ghost">Following</button>
-          </div> -->
             <div class="skills">
               <h6>Features</h6>
               <ul>
@@ -291,7 +289,34 @@
   </div>
   <% } %>
     <!--Shopping Cart Area End-->
-
+    <div class="modal fade" id="historyModal" tabindex="-1" role="dialog" aria-labelledby="historyModalTitle"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="historyModalTitle">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-sm-4">Order ID</div>
+              <div class="col-sm-8" id="order-id"></div>
+            </div>
+            <div class="row">
+              <div class="col-sm-4">Price</div>
+              <div class="col-sm-8" id="order-price"></div>
+            </div>
+            <div class="row" id="order-history">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <script>
       const mapOrderState = (state) => {
         state = state - 1;
@@ -311,6 +336,41 @@
           e.text("");
         }, 15000);
       }
+      $(document).on('click', '.btn-order-history', function (e) {
+        let id = $(this).data('key');
+        $.ajax({
+          url: '/orders/order-history/' + id,
+          type: 'get',
+          success: function (res) {
+            if (res.status == true) {
+              $('#historyModalTitle').text('Order history: ' + id);
+              const { data } = res;
+              const firstRow = data[0];
+              const orderId = firstRow.Value.orderId;
+              const price = firstRow.Value.price;
+              $('#order-id').text(orderId);
+              $('#order-price').text(price);
+              $('#order-history').empty();
+              data.forEach(history => {
+                let d4 = document.createElement('div');
+                d4.classList.add('col-sm-8');
+                d4.classList.add('mt-4');
+                d4.innerText = history.Timestamp;
+                let d12 = document.createElement('div');
+                d12.classList.add('col-sm-12');
+                d12.style.fontWeight = '600';
+                d12.innerText = mapOrderState(history.Value.currentOrderState);
+                $('#order-history').append(d4, d12);
+              });
+              $('#historyModal').modal('show');
+            }
+          },
+          error: function (jq, status, err) {
+            console.log(jq);
+          }
+        })
+      })
+
       $(document).on("click", "#btn-change-password-form", function (e) {
         console.log("click");
         let forms = $("#playground-form form");
@@ -352,7 +412,11 @@
               <td>${Key}</td>
                   <td>$${Value.price}</td>
                   <td class="order-state-${mapOrderState(Value.currentOrderState).toLowerCase()}"><span>${mapOrderState(Value.currentOrderState)}</span></td>
-                  <td class="td-last"><a data-key="${Key}" class="btn-order-detail"><i class="fa fa-file-text"></i></a></td>
+                  <td class="td-last" style="display: flex; justify-content: space-between;">
+                    <a data-key="${Key}" title="Details" class="btn-order-detail"><i class="fa fa-file-text"></i></a>
+                    <a data-key="${Key}" title="History" class="btn-order-history text-info"><i class="fa fa-list-alt"></i></a>
+                    <a data-key="${Key}" title="Mark Received" class="btn-order-mark text-success"><i class="fa fa-check"></i></a>
+                    </td>
                 </tr>`;
                 count += 1;
               });

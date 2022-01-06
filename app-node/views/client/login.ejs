@@ -165,7 +165,26 @@
         });
       },
       error: function (jq, status, error) {
-        console.log(jq);
+        _this.removeAttr("disabled");
+        if (spin) {
+          if (!spin.hasClass("hidden")) {
+            spin.addClass("hidden");
+          }
+        }
+        let responseError = JSON.parse(jq.responseText);
+        console.log(responseError);
+        responseError.errors.forEach((error) => {
+          if (!$("#" + error.param).hasClass("invalid-error-input")) {
+            $("#" + error.param).addClass("invalid-error-input");
+            setTimeout(() => {
+              if ($("#" + error.param).hasClass("invalid-error-input")) {
+                $("#" + error.param).removeClass("invalid-error-input");
+              }
+            }, 5000);
+          }
+          $("#invalid-" + error.param).text(error.msg);
+          clearAfterDelay($("#invalid-" + error.param));
+        });
       },
     });
   });

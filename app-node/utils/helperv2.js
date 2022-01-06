@@ -1463,10 +1463,6 @@ const addOrder = async function (order, org) {
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    const userIdentity = await wallet.get("admin");
-    if (!userIdentity) {
-      return;
-    }
     const gateway = new Gateway();
     await gateway.connect(ccp, {
       wallet,
@@ -1498,10 +1494,6 @@ const createOrderDetail = async function (orderDetail, org) {
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    const userIdentity = await wallet.get("admin");
-    if (!userIdentity) {
-      return;
-    }
     const gateway = new Gateway();
     await gateway.connect(ccp, {
       wallet,
@@ -1534,10 +1526,6 @@ const updateOrderDetail = async function (orderDetail, org) {
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    const userIdentity = await wallet.get("admin");
-    if (!userIdentity) {
-      return;
-    }
     const gateway = new Gateway();
     await gateway.connect(ccp, {
       wallet,
@@ -1570,10 +1558,6 @@ const receiceOrder = async function (orderId, userId, org) {
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    const userIdentity = await wallet.get("admin");
-    if (!userIdentity) {
-      return;
-    }
     const gateway = new Gateway();
     await gateway.connect(ccp, {
       wallet,
@@ -1602,10 +1586,6 @@ const assignShipper = async function (orderId, newShipperId, userId, org) {
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    const userIdentity = await wallet.get("admin");
-    if (!userIdentity) {
-      return;
-    }
     const gateway = new Gateway();
     await gateway.connect(ccp, {
       wallet,
@@ -1635,10 +1615,6 @@ const createShipment = async function (orderId, newTrackingInfo, userId, org) {
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    const userIdentity = await wallet.get("admin");
-    if (!userIdentity) {
-      return;
-    }
     const gateway = new Gateway();
     await gateway.connect(ccp, {
       wallet,
@@ -1668,10 +1644,6 @@ const transportShipment = async function (orderId, userId, org) {
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    const userIdentity = await wallet.get("admin");
-    if (!userIdentity) {
-      return;
-    }
     const gateway = new Gateway();
     await gateway.connect(ccp, {
       wallet,
@@ -1700,10 +1672,6 @@ const receiveShipment = async function (orderId, userId, org) {
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    const userIdentity = await wallet.get("admin");
-    if (!userIdentity) {
-      return;
-    }
     const gateway = new Gateway();
     await gateway.connect(ccp, {
       wallet,
@@ -1732,10 +1700,6 @@ const queryOrder = async function (orderId, org) {
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    const userIdentity = await wallet.get("admin");
-    if (!userIdentity) {
-      return;
-    }
     const gateway = new Gateway();
     await gateway.connect(ccp, {
       wallet,
@@ -1763,10 +1727,6 @@ const queryOrderDetail = async function (orderDetailId, org) {
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    const userIdentity = await wallet.get("admin");
-    if (!userIdentity) {
-      return;
-    }
     const gateway = new Gateway();
     await gateway.connect(ccp, {
       wallet,
@@ -1794,10 +1754,6 @@ const queryAllOrderDetailByOrderid = async function (orderId, org) {
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    const userIdentity = await wallet.get("admin");
-    if (!userIdentity) {
-      return;
-    }
     const gateway = new Gateway();
     await gateway.connect(ccp, {
       wallet,
@@ -1825,10 +1781,6 @@ const getOrderDetailHistory = async function (orderDetailId, org) {
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    const userIdentity = await wallet.get("admin");
-    if (!userIdentity) {
-      return;
-    }
     const gateway = new Gateway();
     await gateway.connect(ccp, {
       wallet,
@@ -1856,10 +1808,6 @@ const queryAllOrders = async function (org) {
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    const userIdentity = await wallet.get("admin");
-    if (!userIdentity) {
-      return;
-    }
     const gateway = new Gateway();
     await gateway.connect(ccp, {
       wallet,
@@ -1884,10 +1832,6 @@ const queryAllOrdersByUserId = async function (userId, org) {
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    const userIdentity = await wallet.get("admin");
-    if (!userIdentity) {
-      return;
-    }
     const gateway = new Gateway();
     await gateway.connect(ccp, {
       wallet,
@@ -1915,10 +1859,6 @@ const getHistoryOrder = async function (orderId, org) {
     const walletPath = await getWalletPath(org);
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-    const userIdentity = await wallet.get("admin");
-    if (!userIdentity) {
-      return;
-    }
     const gateway = new Gateway();
     await gateway.connect(ccp, {
       wallet,

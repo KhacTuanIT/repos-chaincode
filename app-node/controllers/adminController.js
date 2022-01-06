@@ -1,5 +1,6 @@
 const path = require("path");
 const multer = require("multer");
+const helper = require("../utils/helperv2");
 var storage = multer.diskStorage({
   destination: function (req, file, callback) {
     callback(null, path.join(__dirname, "../public/images/"));
@@ -20,8 +21,17 @@ var storageKey = multer.diskStorage({
 var upload = multer({ storage: storage }).single("primaryImage");
 var uploadKey = multer({ storage: storageKey }).single("key");
 
-const indexView = (req, res, next) => {
-  res.render("admin/home", { page_name: "dashboard" });
+const indexView = async (req, res, next) => {
+  try {
+    let org = 'supply';
+    const productAsBytes = await helper.getAllProduct(org);
+    const allProducts = JSON.parse(productAsBytes.toString());
+    const orderAsBytes = await helper.queryAllOrders(org);
+    const allOrders = JSON.parse(orderAsBytes.toString());
+    await res.render("admin/home", { page_name: "dashboard" });
+  } catch (error) {
+    await res.render("404-admin", { page_name: "dashboard", message: error.message });
+  }
 };
 
 const iconsView = (req, res, next) => {
@@ -59,13 +69,31 @@ const uploadFile = async (req, res, next) => {
 };
 
 const uploadFileClient = async (req, res, next) => {
-  uploadKey(req, res, function (err) {
-    if (err) {
-      console.log(err);
-      return res.end("Error uploading file.");
-    }
-    res.json({ status: true, filename: res.req.file.filename });
-  });
+  try {
+    uploadKey(req, res, function (err) {
+      if (err) {
+        console.log(err);
+        return res.end("Error uploading file.");
+      }
+      if (res.req.file) {
+        res.json({ status: true, filename: res.req.file.filename });
+      } else {
+        return res.status(500).json({
+          status: false,
+          message: `Your credentials not obtain`,
+          data: null,
+          errors: [{ param: "key", msg: "Your credentials not obtain" }],
+        });
+      }
+    });
+  } catch (error) {
+    await res.status(500).json({
+      status: false,
+      message: `Your credentials not obtain`,
+      data: null,
+      errors: [{ param: "key", msg: "Your credentials not obtain" }],
+    });
+  }
 };
 
 module.exports = {

@@ -24,8 +24,10 @@ class ProductContract extends Contract {
         vga: "",
         description: "",
         owner: "",
-        primaryImage: "primaryImage-1638800655067.MacBook-Air-2020-gold-M1-13-inch-256gb.jpg",
-        subImage: "primaryImage-1638800658354.MacBook-Air-2020-gray-M1-13-inch-256gb.jpg",
+        primaryImage:
+          "primaryImage-1638800655067.MacBook-Air-2020-gold-M1-13-inch-256gb.jpg",
+        subImage:
+          "primaryImage-1638800658354.MacBook-Air-2020-gray-M1-13-inch-256gb.jpg",
         is_delete: false,
         updated_by: "",
       },
@@ -48,8 +50,10 @@ class ProductContract extends Contract {
         vga: "",
         description: "",
         owner: "",
-        primaryImage: "primaryImage-1638800903597.capture.png",
-        subImage: "primaryImage-1638800912563.image-removebg-preview-12.png",
+        primaryImage:
+          "primaryImage-1640493503276.macbook-air-2020-m1-chinh-hang-vna.jpg",
+        subImage:
+          "primaryImage-1640493507282.41246_macbook_air_m1_2020_gold_ha2.jpg",
         is_delete: false,
         updated_by: "",
       },
@@ -72,8 +76,10 @@ class ProductContract extends Contract {
         vga: "Intel® Iris® Xe Graphics",
         description: "",
         owner: "",
-        primaryImage: "primaryImage-1638800988927.laptop-dell-xps-13-black-luxury_1590489551.jpg",
-        subImage: "primaryImage-1638800994627.dell-xps-13-9370-XPS937001NU-Ps1.jpg",
+        primaryImage:
+          "primaryImage-1638800988927.laptop-dell-xps-13-black-luxury_1590489551.jpg",
+        subImage:
+          "primaryImage-1638800994627.dell-xps-13-9370-XPS937001NU-Ps1.jpg",
         is_delete: false,
         updated_by: "",
       },
@@ -96,8 +102,10 @@ class ProductContract extends Contract {
         vga: "Intel® Iris® Xe Graphics",
         description: "",
         owner: "",
-        primaryImage: "primaryImage-1638801038319.laptop-dell-xps-13-black-luxury_1590489551.jpg",
-        subImage: "primaryImage-1638801041174.dell-xps-13-9370-XPS937001NU-Ps1.jpg",
+        primaryImage:
+          "primaryImage-1638801038319.laptop-dell-xps-13-black-luxury_1590489551.jpg",
+        subImage:
+          "primaryImage-1638801041174.dell-xps-13-9370-XPS937001NU-Ps1.jpg",
         is_delete: false,
         updated_by: "",
       },
@@ -120,8 +128,10 @@ class ProductContract extends Contract {
         vga: "Intel® Iris® Xe Graphics",
         description: "",
         owner: "",
-        primaryImage: "primaryImage-1638801064155.laptop-dell-xps-13-black-luxury_1590489551.jpg",
-        subImage: "primaryImage-1638801067033.dell-xps-13-9370-XPS937001NU-Ps1.jpg",
+        primaryImage:
+          "primaryImage-1638801064155.laptop-dell-xps-13-black-luxury_1590489551.jpg",
+        subImage:
+          "primaryImage-1638801067033.dell-xps-13-9370-XPS937001NU-Ps1.jpg",
         is_delete: false,
         updated_by: "",
       },
@@ -144,7 +154,8 @@ class ProductContract extends Contract {
         vga: "NVIDIA® GeForce RTX™ 2080 8GB GDDR6",
         description: "",
         owner: "",
-        primaryImage: "primaryImage-1638801181890.laptop-asus-rog-mothership-gz700.jpg",
+        primaryImage:
+          "primaryImage-1638801181890.laptop-asus-rog-mothership-gz700.jpg",
         subImage: "primaryImage-1638801185565.asusrog.jpg",
         is_delete: false,
         updated_by: "",
@@ -193,7 +204,8 @@ class ProductContract extends Contract {
         description: "",
         owner: "",
         primaryImage: "primaryImage-1638801319866.2102045-n0_02.jpg",
-        subImage: "primaryImage-1638801342891.laptop-msi-gt76-titan-dt-9sg-012vn-03-800x800_f710c73f2ddd43918591de1b2cf6db03.jpg",
+        subImage:
+          "primaryImage-1638801342891.laptop-msi-gt76-titan-dt-9sg-012vn-03-800x800_f710c73f2ddd43918591de1b2cf6db03.jpg",
         is_delete: false,
         updated_by: "",
       },
@@ -217,7 +229,8 @@ class ProductContract extends Contract {
         description: "",
         owner: "",
         primaryImage: "primaryImage-1638801406440.91ytMW7sXXL.jpg",
-        subImage: "primaryImage-1638801413108.laptop_asus_zenbook_pro_duo_ux581gv-xb94t_40b22f6a3c3f400d8955aa5af4fe9dc4.jpg",
+        subImage:
+          "primaryImage-1638801413108.laptop_asus_zenbook_pro_duo_ux581gv-xb94t_40b22f6a3c3f400d8955aa5af4fe9dc4.jpg",
         is_delete: false,
         updated_by: "",
       },
@@ -240,7 +253,8 @@ class ProductContract extends Contract {
         vga: "Nvidia Quadro P3200 6GB",
         description: "",
         owner: "",
-        primaryImage: "primaryImage-1638801542341.6607_dell_precision_7730_3.jpg",
+        primaryImage:
+          "primaryImage-1638801542341.6607_dell_precision_7730_3.jpg",
         subImage: "primaryImage-1638801545296.3-3-1024x683.jpg",
         is_delete: false,
         updated_by: "",
@@ -264,7 +278,8 @@ class ProductContract extends Contract {
         vga: "NVIDIA Quadro M1200",
         description: "",
         owner: "",
-        primaryImage: "primaryImage-1638801624944.zbook-17-g4-160222-1_fb4b1e02af53496a96b969e9639757ff_master.jpg",
+        primaryImage:
+          "primaryImage-1638801624944.zbook-17-g4-160222-1_fb4b1e02af53496a96b969e9639757ff_master.jpg",
         subImage: "primaryImage-1638801633948.7298-p2-1589169124.jpg",
         is_delete: false,
         updated_by: "",
@@ -288,8 +303,10 @@ class ProductContract extends Contract {
         vga: "NVIDIA® GeForce RTX ™ 3080",
         description: "",
         owner: "",
-        primaryImage: "primaryImage-1638801693569.38316_predator_helios_300_ph_315_54_bl1_bk_01b.png",
-        subImage: "primaryImage-1638801709288.tren-tay-danh-gia-acer-predator-helios-300-cover-_1920x1080-800-resize.jpg",
+        primaryImage:
+          "primaryImage-1638801693569.38316_predator_helios_300_ph_315_54_bl1_bk_01b.png",
+        subImage:
+          "primaryImage-1638801709288.tren-tay-danh-gia-acer-predator-helios-300-cover-_1920x1080-800-resize.jpg",
         is_delete: false,
         updated_by: "",
       },
@@ -384,8 +401,9 @@ class ProductContract extends Contract {
         vga: "Nvidia GTX 1650",
         description: "",
         owner: "",
-        primaryImage: "primaryImage-1638800587526.75_39467_microsoft_surface_studio_2_1_1.jpg",
-        subImage: "primaryImage-1638800589872.75_39467_microsoft_surface_studio_2_1_3.jpg",
+        primaryImage:
+          "primaryImage-1640493391987.39467_microsoft_surface_studio_2_1_1.jpg",
+        subImage: "primaryImage-1640493399835.4528.jpg",
         is_delete: false,
         updated_by: "",
       },
