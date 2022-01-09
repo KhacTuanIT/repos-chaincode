@@ -170,124 +170,6 @@ const receiveOrder = async (req, res, next) => {
   }
 };
 
-const assignShipper = async (req, res, next) => {
-  let { orderId, newShipperId } = req.body;
-  let org = req.query.org ? req.query.org : "supply";
-  try {
-    let userId = req.session.userId;
-    if (userId) {
-      let result = await helper.assignShipper(
-        orderId,
-        newShipperId,
-        userId,
-        org
-      );
-      let allOrder = JSON.parse(result.toString());
-      await res.json({
-        status: true,
-        message: `Assign shipper for order successfully!`,
-        data: allOrder,
-      });
-    } else {
-      res.status(401).json({
-        status: false,
-        message: "Please login to use feature ",
-      });
-    }
-  } catch (error) {
-    res.status(500).json({
-      status: false,
-      message: "Assign shipper for order order fail. ERR: " + error.message,
-    });
-  }
-};
-
-const createShipment = async (req, res, next) => {
-  let { orderId, newTrackingInfo } = req.body;
-  let org = req.query.org ? req.query.org : "supply";
-  try {
-    let userId = req.session.userId;
-    if (userId) {
-      let result = await helper.createShipment(
-        orderId,
-        newTrackingInfo,
-        userId,
-        org
-      );
-      let allOrder = JSON.parse(result.toString());
-      await res.json({
-        status: true,
-        message: `Create shipment for order successfully!`,
-        data: allOrder,
-      });
-    } else {
-      res.status(401).json({
-        status: false,
-        message: "Please login to use feature ",
-      });
-    }
-  } catch (error) {
-    res.status(500).json({
-      status: false,
-      message: "Create shipment for order fail. ERR: " + error.message,
-    });
-  }
-};
-
-const transportShipment = async (req, res, next) => {
-  let { orderId } = req.body;
-  let org = req.query.org ? req.query.org : "supply";
-  try {
-    let userId = req.session.userId;
-    if (userId) {
-      let result = await helper.transportShipment(orderId, userId, org);
-      let allOrder = JSON.parse(result.toString());
-      await res.json({
-        status: true,
-        message: `Transport shipment for order successfully!`,
-        data: allOrder,
-      });
-    } else {
-      res.status(401).json({
-        status: false,
-        message: "Please login to use feature ",
-      });
-    }
-  } catch (error) {
-    res.status(500).json({
-      status: false,
-      message: "Transport shipment for order fail. ERR: " + error.message,
-    });
-  }
-};
-
-const receiveShipment = async (req, res, next) => {
-  let { orderId } = req.body;
-  let org = req.query.org ? req.query.org : "supply";
-  try {
-    let userId = req.session.userId;
-    if (userId) {
-      let result = await helper.receiveShipment(orderId, userId, org);
-      let allOrder = JSON.parse(result.toString());
-      await res.json({
-        status: true,
-        message: `Receive shipment for order successfully!`,
-        data: allOrder,
-      });
-    } else {
-      res.status(401).json({
-        status: false,
-        message: "Please login to use feature ",
-      });
-    }
-  } catch (error) {
-    res.status(500).json({
-      status: false,
-      message: "Receive shipment for order fail. ERR: " + error.message,
-    });
-  }
-};
-
 const queryOrderHistory = async (req, res, next) => {
   let orderId = req.params.id;
   let org = req.query.org ? req.query.org : "supply";
@@ -316,10 +198,6 @@ module.exports = {
   queryOrderByUserId,
   queryOrder,
   queryAllOrder,
-  receiveShipment,
   receiveOrder,
-  transportShipment,
-  createShipment,
-  assignShipper,
   queryOrderHistory,
 };

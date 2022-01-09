@@ -291,7 +291,7 @@
     <!--Shopping Cart Area End-->
     <div class="modal fade" id="historyModal" tabindex="-1" role="dialog" aria-labelledby="historyModalTitle"
       aria-hidden="true">
-      <div class="modal-dialog" role="document">
+      <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="historyModalTitle">Modal title</h5>
@@ -360,7 +360,11 @@
                 d12.classList.add('col-sm-12');
                 d12.style.fontWeight = '600';
                 d12.innerText = mapOrderState(history.Value.currentOrderState);
-                $('#order-history').append(d4, d12);
+                let d12TxID = document.createElement('div');
+                d12TxID.classList.add('col-sm-12');
+                d12TxID.style.fontWeight = '600';
+                d12TxID.innerText = "TxID: " + history.TxId;
+                $('#order-history').append(d4, d12, d12TxID);
               });
               $('#historyModal').modal('show');
             }
@@ -414,9 +418,11 @@
                   <td class="order-state-${mapOrderState(Value.currentOrderState).toLowerCase()}"><span>${mapOrderState(Value.currentOrderState)}</span></td>
                   <td class="td-last" style="display: flex; justify-content: space-between;">
                     <a data-key="${Key}" title="Details" class="btn-order-detail"><i class="fa fa-file-text"></i></a>
-                    <a data-key="${Key}" title="History" class="btn-order-history text-info"><i class="fa fa-list-alt"></i></a>
-                    <a data-key="${Key}" title="Mark Received" class="btn-order-mark text-success"><i class="fa fa-check"></i></a>
-                    </td>
+                    <a data-key="${Key}" title="History" class="btn-order-history text-info"><i class="fa fa-list-alt"></i></a>`
+                if (Value.currentOrderState == 5) {
+                  tableContent += `<a data-key="${Key}" title="Mark Received" class="btn-order-mark text-success"><i class="fa fa-check"></i></a>`;
+                }
+                tableContent += `</td>
                 </tr>`;
                 count += 1;
               });
@@ -430,6 +436,31 @@
         });
         $("#form-orders").removeClass("hidden");
       });
+
+      $(document).on('click', '.btn-order-mark', function (e) {
+        let key = $(this).data('key');
+        $.ajax({
+          url: '/orders/receive-order',
+          data: {
+            orderId: key
+          },
+          type: 'post',
+          success: function (res) {
+            toastr.success(
+              res.message ? res.message : "Server is updating now..."
+            );
+            setTimeout(() => {
+              window.location.reload();
+            }, 1500)
+          },
+          error: function (jq, status, err) {
+            let responseError = JSON.parse(jq.responseText);
+            toastr.danger(
+              responseError.message ? responseError.message : "Server is updating now..."
+            );
+          }
+        })
+      })
 
       function setProductDetailInfo(ids) {
         ids.forEach(productCode => {

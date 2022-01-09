@@ -145,6 +145,7 @@ router.get("/orders/", isAuthorized, queryOrderByUserId);
 router.get("/orders/order-history/:id", isAuthorized, queryOrderHistory);
 router.get("/orders/:id", isAuthorized, queryOrder);
 router.post("/orders/", isAuthorized, addOrder);
+router.post("/orders/receive-order", isAuthorized, receiveOrder);
 
 // register
 
@@ -287,6 +288,19 @@ router.post(
 
 // orders
 router.get("/admin/orders", isAuthorizedAdmin, orderAdminView);
+router.post("/admin/orders/create-shipment", isAuthorizedAdmin, createShipment);
+router.post("/admin/orders/assign-shipment", isAuthorizedAdmin, assignShipper);
+router.post(
+  "/admin/orders/receive-shipment",
+  isAuthorizedAdmin,
+  receiveShipment
+);
+router.post(
+  "/admin/orders/transit-shipment",
+  isAuthorizedAdmin,
+  transitShipment
+);
+// router.post("/admin/orders/close-order", isAuthorizedAdmin, orderClose);
 
 // #### api ####
 

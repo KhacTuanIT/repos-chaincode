@@ -23,14 +23,29 @@ var uploadKey = multer({ storage: storageKey }).single("key");
 
 const indexView = async (req, res, next) => {
   try {
-    let org = 'supply';
+    let org = "supply";
     const productAsBytes = await helper.getAllProduct(org);
     const allProducts = JSON.parse(productAsBytes.toString());
     const orderAsBytes = await helper.queryAllOrders(org);
     const allOrders = JSON.parse(orderAsBytes.toString());
-    await res.render("admin/home", { page_name: "dashboard" });
+    let income = 0;
+    for (var i = 0; i < allOrders.length; i++) {
+      income += parseInt(allOrders[i].Value.price);
+    }
+    const userAsBytes = await helper.getAllUser(org, "");
+    const allUsers = JSON.parse(userAsBytes.toString());
+    await res.render("admin/home", {
+      page_name: "dashboard",
+      allOrders: allOrders,
+      allProducts: allProducts,
+      allUsers: allUsers,
+      income: income,
+    });
   } catch (error) {
-    await res.render("404-admin", { page_name: "dashboard", message: error.message });
+    await res.render("404-admin", {
+      page_name: "dashboard",
+      message: error.message,
+    });
   }
 };
 

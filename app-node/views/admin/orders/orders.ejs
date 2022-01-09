@@ -113,32 +113,27 @@
 <nav class="context-menu" id="context-menu">
     <ul class="context-menu__items">
         <li class="context-menu__item">
-            <a href="#" class="context-menu__link">
+            <a href="#" class="context-menu__link" data-type="SHIPMENT_CREATED">
                 <i class="fa fa-edit"></i> SHIPMENT_CREATED
             </a>
         </li>
-        <li class="context-menu__item">
-            <a href="#" class="context-menu__link">
+        <!-- <li class="context-menu__item">
+            <a href="#" class="context-menu__link" data-type="SHIPMENT_ASSIGNED">
                 <i class="fa fa-american-sign-language-interpreting"></i> SHIPMENT_ASSIGNED
             </a>
-        </li>
+        </li> -->
         <li class="context-menu__item">
-            <a href="#" class="context-menu__link text-success">
+            <a href="#" class="context-menu__link text-success" data-type="SHIPMENT_RECEIVED">
                 <i class="fa fa-calendar-check"></i> SHIPMENT_RECEIVED
             </a>
         </li>
         <li class="context-menu__item">
-            <a href="#" class="context-menu__link">
+            <a href="#" class="context-menu__link" data-type="SHIPMENT_IN_TRANSIT">
                 <i class="fa fa-archive"></i> SHIPMENT_IN_TRANSIT
             </a>
         </li>
         <li class="context-menu__item">
-            <a href="#" class="context-menu__link text-success">
-                <i class="fa fa-check-square"></i> ORDER_RECEIVED
-            </a>
-        </li>
-        <li class="context-menu__item">
-            <a href="#" class="context-menu__link text-danger">
+            <a href="#" class="context-menu__link text-danger" data-type="ORDER_CLOSED">
                 <i class="fa fa-times"></i> ORDER_CLOSED
             </a>
         </li>
@@ -169,7 +164,11 @@
          */
         function clickInsideElement(e, className) {
             var el = e.srcElement || e.target;
-            console.log(el.getAttribute('data-key'))
+            const key = el.getAttribute('data-key');
+            const elContextLinks = document.getElementsByClassName('context-menu__link');
+            for (var i = 0; i < elContextLinks.length; i++) {
+                elContextLinks[i].setAttribute('data-key', key);
+            };
             if (el.classList.contains(className)) {
                 return el;
             } else {
@@ -278,7 +277,6 @@
         function clickListener() {
             document.addEventListener("click", function (e) {
                 var clickeElIsLink = clickInsideElement(e, contextMenuLinkClassName);
-
                 if (clickeElIsLink) {
                     e.preventDefault();
                     menuItemListener(clickeElIsLink);
@@ -360,13 +358,44 @@
             }
         }
 
+        function setOrderStatus(url, params, content) {
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: params,
+                success: function (res) {
+                    let span = document.querySelector('span[data-key="' + params.orderId + '"');
+                    let parentSpan = span.parentElement;
+                    span.innerText = content;
+                    parentSpan.className = "budget order-state-" + content.toLowerCase();
+                },
+                error: function (jq, status, err) {
+                    console.log(jq);
+                }
+            })
+        }
+
         /**
          * Dummy action function that logs an action when a menu item link is clicked
          * 
          * @param {HTMLElement} link The link that was clicked
          */
         function menuItemListener(link) {
-            console.log("Task ID - " + taskItemInContext.getAttribute("data-id") + ", Task action - " + link.getAttribute("data-action"));
+            console.log("Task ID - " + taskItemInContext.getAttribute("data-key") + ", Task action - " + link.getAttribute("data-type"));
+            switch (link.getAttribute('data-type')) {
+                case 'SHIPMENT_CREATED':
+                    setOrderStatus('/admin/orders/create-shipment', { orderId: taskItemInContext.getAttribute("data-key"), newTrackingInfo: "Create shipment" }, link.getAttribute("data-type"));
+                    break;
+                case 'SHIPMENT_ASSIGNED':
+                    setOrderStatus('/admin/orders/assign-shipment', { orderId: taskItemInContext.getAttribute("data-key") }, link.getAttribute("data-type"));
+                    break;
+                case 'SHIPMENT_IN_TRANSIT':
+                    setOrderStatus('/admin/orders/transit-shipment', { orderId: taskItemInContext.getAttribute("data-key") }, link.getAttribute("data-type"));
+                    break;
+                case 'SHIPMENT_RECEIVED':
+                    setOrderStatus('/admin/orders/receive-shipment', { orderId: taskItemInContext.getAttribute("data-key") }, link.getAttribute("data-type"));
+                    break;
+            }
             toggleMenuOff();
         }
 
@@ -395,7 +424,6 @@
         .querySelector("#btn-delete-modal")
         .addEventListener("click", function (e) {
             let key = this.getAttribute("data-key");
-            console.log(key);
             $.ajax({
                 url: "/admin/products/delete",
                 type: "post",

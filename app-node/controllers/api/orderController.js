@@ -117,7 +117,7 @@ const assignShipper = async (req, res, next) => {
   let { orderId, newShipperId } = req.body;
   let org = req.query.org ? req.query.org : "supply";
   try {
-    let userId = req.session.userId;
+    let userId = req.session.adminUserId;
     if (userId) {
       let result = await helper.assignShipper(
         orderId,
@@ -149,7 +149,7 @@ const createShipment = async (req, res, next) => {
   let { orderId, newTrackingInfo } = req.body;
   let org = req.query.org ? req.query.org : "supply";
   try {
-    let userId = req.session.userId;
+    let userId = req.session.adminUserId;
     if (userId) {
       let result = await helper.createShipment(
         orderId,
@@ -181,7 +181,7 @@ const transitShipment = async (req, res, next) => {
   let { orderId } = req.body;
   let org = req.query.org ? req.query.org : "supply";
   try {
-    let userId = req.session.userId;
+    let userId = req.session.adminUserId;
     if (userId) {
       let result = await helper.transportShipment(orderId, userId, org);
       let allOrder = JSON.parse(result.toString());
@@ -208,7 +208,7 @@ const receiveShipment = async (req, res, next) => {
   let { orderId } = req.body;
   let org = req.query.org ? req.query.org : "supply";
   try {
-    let userId = req.session.userId;
+    let userId = req.session.adminUserId;
     if (userId) {
       let result = await helper.receiveShipment(orderId, userId, org);
       let allOrder = JSON.parse(result.toString());
