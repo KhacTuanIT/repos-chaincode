@@ -120,6 +120,7 @@ const {
   isAuthorizedAdmin,
   logoutAdmin,
 } = require("../controllers/admin/authController");
+const { getUserById } = require("../controllers/api/userController");
 const router = express.Router();
 
 //
@@ -306,6 +307,7 @@ router.post(
 
 router.post("/api/enroll-admin", enrollAdmin);
 router.post("/api/registry-user", addUser);
+router.get("/api/users/:id", isAuthorizedAdmin, getUserById);
 
 // product api
 

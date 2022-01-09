@@ -116,18 +116,6 @@
                   </a>
                   <% } %>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/admin/login">
-                <i class="ni ni-key-25 text-info"></i>
-                <span class="nav-link-text">Login</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/admin/register">
-                <i class="ni ni-circle-08 text-pink"></i>
-                <span class="nav-link-text">Register</span>
-              </a>
-            </li>
           </ul>
         </div>
       </div>
@@ -144,20 +132,20 @@
       <div class="container-fluid">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <!-- Search form -->
-          <form class="navbar-search navbar-search-light form-inline mr-sm-3" id="navbar-search-main">
+          <div class="navbar-search navbar-search-light form-inline mr-sm-3" id="navbar-search-main">
             <div class="form-group mb-0">
               <div class="input-group input-group-alternative input-group-merge">
                 <div class="input-group-prepend">
                   <span class="input-group-text"><i class="fas fa-search"></i></span>
                 </div>
-                <input class="form-control" placeholder="Search" type="text" />
+                <input class="form-control" id="search-input" placeholder="User ID" type="text" />
               </div>
             </div>
             <button type="button" class="close" data-action="search-close" data-target="#navbar-search-main"
               aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
-          </form>
+          </div>
           <!-- Navbar links -->
           <ul class="navbar-nav align-items-center ml-md-auto">
             <li class="nav-item d-xl-none">
@@ -480,6 +468,76 @@
         </footer>
       </div>
   </div>
+  <div class="modal fade" id="userDetailSearch" tabindex="-1" role="dialog" aria-labelledby="userDetailSearchTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="userDetailSearchTitle">User Details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row py-2">
+            <div class="col-sm-4">User ID</div>
+            <div class="col-sm-8" id="user-id"></div>
+          </div>
+          <div class="row py-2">
+            <div class="col-sm-4">First name</div>
+            <div class="col-sm-8" id="user-fn"></div>
+          </div>
+          <div class="row py-2">
+            <div class="col-sm-4">Middle name</div>
+            <div class="col-sm-8" id="user-mn"></div>
+          </div>
+          <div class="row py-2">
+            <div class="col-sm-4">Last name</div>
+            <div class="col-sm-8" id="user-ln"></div>
+          </div>
+          <div class="row py-2">
+            <div class="col-sm-4">Email</div>
+            <div class="col-sm-8" id="user-email"></div>
+          </div>
+          <div class="row py-2">
+            <div class="col-sm-4">Address</div>
+            <div class="col-sm-8" id="user-address"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(document).on('keyup', '#search-input', function (e) {
+      if (e.keyCode == 13) {
+        e.preventDefault();
+        let userId = e.target.value;
+        if (userId.length > 0) {
+          $.ajax({
+            url: `/api/users/${userId}`,
+            type: 'get',
+            success: function (res) {
+              let { user } = res;
+              $('#user-id').text(user.userId);
+              $('#user-fn').text(user.firstName);
+              $('#user-mn').text(user.middleName);
+              $('#user-ln').text(user.lastName);
+              $('#user-email').text(user.email);
+              $('#user-address').text(user.address);
+              $('#userDetailSearch').modal('show');
+              $('#search-input').val("");
+            },
+            error: function (jq, status, err) {
+              console.log(jq);
+            }
+          })
+        }
+      }
+    })
+  </script>
 </body>
 
 </html>
