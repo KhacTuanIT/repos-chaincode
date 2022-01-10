@@ -154,6 +154,9 @@
         success: function (res) {
           if (res.status) {
             toastr.success(res.message);
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
           } else {
             toastr.error(res.message);
           }
@@ -204,7 +207,7 @@
         product.name +
         '" data-key="' +
         product.code +
-        '" data-toggle="modal" onclick="loadDeleteModal(this)" data-target="#exampleModalCenter">Delete</a>' +
+        '" data-toggle="modal" data-key="' + product.code + '" onclick="loadDeleteModal(this)" data-target="#exampleModalCenter">Delete</a>' +
         "</div>" +
         "</div>" +
         "</td>" +

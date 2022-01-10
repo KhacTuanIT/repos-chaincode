@@ -19,31 +19,38 @@
         <div class="col-4">
           <div class="card-container">
             <span class="default">Default</span>
-            <a href="/account/download-cert" class="cert" id="download-cert">Cert file</a>
-            <img class="round"
-              src="https://www.nicepng.com/png/full/128-1280406_view-user-icon-png-user-circle-icon-png.png" width="100"
-              alt="user" />
-            <h3>
-              <%= user.lastName + ' ' + user.middleName + ' ' + user.firstName %>
-            </h3>
-            <h6>
-              <%= user.email %>
-            </h6>
-            <p>
-              <%= user.address %>
-            </p>
-            <div class="skills">
-              <h6>Features</h6>
-              <ul>
-                <li>
-                  <a id="btn-change-password-form">Change password</a>
-                </li>
-                <li>
-                  <a id="btn-change-user-info-form">Change information</a>
-                </li>
-                <li><a id="btn-get-orders">Orders</a></li>
-              </ul>
-            </div>
+            <% if (user.is_verify) { %>
+
+              <span class="verify">Email verified</span>
+              <% } else { %>
+                <span class="unverify">Email unverified</span>
+                <% } %>
+                  <span class="default">Default</span>
+                  <a href="/account/download-cert" class="cert" id="download-cert">Cert file</a>
+                  <img class="round"
+                    src="https://www.nicepng.com/png/full/128-1280406_view-user-icon-png-user-circle-icon-png.png"
+                    width="100" alt="user" />
+                  <h3>
+                    <%= user.lastName + ' ' + user.middleName + ' ' + user.firstName %>
+                  </h3>
+                  <h6>
+                    <%= user.email %>
+                  </h6>
+                  <p>
+                    <%= user.address %>
+                  </p>
+                  <div class="skills">
+                    <h6>Features</h6>
+                    <ul>
+                      <li>
+                        <a id="btn-change-password-form">Change password</a>
+                      </li>
+                      <li>
+                        <a id="btn-change-user-info-form">Change information</a>
+                      </li>
+                      <li><a id="btn-get-orders">Orders</a></li>
+                    </ul>
+                  </div>
           </div>
         </div>
         <div class="col-8" id="playground-form">
@@ -78,37 +85,6 @@
                 </div>
               </div>
             </div>
-            <!-- <div class="row">
-            <div class="col-12">
-              <h4>Date of Birth</h4>
-              <div class="input-group">
-                <div class="col-third">
-                  <input
-                    class="profile-input"
-                    readonly
-                    type="text"
-                    placeholder="DD"
-                  />
-                </div>
-                <div class="col-third">
-                  <input
-                    class="profile-input"
-                    readonly
-                    type="text"
-                    placeholder="MM"
-                  />
-                </div>
-                <div class="col-third">
-                  <input
-                    class="profile-input"
-                    readonly
-                    type="text"
-                    placeholder="YYYY"
-                  />
-                </div>
-              </div>
-            </div>
-          </div> -->
             <div class="row">
               <div class="col-12">
                 <h4>Address Details</h4>
@@ -118,22 +94,6 @@
                 <div class="input-group input-group-icon"></div>
               </div>
             </div>
-            <!-- <div class="row pr-0">
-            <h4>Terms and Conditions</h4>
-              <div class="input-group">
-                <input class="profile-input" id="terms" type="checkbox"/>
-                <label for="terms">I accept the terms and conditions for signing up to this service, and hereby confirm I have read the privacy policy.</label>
-              </div>
-            <div class="col-sm-6"></div>
-            <div class="col-sm-6 pr-0">
-              <input
-                class="form-control"
-                type="button"
-                placeholder="Full Name"
-                value="Save"
-              />
-            </div>
-          </div> -->
           </form>
           <form id="form-change-info" class="hidden">
             <input type="hidden" name="userId" value="<%= user.userId %>" />

@@ -16,9 +16,7 @@
           </nav>
         </div>
         <div class="col-lg-6 col-5 text-right">
-          <a href="/admin/product-types/add" class="btn btn-sm btn-neutral"
-            >New</a
-          >
+          <a href="/admin/product-types/add" class="btn btn-sm btn-neutral">New</a>
           <!-- <a href="#" class="btn btn-sm btn-neutral">Filters</a> -->
         </div>
       </div>
@@ -58,24 +56,13 @@
   </div>
 </div>
 
-<div
-  class="modal fade"
-  id="exampleModalCenter"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="exampleModalCenterTitle"
-  aria-hidden="true"
->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLongTitle">Delete item</h5>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -87,12 +74,7 @@
         <button type="button" class="btn btn-secondary" data-dismiss="modal">
           Cancel
         </button>
-        <button
-          type="button"
-          class="btn btn-danger"
-          data-key=""
-          id="btn-delete-modal"
-        >
+        <button type="button" class="btn btn-danger" data-key="" id="btn-delete-modal">
           Delete
         </button>
       </div>
@@ -101,24 +83,13 @@
 </div>
 
 <!-- Modal -->
-<div
-  class="modal fade"
-  id="exampleModalLong"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="exampleModalLongTitle"
-  aria-hidden="true"
->
+<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+  aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalDetailTitle"></h5>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -146,7 +117,7 @@
       let key = this.getAttribute("data-key");
       console.log(key);
       $.ajax({
-        url: "/admin/manufactureres/delete",
+        url: "/admin/product-types/delete",
         type: "post",
         data: {
           productTypeId: key,
@@ -154,6 +125,9 @@
         success: function (res) {
           if (res.status) {
             toastr.success(res.message);
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
           } else {
             toastr.error(res.message);
           }
@@ -192,7 +166,7 @@
         productType.name +
         '" data-key="' +
         productType.productTypeId +
-        '" data-toggle="modal" data-target="#exampleModalCenter">Delete</a>' +
+        '" data-toggle="modal" data-key="' + productType.productTypeId + '" onclick="loadDeleteModal(this)" data-target="#exampleModalCenter">Delete</a>' +
         "</div>" +
         "</div>" +
         "</td>" +
@@ -343,7 +317,6 @@
               '<div class="col-lg-12 col-md-12 col-sm-12 mt-40 d-flex justify-content-center">Not found any product types</div>'
             );
           }
-          addEventShowupModal();
         },
         error: function (r, h, e) {
           console.log(e);

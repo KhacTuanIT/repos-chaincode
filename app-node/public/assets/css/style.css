@@ -5243,10 +5243,12 @@ span.required {
 .category-tags > ul > li:first-child {
   margin-top: 30px;
 }
-.category-tags > ul > li:hover {
+.category-tags > ul > li:hover,
+.category-tags > ul > li.li-active {
   background: #242424;
 }
-.category-tags > ul > li:hover a {
+.category-tags > ul > li:hover a,
+  .category-tags > ul > li.li-active a {
   color: #ffffff;
 }
 /*----- paginatoin-area  css -----*/

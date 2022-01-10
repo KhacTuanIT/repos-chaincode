@@ -2,11 +2,11 @@ const helper = require("../../utils/helperv2");
 const { body, validationResult } = require("express-validator");
 
 const addManufacturerAdmin = async (req, res, next) => {
-  const { name, manufactororId, updated_by } = req.body;
+  const { name, manufactororId } = req.body;
   const manufacturer = {
     name,
     manufactororId,
-    updated_by,
+    updated_by: "admin",
   };
   const org = req.body.org ? req.body.org : "supply";
   if (org) {

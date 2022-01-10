@@ -816,6 +816,7 @@ const changeUserInformation = async function (user) {
       user.role,
       user.manager,
       user.org,
+      user.is_verify,
       user.updated_by
     );
     return result;
@@ -1380,7 +1381,7 @@ const editProductType = async function (productType, org) {
 
     const result = await contract.submitTransaction(
       "updateProductType",
-      productType.manufactororId,
+      productType.productTypeId,
       productType.name,
       productType.updated_by
     );
@@ -1967,5 +1968,5 @@ module.exports = {
   queryOrderDetail,
   queryAllOrderDetailByOrderid,
   uuidv4,
-  getWallet
+  getWallet,
 };

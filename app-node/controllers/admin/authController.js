@@ -79,7 +79,7 @@ const registerAdmin = async (req, res, next) => {
               "utf-8"
             );
             req.session.adminUserId = user.userId;
-            req.session.email = existUser.email;
+            req.session.adminEmail = existUser.email;
             await res.json({
               message: `Add user for ${org} successfully!`,
               data: JSON.parse(result.toString()),
@@ -150,7 +150,7 @@ const loginAdmin = async (req, res, next) => {
                 if (JSON.stringify(key) === JSON.stringify(wallet)) {
                   if (existUser.role == "admin") {
                     req.session.adminUserId = user.userId;
-                    req.session.email = existUser.email;
+                    req.session.adminEmail = existUser.email;
                     await res.json({
                       status: true,
                       message: `Login successfully!`,
@@ -228,7 +228,7 @@ const loginAdmin = async (req, res, next) => {
 const logoutAdmin = (req, res, next) => {
   if (req.session.adminUserId) {
     delete req.session.adminUserId;
-    delete req.session.email;
+    delete req.session.adminEmail;
   }
   return res.redirect("/admin/login");
 };

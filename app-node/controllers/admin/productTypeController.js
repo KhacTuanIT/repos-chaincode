@@ -2,11 +2,11 @@ const helper = require("../../utils/helperv2");
 const { body, validationResult } = require("express-validator");
 
 const addProductTypeAdmin = async (req, res, next) => {
-  const { name, productTypeId, updated_by } = req.body;
+  const { name, productTypeId } = req.body;
   const productType = {
     name,
     productTypeId,
-    updated_by,
+    updated_by: "admin",
   };
   const org = req.body.org ? req.body.org : "supply";
   if (org) {
@@ -40,11 +40,10 @@ const addProductTypeAdmin = async (req, res, next) => {
 
 const editProductTypeAdmin = async (req, res, next) => {
   const { name, productTypeId } = req.body;
-  let updated_by = "admin";
   const productType = {
     name,
     productTypeId,
-    updated_by: updated_by ? updated_by : 'admin',
+    updated_by: "admin",
   };
   const org = req.body.org ? req.body.org : "supply";
   if (org) {

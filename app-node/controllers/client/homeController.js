@@ -45,6 +45,15 @@ const home = async (req, res, next) => {
   }
 };
 
+const errorPage = (req, res, next) => {
+  res.render("client/error", {
+    layout: "client-layout",
+    page_name: "error",
+    message: req.session.error,
+  });
+};
+
 module.exports = {
   home,
+  errorPage,
 };

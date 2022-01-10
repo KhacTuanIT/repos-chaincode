@@ -105,6 +105,8 @@ const {
   changePassword,
   changeUserInformation,
   downloadCertificate,
+  verifyEmail,
+  beforeVerifyClientView,
 } = require("../controllers/client/accountController");
 const { isAuthorized } = require("../controllers/client/authController");
 const { queryOrderByUserId } = require("../controllers/client/cartController");
@@ -121,6 +123,7 @@ const {
   logoutAdmin,
 } = require("../controllers/admin/authController");
 const { getUserById } = require("../controllers/api/userController");
+const { errorPage } = require("../controllers/client/homeController");
 const router = express.Router();
 
 //
@@ -167,6 +170,11 @@ router.post(
 // logout
 
 router.get("/logout", logout);
+router.get("/error", errorPage);
+// verify
+
+router.get("/verify", verifyEmail);
+router.get("/check-verify", beforeVerifyClientView);
 
 // #### admin ####
 

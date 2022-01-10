@@ -1,8 +1,10 @@
 const helper = require("./../../utils/helperv2");
 const { body, validationResult } = require("express-validator");
+var nodemailer = require("nodemailer");
 const uuid = require("uuid");
 const fs = require("fs");
 const path = require("path");
+const { log } = require("console");
 const getKeys = (id) => {
   const filePath = path.join(__dirname, "../../public/keys/" + id);
   var result = undefined;
@@ -16,6 +18,17 @@ const getKeys = (id) => {
   console.log(fs);
   return result;
 };
+
+var smtpTransport = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: "tuantk1506@gmail.com",
+    pass: "Kt0985204903",
+  },
+});
+var rand, mailOptions, host, link;
 
 const account = async (req, res, next) => {
   let org = req.query.org ? req.query.org : "supply";
@@ -82,9 +95,19 @@ const register = async (req, res, next) => {
       });
     } else {
       try {
-        const existUserResult = await helper.getUserByUsername(user);
-        const existUser = JSON.stringify(existUserResult.toString());
-        if (existUser.username != "") {
+        const existUserResult = await helper.getAllUser("supply", "");
+        const existUserParse = JSON.parse(existUserResult.toString());
+        let existUser = undefined;
+        let existEmail = undefined;
+        for (var i = 0; i < existUserParse.length; i++) {
+          if (existUserParse[i].Value.email === email)
+            existEmail = existUserParse[i].Value;
+          if (existUserParse[i].Value.username === username)
+            existUser = existUserParse[i].Value;
+        }
+        console.log(email, username);
+        console.log(existEmail, existUser);
+        if (!existUser && !existEmail) {
           user.userId = uuid.v4();
           user.role = "client";
           user.manager = "";
@@ -108,12 +131,34 @@ const register = async (req, res, next) => {
               "utf-8"
             );
             req.session.userId = user.userId;
-            req.session.email = existUser.email;
-            await res.json({
-              message: `Add user for ${org} successfully!`,
-              data: JSON.parse(result.toString()),
-              result: enroll,
-              wallet: wallet,
+            req.session.usernameS = user.username;
+            req.session.email = user.email;
+            rand = helper.uuidv4();
+            host = req.get("host");
+            link = "http://" + host + "/verify?id=" + rand;
+            mailOptions = {
+              from: "TECO .Inc",
+              to: user.email,
+              subject: "Please confirm your Email account",
+              html:
+                "Hello,<br> Please Click on the link to verify your email.<br><a href=" +
+                link +
+                ">Click here to verify</a>",
+            };
+            console.log(mailOptions);
+            smtpTransport.sendMail(mailOptions, function (error, response) {
+              if (error) {
+                req.session.error = error.message;
+                res.status(500).json({
+                  redirect: true,
+                  message: error.message,
+                });
+              } else {
+                res.json({
+                  message: `Add user for ${org} successfully!`,
+                  data: JSON.parse(result.toString()),
+                });
+              }
             });
           } else {
             await res.status(500).json({
@@ -121,9 +166,19 @@ const register = async (req, res, next) => {
             });
           }
         } else {
-          await res.status(500).json({
-            message: "Add user failed! ERR: username is exists in system!",
-          });
+          if (existUser) {
+            await res.status(500).json({
+              errors: [
+                { msg: "Username is exists in system!", param: "username" },
+              ],
+              message: "Add user failed! ERR: username is exists in system!",
+            });
+          } else if (existEmail) {
+            await res.status(500).json({
+              message: "Add user failed! ERR: email is exists in system!",
+              errors: [{ msg: "Email is exists in system!", param: "email" }],
+            });
+          }
         }
       } catch (error) {
         console.log(error);
@@ -139,11 +194,79 @@ const register = async (req, res, next) => {
   }
 };
 
+const verifyEmail = async (req, res, next) => {
+  try {
+    if (req.protocol + "://" + req.get("host") == "http://" + host) {
+      console.log("Domain is matched. Information is from Authentic email");
+      if (req.query.id == rand) {
+        let userResult = await helper.getUser("supply", req.session.userId);
+        let user = JSON.parse(userResult.toString());
+        let userParse = JSON.parse(Buffer.from(user.data).toString("utf-8"));
+        console.log(userParse);
+        const {
+          userId,
+          firstName,
+          middleName,
+          lastName,
+          email,
+          address,
+          org,
+          is_verify,
+          updated_by,
+        } = userParse;
+        let userVerify = {
+          userId,
+          email,
+          address,
+          org,
+          is_verify,
+          updated_by,
+        };
+        userVerify.firstname = firstName;
+        userVerify.middlename = middleName;
+        userVerify.lastname = lastName;
+        console.log(userVerify);
+        await helper.changeUserInformation(userVerify);
+        res.render("client/verify", {
+          layout: "client-layout",
+          page_name: "verify",
+          isVerify: true,
+          message:
+            "Email " +
+            mailOptions.to +
+            " is been Successfully verified. Please download certificate file in personal page to login in next time!",
+        });
+      } else {
+        await res.render("client/verify", {
+          layout: "client-layout",
+          page_name: "verify",
+          isVerify: false,
+          message: "Email is not verified",
+        });
+      }
+    } else {
+      await res.render("404", {
+        layout: "client-layout",
+        page_name: "error",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const loginClientView = (req, res, next) => {
   res.render("client/login", {
     layout: "client-layout",
     page_name: "login",
     message: "Please save the certificate file to use for login!",
+  });
+};
+
+const beforeVerifyClientView = (req, res, next) => {
+  res.render("client/beforeConfirm", {
+    layout: "client-layout",
+    page_name: "verify",
   });
 };
 
@@ -310,6 +433,7 @@ const changeUserInformation = async (req, res, next) => {
       email,
       address,
       org,
+      is_verify: true,
       updated_by: "admin",
     };
     let result = await helper.changeUserInformation(user);
@@ -389,4 +513,6 @@ module.exports = {
   changeUserInformation,
   changePassword,
   downloadCertificate,
+  verifyEmail,
+  beforeVerifyClientView,
 };

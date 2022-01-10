@@ -22,112 +22,41 @@
               <input type="hidden" name="org" value="supply" />
               <div class="col-md-12 col-12 mb-20">
                 <label>User Name<span class="text-danger">*</span></label>
-                <input
-                  class="mb-0"
-                  name="username"
-                  id="username"
-                  type="text"
-                  required
-                  placeholder="User Name"
-                />
-                <span
-                  id="invalid-username"
-                  class="invalid-text-value text-danger"
-                ></span>
+                <input class="mb-0" name="username" id="username" type="text" required placeholder="User Name" />
+                <span id="invalid-username" class="invalid-text-value text-danger"></span>
               </div>
               <div class="col-md-4 col-12 mb-20">
                 <label>First Name<span class="text-danger">*</span></label>
-                <input
-                  class="mb-0"
-                  name="firstname"
-                  id="firstname"
-                  type="text"
-                  required
-                  placeholder="First Name"
-                />
-                <span
-                  id="invalid-firstname"
-                  class="invalid-text-value text-danger"
-                ></span>
+                <input class="mb-0" name="firstname" id="firstname" type="text" required placeholder="First Name" />
+                <span id="invalid-firstname" class="invalid-text-value text-danger"></span>
               </div>
               <div class="col-md-4 col-12 mb-20">
                 <label>Middle Name</label>
-                <input
-                  class="mb-0"
-                  name="middlename"
-                  id="middlename"
-                  type="text"
-                  placeholder="Middle Name"
-                />
+                <input class="mb-0" name="middlename" id="middlename" type="text" placeholder="Middle Name" />
               </div>
               <div class="col-md-4 col-12 mb-20">
                 <label>Last Name<span class="text-danger">*</span></label>
-                <input
-                  class="mb-0"
-                  name="lastname"
-                  id="lastname"
-                  type="text"
-                  required
-                  placeholder="Last Name"
-                />
-                <span
-                  id="invalid-lastname"
-                  class="invalid-text-value text-danger"
-                ></span>
+                <input class="mb-0" name="lastname" id="lastname" type="text" required placeholder="Last Name" />
+                <span id="invalid-lastname" class="invalid-text-value text-danger"></span>
               </div>
               <div class="col-md-12 mb-20">
                 <label>Email Address<span class="text-danger">*</span></label>
-                <input
-                  class="mb-0"
-                  name="email"
-                  id="email"
-                  type="email"
-                  required
-                  placeholder="Email Address"
-                />
-                <span
-                  id="invalid-email"
-                  class="invalid-text-value text-danger"
-                ></span>
+                <input class="mb-0" name="email" id="email" type="email" required placeholder="Email Address" />
+                <span id="invalid-email" class="invalid-text-value text-danger"></span>
               </div>
               <div class="col-md-6 mb-20">
                 <label>Password<span class="text-danger">*</span></label>
-                <input
-                  class="mb-0"
-                  name="password"
-                  id="password"
-                  type="password"
-                  required
-                  placeholder="Password"
-                />
-                <span
-                  id="invalid-password"
-                  class="invalid-text-value text-danger"
-                ></span>
+                <input class="mb-0" name="password" id="password" type="password" required placeholder="Password" />
+                <span id="invalid-password" class="invalid-text-value text-danger"></span>
               </div>
               <div class="col-md-6 mb-20">
-                <label
-                  >Confirm Password<span class="text-danger">*</span></label
-                >
-                <input
-                  class="mb-0"
-                  name="confirmPassword"
-                  id="confirmPassword"
-                  type="password"
-                  required
-                  placeholder="Confirm Password"
-                />
-                <span
-                  id="invalid-confirmPassword"
-                  class="invalid-text-value text-danger"
-                ></span>
+                <label>Confirm Password<span class="text-danger">*</span></label>
+                <input class="mb-0" name="confirmPassword" id="confirmPassword" type="password" required
+                  placeholder="Confirm Password" />
+                <span id="invalid-confirmPassword" class="invalid-text-value text-danger"></span>
               </div>
               <div class="col-md-4">
-                <button
-                  type="button"
-                  id="register-btn"
-                  class="register-button mt-0"
-                >
+                <button type="button" id="register-btn" class="register-button mt-0">
                   <div id="loader-register" class="lds-ring hidden">
                     <div></div>
                     <div></div>
@@ -171,7 +100,7 @@
       success: function (res) {
         toastr.success(res.message);
         setTimeout(() => {
-          window.location.href = "/account";
+          window.location.href = "/check-verify";
         }, 3000);
       },
       error: function (jq, status, err) {
@@ -183,6 +112,9 @@
         }
         let responseError = JSON.parse(jq.responseText);
         console.log(responseError);
+        if (responseError.redirect) {
+          window.location.href = '/error';
+        }
         responseError.errors.forEach((error) => {
           if (!$("#" + error.param).hasClass("invalid-error-input")) {
             $("#" + error.param).addClass("invalid-error-input");

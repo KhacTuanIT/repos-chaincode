@@ -19,6 +19,7 @@ class UserContract extends Contract {
         org: "supply",
         docType: "user",
         is_delete: false,
+        is_verify: false,
         updated_by: "",
       },
       {
@@ -35,6 +36,7 @@ class UserContract extends Contract {
         org: "delivery",
         docType: "user",
         is_delete: false,
+        is_verify: false,
         updated_by: "",
       },
     ];
@@ -81,6 +83,7 @@ class UserContract extends Contract {
       org: org,
       docType: "user",
       is_delete: false,
+      is_verify: false,
       updated_by: updated_by ? updated_by : "",
     };
     try {
@@ -148,6 +151,7 @@ class UserContract extends Contract {
     role,
     manager,
     org,
+    is_verify,
     updated_by
   ) {
     try {
@@ -165,6 +169,7 @@ class UserContract extends Contract {
       user.role = role ? role : user.role;
       user.manager = manager ? manager : user.manager;
       user.org = org ? org : user.org;
+      user.is_verify = is_verify ? is_verify : user.is_verify;
       user.updated_by = updated_by ? updated_by : user.updated_by;
 
       await ctx.stub.putState(userId, Buffer.from(JSON.stringify(user)));
@@ -184,10 +189,12 @@ class UserContract extends Contract {
     )) {
       const strValue = Buffer.from(value).toString("utf8");
       let record;
+      let parseData;
       try {
         record = JSON.parse(strValue);
-        if (record.username === username) {
-          expectedUser = record;
+        parseData = JSON.parse(Buffer.from(record.data).toString("utf-8"));
+        if (parseData.username === username) {
+          expectedUser = parseData;
         }
       } catch (error) {
         throw new Error(error);

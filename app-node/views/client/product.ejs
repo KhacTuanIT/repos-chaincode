@@ -63,11 +63,7 @@
         <!-- shop-products-wrapper start -->
         <div class="shop-products-wrapper">
           <div class="tab-content">
-            <div
-              id="grid-view"
-              class="tab-pane fade active show"
-              role="tabpanel"
-            >
+            <div id="grid-view" class="tab-pane fade active show" role="tabpanel">
               <div class="product-area shop-product-area">
                 <div class="row" id="product-grid"></div>
               </div>
@@ -76,10 +72,7 @@
               <div class="row">
                 <div class="col-lg-6 col-md-6 pt-xs-15"></div>
                 <div class="col-lg-6 col-md-6">
-                  <ul
-                    class="pagination-box pt-xs-20 pb-xs-15"
-                    id="paginationArea"
-                  ></ul>
+                  <ul class="pagination-box pt-xs-20 pb-xs-15" id="paginationArea"></ul>
                 </div>
               </div>
             </div>
@@ -118,12 +111,12 @@
       let endProduct = startProduct + 9 > total ? total : startProduct + 8;
       $("#totalProduct").text(
         "Showing " +
-          startProduct +
-          " - " +
-          endProduct +
-          " of " +
-          total +
-          ` item${total > 1 ? "s" : ""}`
+        startProduct +
+        " - " +
+        endProduct +
+        " of " +
+        total +
+        ` item${total > 1 ? "s" : ""}`
       );
       let paginationContent = "";
       if (page > 1) {
@@ -678,16 +671,30 @@
             ulType.empty();
             let liType = undefined;
             let aType = undefined;
+            let pth = window.location.href;
+            console.log(pth);
+            let isActive = false;
             productTypes.forEach((type) => {
-              liType = document.createElement("li");
-              aType = document.createElement("a");
-              aType.setAttribute(
-                "href",
-                "/products?type=" + type.Value.productTypeId
-              );
-              aType.innerText = type.Value.name;
-              liType.append(aType);
-              ulType.append(liType);
+              if (pth.includes(type.Value.productTypeId)) {
+                isActive = true;
+              }
+              else {
+                isActive = false;
+              }
+              if (!type.Value.is_delete) {
+                liType = document.createElement("li");
+                if (isActive) {
+                  liType.className = 'li-active';
+                }
+                aType = document.createElement("a");
+                aType.setAttribute(
+                  "href",
+                  "/products?type=" + type.Value.productTypeId
+                );
+                aType.innerText = type.Value.name;
+                liType.append(aType);
+                ulType.append(liType);
+              }
             });
           }
         },
@@ -711,16 +718,29 @@
             ulManufacturer.empty();
             let liManufacturer = undefined;
             let aManudacturer = undefined;
+            let pth = window.location.href;
+            let isActive = false;
             manufactureres.forEach((manufacturer) => {
-              liManufacturer = document.createElement("li");
-              aManudacturer = document.createElement("a");
-              aManudacturer.setAttribute(
-                "href",
-                "/products?manufacturer=" + manufacturer.Value.manufactororId
-              );
-              aManudacturer.innerText = manufacturer.Value.name;
-              liManufacturer.append(aManudacturer);
-              ulManufacturer.append(liManufacturer);
+              if (pth.includes(manufacturer.Value.manufactororId)) {
+                isActive = true;
+              }
+              else {
+                isActive = false;
+              }
+              if (!manufacturer.Value.is_delete) {
+                liManufacturer = document.createElement("li");
+                if (isActive) {
+                  liManufacturer.className = 'li-active';
+                }
+                aManudacturer = document.createElement("a");
+                aManudacturer.setAttribute(
+                  "href",
+                  "/products?manufacturer=" + manufacturer.Value.manufactororId
+                );
+                aManudacturer.innerText = manufacturer.Value.name;
+                liManufacturer.append(aManudacturer);
+                ulManufacturer.append(liManufacturer);
+              }
             });
           }
         },
